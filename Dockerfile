@@ -7,8 +7,8 @@ RUN apk add --no-cache bash git unzip linux-headers autoconf g++ make postgresql
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /app
-COPY . .
+WORKDIR /app/src/backend
+COPY . /app
 
 RUN addgroup -g 1000 -S app && adduser -u 1000 -S app -G app
 USER app:app
