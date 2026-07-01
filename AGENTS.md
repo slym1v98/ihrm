@@ -60,6 +60,36 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
+## 5. iHRM Module Conventions
+
+**Identity is the reference module. New modules must match it unless the user explicitly approves a deviation.**
+
+Backend module layout:
+- Use `src/backend/app/Modules/<Module>/Application` for commands, handlers, services.
+- Use `src/backend/app/Modules/<Module>/Domain` for aggregates, value objects, events, exceptions, repository interfaces, domain services.
+- Use `src/backend/app/Modules/<Module>/Infrastructure/Http` for controllers, requests, resources, middleware.
+- Use `src/backend/app/Modules/<Module>/Infrastructure/Persistence` for Eloquent models and repository implementations.
+- Use `src/backend/app/Modules/<Module>/Infrastructure/Seeders` for module seeders.
+- Use `src/backend/app/Modules/<Module>/Routes/api.php` for module routes.
+
+Routing rules:
+- `src/backend/routes/api.php` is only a module route loader.
+- Do not add module-specific files directly under `src/backend/routes`.
+- Controllers in routes should reference `App\Modules\<Module>\Infrastructure\Http\Controllers\...`.
+- Route prefixes and middleware belong in the module route file.
+
+Implementation workflow:
+- Start each non-trivial module in a Git worktree, e.g. `.worktrees/<module>` on `feature/<module>`.
+- Keep commits small by task: schema, domain, persistence, seeders, HTTP, docs/tests.
+- Merge/push only after targeted tests and full backend tests pass.
+
+Testing rules:
+- Mirror module tests under `src/backend/tests/Unit/Modules/<Module>` and `src/backend/tests/Feature/Modules/<Module>`.
+- Add at least one feature test for auth/permission boundaries on module APIs.
+
+Deviation rule:
+- If a module needs a different structure, stop and ask first. Document the approved exception in the plan/spec before coding.
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
