@@ -53,6 +53,20 @@ class PermissionSeeder extends Seeder
             ['organization.position.create', 'position.create', 'Create position'],
             ['organization.position.update', 'position.update', 'Update position'],
             ['organization.tree.view', 'tree.view', 'View organization tree'],
+            ['employee.view', 'view', 'View employees'],
+            ['employee.create', 'create', 'Create employee'],
+            ['employee.update', 'update', 'Update employee'],
+            ['employee.status.change', 'change_status', 'Change employee status'],
+            ['employee.contract.view', 'view', 'View employee contracts'],
+            ['employee.contract.create', 'create', 'Create employee contract'],
+            ['employee.contract.activate', 'activate', 'Activate employee contract'],
+            ['employee.contract.renew', 'renew', 'Renew employee contract'],
+            ['employee.contract.terminate', 'terminate', 'Terminate employee contract'],
+            ['employee.document.view', 'view', 'View employee documents'],
+            ['employee.document.upload', 'upload', 'Upload employee document'],
+            ['employee.document.replace', 'replace', 'Replace employee document'],
+            ['employee.document.archive', 'archive', 'Archive employee document'],
+            ['employee.document.download', 'download', 'Download employee document'],
         ];
 
         foreach ($permissions as [$code, $action, $description]) {

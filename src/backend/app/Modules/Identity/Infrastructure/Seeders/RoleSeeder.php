@@ -28,6 +28,9 @@ class RoleSeeder extends Seeder
                     'organization.department.list', 'organization.department.view', 'organization.department.create', 'organization.department.update', 'organization.department.move',
                     'organization.position.list', 'organization.position.view', 'organization.position.create', 'organization.position.update',
                     'organization.tree.view',
+                    'employee.view', 'employee.create', 'employee.update', 'employee.status.change',
+                    'employee.contract.view', 'employee.contract.create', 'employee.contract.activate', 'employee.contract.renew', 'employee.contract.terminate',
+                    'employee.document.view', 'employee.document.upload', 'employee.document.replace', 'employee.document.archive', 'employee.document.download',
                 ],
             ],
             'EMPLOYEE' => [
