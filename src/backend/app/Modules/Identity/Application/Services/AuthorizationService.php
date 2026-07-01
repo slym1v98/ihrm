@@ -4,9 +4,21 @@ namespace App\Modules\Identity\Application\Services;
 
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RolePermissionModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserRoleModel;
+use App\Modules\Shared\Exceptions\AppException;
 
 class AuthorizationService
 {
+    public function requirePermission(string $userId, string $permissionCode): void
+    {
+        if ($this->userHasPermission($userId, $permissionCode)) {
+            return;
+        }
+
+        throw new class('PERMISSION_DENIED', "Missing permission: {$permissionCode}") extends AppException {
+            public function getHttpStatus(): int { return 403; }
+        };
+    }
+
     public function userHasPermission(string $userId, string $permissionCode): bool
     {
         $roleIds = UserRoleModel::where('user_id', $userId)
