@@ -4,6 +4,7 @@ namespace App\Modules\Identity\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RolePermissionModel extends Model
 {
@@ -16,4 +17,9 @@ class RolePermissionModel extends Model
     public $timestamps = false;
 
     protected $casts = ['created_at' => 'datetime'];
+
+    public function permission(): BelongsTo
+    {
+        return $this->belongsTo(PermissionModel::class, 'permission_code', 'code');
+    }
 }
