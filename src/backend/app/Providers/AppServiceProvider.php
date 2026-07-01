@@ -15,6 +15,12 @@ use App\Modules\Configuration\Infrastructure\Persistence\Repositories\EloquentNo
 use App\Modules\Configuration\Infrastructure\Persistence\Repositories\EloquentSystemSettingRepository;
 use App\Modules\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Modules\Identity\Domain\Repositories\UserRepositoryInterface;
+use App\Modules\Organization\Domain\Repositories\BranchRepositoryInterface;
+use App\Modules\Organization\Domain\Repositories\DepartmentRepositoryInterface;
+use App\Modules\Organization\Domain\Repositories\PositionRepositoryInterface;
+use App\Modules\Organization\Infrastructure\Persistence\Repositories\EloquentBranchRepository;
+use App\Modules\Organization\Infrastructure\Persistence\Repositories\EloquentDepartmentRepository;
+use App\Modules\Organization\Infrastructure\Persistence\Repositories\EloquentPositionRepository;
 use App\Modules\Identity\Infrastructure\Persistence\Repositories\EloquentRoleRepository;
 use App\Modules\Identity\Infrastructure\Persistence\Repositories\EloquentUserRepository;
 use App\Modules\Identity\Domain\Events\RoleCreated;
@@ -44,6 +50,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(SystemSettingRepositoryInterface::class, EloquentSystemSettingRepository::class);
         $this->app->bind(HolidayCalendarRepositoryInterface::class, EloquentHolidayCalendarRepository::class);
         $this->app->bind(NotificationThresholdRepositoryInterface::class, EloquentNotificationThresholdRepository::class);
+        $this->app->bind(BranchRepositoryInterface::class, EloquentBranchRepository::class);
+        $this->app->bind(DepartmentRepositoryInterface::class, EloquentDepartmentRepository::class);
+        $this->app->bind(PositionRepositoryInterface::class, EloquentPositionRepository::class);
     }
 
     public function boot(): void
