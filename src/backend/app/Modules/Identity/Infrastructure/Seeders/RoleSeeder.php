@@ -19,17 +19,21 @@ class RoleSeeder extends Seeder
             ],
             'HR_MANAGER' => [
                 'name' => 'HR Manager',
-                'description' => 'Manage users and roles at read level',
+                'description' => 'Manage users, roles, and organization data',
                 'permissions' => [
                     'identity.user.list', 'identity.user.view',
                     'identity.role.list', 'identity.role.view',
                     'identity.permission.list',
+                    'organization.branch.list', 'organization.branch.view', 'organization.branch.create', 'organization.branch.update',
+                    'organization.department.list', 'organization.department.view', 'organization.department.create', 'organization.department.update', 'organization.department.move',
+                    'organization.position.list', 'organization.position.view', 'organization.position.create', 'organization.position.update',
+                    'organization.tree.view',
                 ],
             ],
             'EMPLOYEE' => [
                 'name' => 'Employee',
                 'description' => 'Self-service only',
-                'permissions' => [],
+                'permissions' => ['organization.tree.view'],
             ],
         ];
 

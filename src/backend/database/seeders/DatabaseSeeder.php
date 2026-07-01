@@ -6,6 +6,7 @@ use App\Modules\Configuration\Infrastructure\Seeders\ConfigurationSeeder;
 use App\Modules\Identity\Infrastructure\Seeders\AdminUserSeeder;
 use App\Modules\Identity\Infrastructure\Seeders\PermissionSeeder;
 use App\Modules\Identity\Infrastructure\Seeders\RoleSeeder;
+use App\Modules\Organization\Infrastructure\Seeders\OrgStructureSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminUserSeeder::class,
             ConfigurationSeeder::class,
+            OrgStructureSeeder::class,
         ]);
     }
 }

@@ -39,6 +39,20 @@ class PermissionSeeder extends Seeder
             ['configuration.holiday.manage', 'holiday.manage', 'Manage holiday calendars'],
             ['configuration.notification_threshold.list', 'notification_threshold.list', 'List notification thresholds'],
             ['configuration.notification_threshold.manage', 'notification_threshold.manage', 'Manage notification thresholds'],
+            ['organization.branch.list', 'branch.list', 'List branches'],
+            ['organization.branch.view', 'branch.view', 'View branch'],
+            ['organization.branch.create', 'branch.create', 'Create branch'],
+            ['organization.branch.update', 'branch.update', 'Update branch'],
+            ['organization.department.list', 'department.list', 'List departments'],
+            ['organization.department.view', 'department.view', 'View department'],
+            ['organization.department.create', 'department.create', 'Create department'],
+            ['organization.department.update', 'department.update', 'Update department'],
+            ['organization.department.move', 'department.move', 'Move department'],
+            ['organization.position.list', 'position.list', 'List positions'],
+            ['organization.position.view', 'position.view', 'View position'],
+            ['organization.position.create', 'position.create', 'Create position'],
+            ['organization.position.update', 'position.update', 'Update position'],
+            ['organization.tree.view', 'tree.view', 'View organization tree'],
         ];
 
         foreach ($permissions as [$code, $action, $description]) {
