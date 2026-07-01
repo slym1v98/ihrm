@@ -2,10 +2,17 @@
 
 namespace App\Modules\Organization\Domain\Exceptions;
 
-class CircularMoveException extends \DomainException
+use App\Modules\Shared\Exceptions\AppException;
+
+class CircularMoveException extends AppException
 {
-    public function __construct()
+    public function __construct(string $param = '')
     {
-        parent::__construct('Cannot move department: target is self or a descendant.');
+        parent::__construct('CIRCULAR_MOVE', $param ? "CircularMoveException: $param" : 'CircularMoveException');
+    }
+
+    public function getHttpStatus(): int
+    {
+        return 422;
     }
 }

@@ -2,10 +2,17 @@
 
 namespace App\Modules\Organization\Domain\Exceptions;
 
-class DepartmentNotInSameBranchException extends \DomainException
+use App\Modules\Shared\Exceptions\AppException;
+
+class DepartmentNotInSameBranchException extends AppException
 {
-    public function __construct()
+    public function __construct(string $param = '')
     {
-        parent::__construct('Cannot move department: parent department is in a different branch.');
+        parent::__construct('DEPARTMENT_NOT_IN_SAME_BRANCH', $param ? "DepartmentNotInSameBranchException: $param" : 'DepartmentNotInSameBranchException');
+    }
+
+    public function getHttpStatus(): int
+    {
+        return 422;
     }
 }

@@ -11,7 +11,7 @@ class CreateBranchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => ['required', 'string', 'regex:/^[A-Za-z][A-Za-z0-9-]{1,49}$/', 'unique:branches,code'],
+            'code' => ['required', 'string', 'regex:/^[A-Za-z][A-Za-z0-9-]{1,49}$/'],
             'name' => ['required', 'string', 'max:255'],
             'address' => ['nullable', 'string', 'max:1000'],
             'phone' => ['nullable', 'string', 'max:30'],

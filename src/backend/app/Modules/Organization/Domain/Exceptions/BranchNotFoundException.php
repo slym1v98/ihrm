@@ -2,10 +2,17 @@
 
 namespace App\Modules\Organization\Domain\Exceptions;
 
-class BranchNotFoundException extends \DomainException
+use App\Modules\Shared\Exceptions\AppException;
+
+class BranchNotFoundException extends AppException
 {
-    public function __construct(string $id = '')
+    public function __construct(string $param = '')
     {
-        parent::__construct("Branch not found: {$id}");
+        parent::__construct('BRANCH_NOT_FOUND', $param ? "BranchNotFoundException: $param" : 'BranchNotFoundException');
+    }
+
+    public function getHttpStatus(): int
+    {
+        return 404;
     }
 }

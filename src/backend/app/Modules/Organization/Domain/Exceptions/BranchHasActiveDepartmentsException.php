@@ -2,10 +2,17 @@
 
 namespace App\Modules\Organization\Domain\Exceptions;
 
-class BranchHasActiveDepartmentsException extends \DomainException
+use App\Modules\Shared\Exceptions\AppException;
+
+class BranchHasActiveDepartmentsException extends AppException
 {
-    public function __construct(string $branchId = '')
+    public function __construct(string $param = '')
     {
-        parent::__construct("Cannot deactivate branch {$branchId}: it has active departments.");
+        parent::__construct('BRANCH_HAS_ACTIVE_DEPARTMENTS', $param ? "BranchHasActiveDepartmentsException: $param" : 'BranchHasActiveDepartmentsException');
+    }
+
+    public function getHttpStatus(): int
+    {
+        return 409;
     }
 }
