@@ -1,4 +1,4 @@
 <?php
 
 require __DIR__ . '/../app/Modules/Identity/Routes/api.php';
-require __DIR__ . '/configuration.php';
+require __DIR__ . '/../app/Modules/Configuration/Routes/api.php';

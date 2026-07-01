@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Configuration\Http\Controllers;
+namespace App\Modules\Configuration\Infrastructure\Http\Controllers;
 
 use App\Modules\Configuration\Domain\Repositories\SystemSettingRepositoryInterface;
-use App\Modules\Configuration\Http\Requests\ConfigurationRequest;
-use App\Modules\Configuration\Http\Resources\SystemSettingResource;
+use App\Modules\Configuration\Infrastructure\Http\Requests\ConfigurationRequest;
+use App\Modules\Configuration\Infrastructure\Http\Resources\SystemSettingResource;
 use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use Illuminate\Http\Request;
 

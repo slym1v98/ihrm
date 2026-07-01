@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Configuration\Http\Controllers;
+namespace App\Modules\Configuration\Infrastructure\Http\Controllers;
 
 use App\Modules\Configuration\Application\Services\CodeGenerator;
 use App\Modules\Configuration\Domain\Repositories\CodeGenerationRuleRepositoryInterface;
-use App\Modules\Configuration\Http\Requests\ConfigurationRequest;
-use App\Modules\Configuration\Http\Resources\CodeGenerationRuleResource;
+use App\Modules\Configuration\Infrastructure\Http\Requests\ConfigurationRequest;
+use App\Modules\Configuration\Infrastructure\Http\Resources\CodeGenerationRuleResource;
 use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use Illuminate\Http\Request;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Configuration\Http\Controllers;
+namespace App\Modules\Configuration\Infrastructure\Http\Controllers;
 
 use App\Modules\Configuration\Domain\Repositories\HolidayCalendarRepositoryInterface;
-use App\Modules\Configuration\Http\Requests\ConfigurationRequest;
-use App\Modules\Configuration\Http\Resources\HolidayCalendarResource;
-use App\Modules\Configuration\Http\Resources\HolidayResource;
+use App\Modules\Configuration\Infrastructure\Http\Requests\ConfigurationRequest;
+use App\Modules\Configuration\Infrastructure\Http\Resources\HolidayCalendarResource;
+use App\Modules\Configuration\Infrastructure\Http\Resources\HolidayResource;
 use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

@@ -1,10 +1,10 @@
 <?php
 
-use App\Modules\Configuration\Http\Controllers\LookupController;
-use App\Modules\Configuration\Http\Controllers\CodeGenerationRuleController;
-use App\Modules\Configuration\Http\Controllers\HolidayCalendarController;
-use App\Modules\Configuration\Http\Controllers\NotificationThresholdController;
-use App\Modules\Configuration\Http\Controllers\SystemSettingController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\LookupController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\CodeGenerationRuleController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\HolidayCalendarController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\NotificationThresholdController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\SystemSettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->prefix('v1/config')->group(function () {

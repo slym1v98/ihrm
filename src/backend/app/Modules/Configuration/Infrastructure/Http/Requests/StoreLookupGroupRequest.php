@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Configuration\Http\Requests;
+namespace App\Modules\Configuration\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreLookupValueRequest extends FormRequest
+class StoreLookupGroupRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -12,9 +12,7 @@ class StoreLookupValueRequest extends FormRequest
             'code' => ['required', 'string', 'max:100'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'sort_order' => ['integer', 'min:0'],
             'active' => ['boolean'],
-            'metadata' => ['nullable', 'array'],
         ];
     }
 }

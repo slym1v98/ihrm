@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Configuration\Http\Controllers;
+namespace App\Modules\Configuration\Infrastructure\Http\Controllers;
 
 use App\Modules\Configuration\Domain\Repositories\LookupRepositoryInterface;
-use App\Modules\Configuration\Http\Requests\StoreLookupGroupRequest;
-use App\Modules\Configuration\Http\Requests\StoreLookupValueRequest;
-use App\Modules\Configuration\Http\Resources\LookupGroupResource;
-use App\Modules\Configuration\Http\Resources\LookupValueResource;
+use App\Modules\Configuration\Infrastructure\Http\Requests\StoreLookupGroupRequest;
+use App\Modules\Configuration\Infrastructure\Http\Requests\StoreLookupValueRequest;
+use App\Modules\Configuration\Infrastructure\Http\Resources\LookupGroupResource;
+use App\Modules\Configuration\Infrastructure\Http\Resources\LookupValueResource;
 use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
