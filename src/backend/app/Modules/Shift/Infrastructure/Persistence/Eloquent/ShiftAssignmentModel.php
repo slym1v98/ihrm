@@ -4,6 +4,7 @@ namespace App\Modules\Shift\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ShiftAssignmentModel extends Model
 {
@@ -22,5 +23,10 @@ class ShiftAssignmentModel extends Model
             'active' => 'boolean',
             'recurrence_rule' => 'array',
         ];
+    }
+
+    public function shiftTemplate(): BelongsTo
+    {
+        return $this->belongsTo(ShiftTemplateModel::class, 'shift_template_id');
     }
 }

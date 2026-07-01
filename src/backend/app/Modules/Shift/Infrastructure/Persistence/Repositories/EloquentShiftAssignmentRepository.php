@@ -70,7 +70,12 @@ class EloquentShiftAssignmentRepository implements ShiftAssignmentRepositoryInte
                 'assignable_id' => $assignment->assignableId(),
                 'effective_from' => $assignment->effectiveFrom()->format('Y-m-d'),
                 'effective_to' => $assignment->effectiveTo()?->format('Y-m-d'),
-                'recurrence_rule' => $assignment->recurrenceRule(),
+                'recurrence_rule' => $assignment->recurrenceRule() ? [
+                    'frequency' => $assignment->recurrenceRule()->frequency,
+                    'interval' => $assignment->recurrenceRule()->interval,
+                    'daysOfWeek' => $assignment->recurrenceRule()->daysOfWeek,
+                    'rotationGroup' => $assignment->recurrenceRule()->rotationGroup,
+                ] : null,
                 'active' => $assignment->active(),
             ]
         );

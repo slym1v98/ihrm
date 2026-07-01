@@ -57,8 +57,19 @@ class EloquentShiftTemplateRepository implements ShiftTemplateRepositoryInterfac
                 'is_overnight' => $template->shiftWindow()->isOvernight,
                 'break_minutes' => $template->breakMinutes(),
                 'late_tolerance_minutes' => $template->lateToleranceMinutes(),
-                'overtime_rules' => $template->overtimeRules(),
-                'flexibility_rules' => $template->flexibilityRules(),
+                'overtime_rules' => [
+                    'minOvertimeThreshold' => $template->overtimeRules()->minOvertimeThreshold,
+                    'roundingInterval' => $template->overtimeRules()->roundingInterval,
+                    'graceMinutes' => $template->overtimeRules()->graceMinutes,
+                    'beforeShiftAllowance' => $template->overtimeRules()->beforeShiftAllowance,
+                    'afterShiftAllowance' => $template->overtimeRules()->afterShiftAllowance,
+                ],
+                'flexibility_rules' => [
+                    'maxEarlyArrival' => $template->flexibilityRules()->maxEarlyArrival,
+                    'maxLateDeparture' => $template->flexibilityRules()->maxLateDeparture,
+                    'coreStart' => $template->flexibilityRules()->coreStart,
+                    'coreEnd' => $template->flexibilityRules()->coreEnd,
+                ],
                 'payroll_attribution_rule' => $template->payrollAttributionRule(),
                 'active' => $template->active(),
             ]

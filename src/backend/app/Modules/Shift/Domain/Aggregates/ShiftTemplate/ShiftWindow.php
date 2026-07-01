@@ -18,7 +18,7 @@ final readonly class ShiftWindow
 
     public static function fromStrings(string $start, string $end): self
     {
-        return new self($start, $end);
+        return new self(substr($start, 0, 5), substr($end, 0, 5));
     }
 
     public function durationMinutes(): int
