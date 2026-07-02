@@ -166,6 +166,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(\App\Modules\Notification\Infrastructure\Channels\Contracts\NotificationChannelInterface::class . ':sms', \App\Modules\Notification\Infrastructure\Channels\SmsChannel::class);
         $this->app->bind(\App\Modules\Reporting\Domain\Repositories\ReportDefinitionRepositoryInterface::class, \App\Modules\Reporting\Infrastructure\Persistence\Repositories\EloquentReportDefinitionRepository::class);
         $this->app->bind(\App\Modules\Reporting\Domain\Repositories\ReportRunRepositoryInterface::class, \App\Modules\Reporting\Infrastructure\Persistence\Repositories\EloquentReportRunRepository::class);
+        $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\RecruitmentRequisitionRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentRecruitmentRequisitionRepository::class);
+        $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\CandidateRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentCandidateRepository::class);
+        $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\InterviewRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentInterviewRepository::class);
+        $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\OfferRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentOfferRepository::class);
         $this->commands([\App\Modules\Notification\Infrastructure\Console\ProcessNotificationOutboxCommand::class]);
     }
 

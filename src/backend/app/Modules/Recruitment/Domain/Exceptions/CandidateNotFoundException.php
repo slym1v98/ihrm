@@ -1,0 +1,1 @@
+<?php namespace App\Modules\Recruitment\Domain\Exceptions; use App\Modules\Shared\Exceptions\AppException; class CandidateNotFoundException extends AppException { public function __construct(string $d=''){parent::__construct('CAND_NOT_FOUND',trim('Candidate not found: '.$d));}public function getHttpStatus(): int { return 404;}}
