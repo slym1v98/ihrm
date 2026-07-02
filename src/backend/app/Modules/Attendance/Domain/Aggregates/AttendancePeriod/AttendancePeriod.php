@@ -37,6 +37,16 @@ class AttendancePeriod
         return $instance;
     }
 
+    public static function reconstitute(
+        AttendancePeriodId $id,
+        string $periodCode,
+        CarbonImmutable $startDate,
+        CarbonImmutable $endDate,
+        PeriodStatus $status,
+    ): self {
+        return new self($id, $periodCode, $startDate, $endDate, $status);
+    }
+
     public function close(): void
     {
         $this->status = PeriodStatus::Closed;
@@ -65,7 +75,9 @@ class AttendancePeriod
         return $events;
     }
 
-    public function status(): PeriodStatus { return $this->status; }
     public function id(): AttendancePeriodId { return $this->id; }
     public function periodCode(): string { return $this->periodCode; }
+    public function startDate(): CarbonImmutable { return $this->startDate; }
+    public function endDate(): CarbonImmutable { return $this->endDate; }
+    public function status(): PeriodStatus { return $this->status; }
 }

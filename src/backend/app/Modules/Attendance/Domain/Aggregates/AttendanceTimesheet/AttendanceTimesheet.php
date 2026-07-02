@@ -51,6 +51,28 @@ class AttendanceTimesheet
         return $instance;
     }
 
+    public static function reconstitute(
+        AttendanceTimesheetId $id,
+        string $attendancePeriodId,
+        string $employeeId,
+        CarbonImmutable $workDate,
+        ?string $shiftAssignmentId,
+        int $expectedMinutes,
+        int $workedMinutes,
+        int $lateMinutes,
+        int $earlyLeaveMinutes,
+        int $overtimeMinutes,
+        AttendanceStatus $resultStatus,
+        ?string $calculationRunId,
+    ): self {
+        return new self(
+            $id, $attendancePeriodId, $employeeId, $workDate,
+            $shiftAssignmentId, $expectedMinutes, $workedMinutes,
+            $lateMinutes, $earlyLeaveMinutes, $overtimeMinutes,
+            $resultStatus, $calculationRunId,
+        );
+    }
+
     public function replaceWith(TimesheetData $data, string $calculationRunId): void
     {
         $this->expectedMinutes = $data->expectedMinutes;
@@ -79,7 +101,13 @@ class AttendanceTimesheet
     public function id(): AttendanceTimesheetId { return $this->id; }
     public function attendancePeriodId(): string { return $this->attendancePeriodId; }
     public function employeeId(): string { return $this->employeeId; }
+    public function workDate(): CarbonImmutable { return $this->workDate; }
+    public function shiftAssignmentId(): ?string { return $this->shiftAssignmentId; }
+    public function expectedMinutes(): int { return $this->expectedMinutes; }
     public function workedMinutes(): int { return $this->workedMinutes; }
+    public function lateMinutes(): int { return $this->lateMinutes; }
+    public function earlyLeaveMinutes(): int { return $this->earlyLeaveMinutes; }
+    public function overtimeMinutes(): int { return $this->overtimeMinutes; }
     public function resultStatus(): AttendanceStatus { return $this->resultStatus; }
     public function calculationRunId(): ?string { return $this->calculationRunId; }
 }

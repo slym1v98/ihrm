@@ -49,6 +49,25 @@ class AttendanceAdjustmentRequest
         return $instance;
     }
 
+    public static function reconstitute(
+        AttendanceAdjustmentRequestId $id,
+        string $attendanceTimesheetId,
+        string $employeeId,
+        string $requestedBy,
+        string $reason,
+        ?string $evidenceFile,
+        array $corrections,
+        AdjustmentStatus $status,
+        ?string $approvedBy,
+        ?CarbonImmutable $approvedAt,
+    ): self {
+        return new self(
+            $id, $attendanceTimesheetId, $employeeId, $requestedBy,
+            $reason, $evidenceFile, $corrections, $status,
+            $approvedBy, $approvedAt,
+        );
+    }
+
     public function approve(string $approverId, CarbonImmutable $at): void
     {
         if ($this->status !== AdjustmentStatus::Pending) {
@@ -90,5 +109,14 @@ class AttendanceAdjustmentRequest
         return $events;
     }
 
+    public function id(): AttendanceAdjustmentRequestId { return $this->id; }
+    public function attendanceTimesheetId(): string { return $this->attendanceTimesheetId; }
+    public function employeeId(): string { return $this->employeeId; }
+    public function requestedBy(): string { return $this->requestedBy; }
+    public function reason(): string { return $this->reason; }
+    public function evidenceFile(): ?string { return $this->evidenceFile; }
+    public function corrections(): array { return $this->corrections; }
     public function status(): AdjustmentStatus { return $this->status; }
+    public function approvedBy(): ?string { return $this->approvedBy; }
+    public function approvedAt(): ?CarbonImmutable { return $this->approvedAt; }
 }
