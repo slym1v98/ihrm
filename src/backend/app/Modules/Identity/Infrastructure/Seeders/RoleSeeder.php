@@ -36,6 +36,9 @@ class RoleSeeder extends Seeder
                     'attendance.timesheet.view', 'attendance.timesheet.calculate',
                     'attendance.adjustment.create', 'attendance.adjustment.approve',
                     'attendance.period.manage',
+                    'leave.type.view', 'leave.policy.view',
+                    'leave.request.create', 'leave.request.view', 'leave.request.approve', 'leave.request.reject', 'leave.request.cancel',
+                    'leave.balance.view',
                 ],
             ],
             'EMPLOYEE' => [

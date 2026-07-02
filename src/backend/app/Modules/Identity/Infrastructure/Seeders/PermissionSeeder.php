@@ -77,6 +77,14 @@ class PermissionSeeder extends Seeder
             ['attendance.adjustment.create', 'adjustment.create', 'Create attendance adjustment'],
             ['attendance.adjustment.approve', 'adjustment.approve', 'Approve attendance adjustment'],
             ['attendance.period.manage', 'period.manage', 'Manage attendance periods'],
+            ['leave.type.view', 'leave-type.view', 'View leave types'],
+            ['leave.policy.view', 'leave-policy.view', 'View leave policies'],
+            ['leave.request.create', 'leave-request.create', 'Create leave request'],
+            ['leave.request.view', 'leave-request.view', 'View leave requests'],
+            ['leave.request.approve', 'leave-request.approve', 'Approve leave request'],
+            ['leave.request.reject', 'leave-request.reject', 'Reject leave request'],
+            ['leave.request.cancel', 'leave-request.cancel', 'Cancel leave request'],
+            ['leave.balance.view', 'leave-balance.view', 'View leave balances'],
         ];
 
         foreach ($permissions as [$code, $action, $description]) {
