@@ -9,7 +9,7 @@ use Carbon\CarbonImmutable;
 
 class NotificationOutbox
 {
-    private const BACKOFF_BASE = 60; // seconds
+    private const BACKOFF_BASE = 60;
 
     private function __construct(
         private readonly NotificationOutboxId $id,
@@ -24,10 +24,8 @@ class NotificationOutbox
         private ?string $lastError,
     ) {}
 
-    public static function create(
-        NotificationOutboxId $id,
-        NotificationMessage $message,
-    ): self {
+    public static function create(NotificationOutboxId $id, NotificationMessage $message): self
+    {
         return new self(
             $id,
             (string) $message->getId(),
@@ -40,6 +38,21 @@ class NotificationOutbox
             null,
             null,
         );
+    }
+
+    public static function reconstitute(
+        NotificationOutboxId $id,
+        string $notificationMessageId,
+        Channel $channel,
+        OutboxStatus $status,
+        int $attempts,
+        int $maxAttempts,
+        CarbonImmutable $availableAt,
+        ?CarbonImmutable $lockedAt,
+        ?string $lockedBy,
+        ?string $lastError,
+    ): self {
+        return new self($id, $notificationMessageId, $channel, $status, $attempts, $maxAttempts, $availableAt, $lockedAt, $lockedBy, $lastError);
     }
 
     public function lock(string $workerId, CarbonImmutable $at): void

@@ -52,6 +52,24 @@ class NotificationMessage
         );
     }
 
+    public static function reconstitute(
+        NotificationMessageId $id,
+        string $templateCode,
+        Channel $channel,
+        string $recipientUserId,
+        ?string $recipientAddress,
+        ?string $subjectRendered,
+        string $bodyRendered,
+        array $payload,
+        MessageStatus $status,
+        NotificationPriority $priority,
+        ?string $error,
+        ?CarbonImmutable $readAt,
+        ?CarbonImmutable $sentAt,
+    ): self {
+        return new self($id, $templateCode, $channel, $recipientUserId, $recipientAddress, $subjectRendered, $bodyRendered, $payload, $status, $priority, $error, $readAt, $sentAt);
+    }
+
     public function markRead(CarbonImmutable $at): void
     {
         if ($this->readAt !== null) {
