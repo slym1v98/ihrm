@@ -4,9 +4,11 @@ namespace App\Modules\Attendance\Application\CommandHandlers\AttendanceAdjustmen
 
 use App\Modules\Attendance\Application\Commands\AttendanceAdjustment\SubmitAttendanceAdjustmentCommand;
 use App\Modules\Attendance\Domain\Aggregates\AttendanceAdjustmentRequest\AttendanceAdjustmentRequest;
+use App\Modules\Attendance\Domain\Exceptions\AttendancePeriodClosedException;
+use App\Modules\Attendance\Domain\Exceptions\AttendanceTimesheetNotFoundException;
 use App\Modules\Attendance\Domain\Repositories\AttendanceAdjustmentRequestRepositoryInterface;
-use App\Modules\Attendance\Domain\Repositories\AttendanceTimesheetRepositoryInterface;
 use App\Modules\Attendance\Domain\Repositories\AttendancePeriodRepositoryInterface;
+use App\Modules\Attendance\Domain\Repositories\AttendanceTimesheetRepositoryInterface;
 
 class SubmitAttendanceAdjustmentHandler
 {
@@ -19,7 +21,14 @@ class SubmitAttendanceAdjustmentHandler
     public function handle(SubmitAttendanceAdjustmentCommand $command): AttendanceAdjustmentRequest
     {
         $timesheet = $this->timesheetRepo->findById($command->attendanceTimesheetId);
-        // Timesheet existence check handled by controller validation
+        if ($timesheet === null) {
+            throw new AttendanceTimesheetNotFoundException($command->attendanceTimesheetId);
+        }
+
+        $period = $this->periodRepo->findClosedByDate($timesheet->workDate()->format('Y-m-d'));
+        if ($period !== null) {
+            throw new AttendancePeriodClosedException("Timesheet date {$timesheet->workDate()->format('Y-m-d')}");
+        }
 
         $request = AttendanceAdjustmentRequest::submit(
             timesheetId: $command->attendanceTimesheetId,

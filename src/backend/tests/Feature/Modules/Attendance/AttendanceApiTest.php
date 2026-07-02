@@ -117,7 +117,68 @@ class AttendanceApiTest extends TestCase
         $this->withToken($this->token)->getJson('/api/v1/attendance-adjustment-requests')->assertStatus(200);
     }
 
-    public function test_duplicate_pending_adjustment_returns_500_currently(): void
+
+    public function test_raw_log_blocked_by_closed_period(): void
+    {
+        // Create then close period
+        $r = $this->withToken($this->token)->postJson('/api/v1/attendance-periods', [
+            'period_code' => '2026-11',
+            'start_date' => '2026-11-01',
+            'end_date' => '2026-11-30',
+        ]);
+        $periodId = $r->json('data.id');
+        $this->withToken($this->token)->postJson("/api/v1/attendance-periods/{$periodId}/close")->assertStatus(200);
+
+        $this->withToken($this->token)->postJson('/api/v1/attendance/raw-logs', [
+            'employee_id' => (string) UserModel::query()->value('id'),
+            'source' => 'web',
+            'event_type' => 'check_in',
+            'event_time' => '2026-11-15T08:00:00+07:00',
+            'payload' => [],
+        ])->assertStatus(422);
+    }
+
+    public function test_adjustment_blocked_by_closed_period(): void
+    {
+        $timesheetId = (string) \Illuminate\Support\Str::uuid();
+
+        \DB::table('attendance_periods')->insert([
+            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'period_code' => '2026-12',
+            'start_date' => '2026-12-01',
+            'end_date' => '2026-12-31',
+            'status' => 'closed',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        $periodId = \DB::table('attendance_periods')->value('id');
+
+        \DB::table('attendance_timesheets')->insert([
+            'id' => $timesheetId,
+            'attendance_period_id' => $periodId,
+            'employee_id' => (string) UserModel::query()->value('id'),
+            'work_date' => '2026-12-02',
+            'shift_assignment_id' => null,
+            'expected_minutes' => 480,
+            'worked_minutes' => 0,
+            'late_minutes' => 0,
+            'early_leave_minutes' => 0,
+            'overtime_minutes' => 0,
+            'result_status' => 'absent',
+            'calculation_run_id' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $this->withToken($this->token)->postJson('/api/v1/attendance-adjustment-requests', [
+            'attendance_timesheet_id' => $timesheetId,
+            'employee_id' => (string) UserModel::query()->value('id'),
+            'corrections' => ['check_in' => '2026-12-02T08:05:00+07:00'],
+            'reason' => 'Forgot check in',
+        ])->assertStatus(422);
+    }
+
+    public function test_duplicate_pending_adjustment_returns_409(): void
     {
         $timesheetId = (string) \Illuminate\Support\Str::uuid();
 

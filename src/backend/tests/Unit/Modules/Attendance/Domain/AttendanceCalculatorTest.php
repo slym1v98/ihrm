@@ -194,6 +194,31 @@ class AttendanceCalculatorTest extends TestCase
         $this->assertSame(AttendanceStatus::Late, $result->status);
     }
 
+
+    public function test_flexitime_skips_late_when_min_met(): void
+    {
+        $flex = (object) [
+            'beforeShiftAllowance' => 0,
+            'afterShiftAllowance' => 0,
+            'maxEarlyArrival' => 30,
+            'maxLateDeparture' => 60,
+        ];
+        $result = AttendanceCalculator::calculate(
+            employeeId: 'e1',
+            workDate: CarbonImmutable::parse('2026-07-02'),
+            rawLogs: [
+                $this->rawLog('08:30', 'check_in'),
+                $this->rawLog('17:00', 'check_out'),
+            ],
+            assignment: $this->assignment('08:00', '17:00', false, 60, 0, true, $flex),
+            leaves: [],
+            holidays: [],
+        );
+
+        $this->assertSame(0, $result->lateMinutes);
+        $this->assertSame(AttendanceStatus::Present, $result->status);
+    }
+
     private function leaveWindow(string $start, string $end): object
     {
         return (object) [

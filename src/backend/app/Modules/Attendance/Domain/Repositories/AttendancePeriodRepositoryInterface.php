@@ -9,6 +9,7 @@ interface AttendancePeriodRepositoryInterface
 {
     public function findById(string $id): ?AttendancePeriod;
     public function findByCode(string $code): ?AttendancePeriod;
+    public function findClosedByDate(string $date): ?AttendancePeriod;
     public function saveAndDispatch(AttendancePeriod $period): void;
     public function findPaginated(int $perPage = 15, int $page = 1): array;
 }
