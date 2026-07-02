@@ -1,0 +1,1 @@
+<?php namespace App\Modules\Recruitment\Domain\Exceptions; use App\Modules\Shared\Exceptions\AppException; class DuplicateCandidateException extends AppException { public function __construct(string $d=''){parent::__construct('DUPLICATE_CANDIDATE','Duplicate candidate: '.$d);}public function getHttpStatus(): int { return 422;}}

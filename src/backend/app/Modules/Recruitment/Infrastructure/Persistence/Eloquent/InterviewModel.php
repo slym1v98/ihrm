@@ -1,0 +1,2 @@
+<?php namespace App\Modules\Recruitment\Infrastructure\Persistence\Eloquent; use Illuminate\Database\Eloquent\Model;
+class InterviewModel extends Model { protected $table='recruitment_interviews';protected $keyType='string';public $incrementing=false; protected $fillable=['id','candidate_id','requisition_id','interviewers','scheduled_at','status','scorecards','notes'];protected $casts=['interviewers'=>'array','scorecards'=>'array','scheduled_at'=>'datetime']; }

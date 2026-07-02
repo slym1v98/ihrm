@@ -57,6 +57,10 @@ class RoleSeeder extends Seeder
                     'notification.view-own', 'notification.mark-read-own', 'notification.preference.manage-own',
                     'notification.template.view', 'notification.template.manage',
                     'report.definition.view', 'report.run.create', 'report.run.view-own', 'report.run.view-all',
+                    'recruitment.requisition.view', 'recruitment.requisition.create', 'recruitment.requisition.update', 'recruitment.requisition.submit',
+                    'recruitment.candidate.view', 'recruitment.candidate.create', 'recruitment.candidate.update',
+                    'recruitment.interview.view', 'recruitment.interview.create', 'recruitment.interview.scorecard',
+                    'recruitment.offer.view', 'recruitment.offer.create', 'recruitment.offer.accept', 'recruitment.offer.reject', 'recruitment.offer.convert',
                 ],
             ],
             'EMPLOYEE' => [
