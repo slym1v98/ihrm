@@ -13,10 +13,10 @@ return new class extends Migration
             $table->uuid('employee_id');
             $table->foreignUuid('leave_type_id')->constrained('leave_types')->cascadeOnDelete();
             $table->integer('year');
-            $table->integer('opening');
-            $table->integer('accrued');
-            $table->integer('used');
-            $table->integer('carried_over');
+            $table->integer('opening')->default(0);
+            $table->integer('accrued')->default(0);
+            $table->integer('used')->default(0);
+            $table->integer('carried_over')->default(0);
             $table->integer('expired')->default(0);
             $table->timestamps();
 
