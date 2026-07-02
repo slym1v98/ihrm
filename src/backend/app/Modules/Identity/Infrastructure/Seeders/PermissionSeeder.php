@@ -70,6 +70,21 @@ class PermissionSeeder extends Seeder
             ['shift.template.view', 'template', 'View shift templates'],
             ['shift.template.create', 'template', 'Create shift template'],
             ['shift.template.update', 'template', 'Update/Activate/Deactivate shift template'],
+            ['attendance.raw-log.create', 'raw-log.create', 'Create attendance raw log'],
+            ['attendance.raw-log.view', 'raw-log.view', 'View attendance raw logs'],
+            ['attendance.timesheet.view', 'timesheet.view', 'View attendance timesheets'],
+            ['attendance.timesheet.calculate', 'timesheet.calculate', 'Calculate attendance timesheets'],
+            ['attendance.adjustment.create', 'adjustment.create', 'Create attendance adjustment'],
+            ['attendance.adjustment.approve', 'adjustment.approve', 'Approve attendance adjustment'],
+            ['attendance.period.manage', 'period.manage', 'Manage attendance periods'],
+            ['leave.type.view', 'leave-type.view', 'View leave types'],
+            ['leave.policy.view', 'leave-policy.view', 'View leave policies'],
+            ['leave.request.create', 'leave-request.create', 'Create leave request'],
+            ['leave.request.view', 'leave-request.view', 'View leave requests'],
+            ['leave.request.approve', 'leave-request.approve', 'Approve leave request'],
+            ['leave.request.reject', 'leave-request.reject', 'Reject leave request'],
+            ['leave.request.cancel', 'leave-request.cancel', 'Cancel leave request'],
+            ['leave.balance.view', 'leave-balance.view', 'View leave balances'],
         ];
 
         foreach ($permissions as [$code, $action, $description]) {
