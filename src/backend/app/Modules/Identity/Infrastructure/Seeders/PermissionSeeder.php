@@ -115,6 +115,21 @@ class PermissionSeeder extends Seeder
             ['report.run.create', 'run.create', 'Create report runs'],
             ['report.run.view-own', 'run.view-own', 'View own report runs'],
             ['report.run.view-all', 'run.view-all', 'View all report runs'],
+            ['recruitment.requisition.view', 'requisition.view', 'View recruitment requisitions'],
+            ['recruitment.requisition.create', 'requisition.create', 'Create recruitment requisitions'],
+            ['recruitment.requisition.update', 'requisition.update', 'Update recruitment requisitions'],
+            ['recruitment.requisition.submit', 'requisition.submit', 'Submit requisitions for approval'],
+            ['recruitment.candidate.view', 'candidate.view', 'View recruitment candidates'],
+            ['recruitment.candidate.create', 'candidate.create', 'Create recruitment candidates'],
+            ['recruitment.candidate.update', 'candidate.update', 'Update candidate stage'],
+            ['recruitment.interview.view', 'interview.view', 'View interviews'],
+            ['recruitment.interview.create', 'interview.create', 'Schedule interviews'],
+            ['recruitment.interview.scorecard', 'interview.scorecard', 'Submit interview scorecard'],
+            ['recruitment.offer.view', 'offer.view', 'View offers'],
+            ['recruitment.offer.create', 'offer.create', 'Create offers'],
+            ['recruitment.offer.accept', 'offer.accept', 'Accept offers'],
+            ['recruitment.offer.reject', 'offer.reject', 'Reject offers'],
+            ['recruitment.offer.convert', 'offer.convert', 'Convert candidate to employee'],
         ];
 
         foreach ($permissions as [$code, $action, $description]) {
