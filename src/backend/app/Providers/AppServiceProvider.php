@@ -172,7 +172,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\OfferRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentOfferRepository::class);
         $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTemplateRepository::class);
         $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingPlanRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingPlanRepository::class);
-        $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTaskRepository::class);
+                $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\OffboardingRequestRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingRequestRepository::class);
+        $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\OffboardingPlanRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingPlanRepository::class);
+        $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\OffboardingTaskRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingTaskRepository::class);
+        $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\FinalClearanceRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentFinalClearanceRepository::class);
+$this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTaskRepository::class);
         $this->commands([\App\Modules\Notification\Infrastructure\Console\ProcessNotificationOutboxCommand::class]);
     }
 
