@@ -15,6 +15,7 @@ use App\Modules\Onboarding\Infrastructure\Seeders\OnboardingPermissionSeeder;
 use App\Modules\Offboarding\Infrastructure\Seeders\OffboardingPermissionSeeder;
 use App\Modules\Performance\Infrastructure\Seeders\PerformancePermissionSeeder;
 use App\Modules\Training\Infrastructure\Seeders\TrainingPermissionSeeder;
+use App\Modules\Asset\Infrastructure\Seeders\AssetPermissionSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
             OffboardingPermissionSeeder::class,
             PerformancePermissionSeeder::class,
             TrainingPermissionSeeder::class,
+            AssetPermissionSeeder::class,
         ]);
     }
 }
