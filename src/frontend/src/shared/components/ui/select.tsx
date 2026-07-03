@@ -8,7 +8,7 @@ const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HT
   <select
     ref={ref}
     className={cn(
-      'h-10 w-full rounded-md border bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary',
+      'h-8 w-full rounded-md border bg-white px-2 py-1 text-[13px] outline-none focus:ring-2 focus:ring-primary',
       !props.value && 'text-muted-foreground',
       className,
     )}
@@ -19,7 +19,6 @@ const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HT
   </select>
 ));
 Select.displayName = 'Select';
-
 export { Select };
 
 export function SelectItem({ value, children }: { value: string; children: React.ReactNode }) {
