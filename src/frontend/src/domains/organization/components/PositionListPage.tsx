@@ -161,12 +161,12 @@ const [confirm, setConfirm] = useState<{ id: string; action: 'activate' | 'deact
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="code">Mã chức vụ</Label>
+              <Label htmlFor="code">Mã chức vụ <span className="text-destructive">*</span></Label>
               <Input id="code" {...form.register('code')} disabled={!!editing} />
               {form.formState.errors.code && <p className="text-xs text-destructive">{form.formState.errors.code.message}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="name">Tên chức vụ</Label>
+              <Label htmlFor="name">Tên chức vụ <span className="text-destructive">*</span></Label>
               <Input id="name" {...form.register('name')} />
               {form.formState.errors.name && <p className="text-xs text-destructive">{form.formState.errors.name.message}</p>}
             </div>

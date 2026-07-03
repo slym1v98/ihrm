@@ -202,19 +202,19 @@ export function DepartmentListPage() {
             {!isMove && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="code">Mã phòng ban</Label>
+                  <Label htmlFor="code">Mã phòng ban <span className="text-destructive">*</span></Label>
                   <Input id="code" {...form.register('code')} disabled={!!editing} />
                   {form.formState.errors.code && <p className="text-xs text-destructive">{form.formState.errors.code.message}</p>}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="name">Tên phòng ban</Label>
+                  <Label htmlFor="name">Tên phòng ban <span className="text-destructive">*</span></Label>
                   <Input id="name" {...form.register('name')} disabled={isMove} />
                   {form.formState.errors.name && <p className="text-xs text-destructive">{form.formState.errors.name.message}</p>}
                 </div>
               </>
             )}
             <div className="space-y-2">
-              <Label htmlFor="branch_id">Chi nhánh</Label>
+              <Label htmlFor="branch_id">Chi nhánh <span className="text-destructive">*</span></Label>
               <Select
                 value={form.watch('branch_id')}
                 onChange={(v) => form.setValue('branch_id', v)}
