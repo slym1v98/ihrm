@@ -61,7 +61,7 @@ class AssetItemController extends Controller
                 notes: $validated['notes'] ?? null,
             )
         );
-        return response()->json(['data' => []] , 201);
+        return response()->json(['data' => $item->toArray()] , 201);
     }
 
     public function show(string $id): JsonResponse
@@ -70,7 +70,7 @@ class AssetItemController extends Controller
         if (!$item) {
             throw new AssetItemNotFoundException($id);
         }
-        return response()->json(['data' => []]);
+        return response()->json(['data' => $item->toArray()]);
     }
 
     public function update(Request $request, string $id): JsonResponse
@@ -104,7 +104,7 @@ class AssetItemController extends Controller
         }
         $assignments = $this->assignmentRepo->all(['asset_item_id' => $id]);
         if (count($assignments) > 0) {
-            throw new AssetHasAssignmentHistoryException();
+            return response()->json(['message' => (new AssetHasAssignmentHistoryException())->getMessage()], 422);
         }
         $this->itemRepo->delete($item);
         return response()->json(['message' => 'Asset item deleted']);
@@ -132,9 +132,13 @@ class AssetItemController extends Controller
 
     private function markStatus(string $id, AssetItemStatus $status): JsonResponse
     {
-        $this->markStatusHandler->handle(
-            new MarkAssetItemStatusCommand(id: $id, newStatus: $status)
-        );
-        return response()->json(['message' => 'Status updated']);
+        try {
+            $this->markStatusHandler->handle(
+                new MarkAssetItemStatusCommand(id: $id, newStatus: $status)
+            );
+            return response()->json(['message' => 'Status updated']);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 }

@@ -43,15 +43,19 @@ class AssetAssignmentController extends Controller
             'expected_return_at' => 'nullable|date',
             'condition_on_issue' => 'nullable|string',
         ]);
-        $assignment = $this->assignHandler->handle(
-            new AssignAssetCommand(
-                assetItemId: $validated['asset_item_id'],
-                employeeId: $validated['employee_id'],
-                expectedReturnAt: $validated['expected_return_at'] ?? null,
-                conditionOnIssue: $validated['condition_on_issue'] ?? null,
-            )
-        );
-        return response()->json(['data' => []], 201);
+        try {
+            $assignment = $this->assignHandler->handle(
+                new AssignAssetCommand(
+                    assetItemId: $validated['asset_item_id'],
+                    employeeId: $validated['employee_id'],
+                    expectedReturnAt: $validated['expected_return_at'] ?? null,
+                    conditionOnIssue: $validated['condition_on_issue'] ?? null,
+                )
+            );
+            return response()->json(['data' => $assignment->toArray()], 201);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 
     public function show(string $id): JsonResponse
@@ -60,7 +64,7 @@ class AssetAssignmentController extends Controller
         if (!$assignment) {
             throw new AssetAssignmentNotFoundException($id);
         }
-        return response()->json(['data' => []]);
+        return response()->json(['data' => $assignment->toArray()]);
     }
 
     public function returnAsset(Request $request, string $id): JsonResponse
@@ -70,14 +74,18 @@ class AssetAssignmentController extends Controller
             'notes' => 'nullable|string',
             'settlement_amount' => 'nullable|numeric|min:0',
         ]);
-        $this->returnHandler->handle(
-            new ReturnAssetCommand(
-                assignmentId: $id,
-                conditionOnReturn: $validated['condition_on_return'],
-                notes: $validated['notes'] ?? null,
-                settlementAmount: (float)($validated['settlement_amount'] ?? 0),
-            )
-        );
-        return response()->json(['message' => 'Asset returned'], 201);
+        try {
+            $this->returnHandler->handle(
+                new ReturnAssetCommand(
+                    assignmentId: $id,
+                    conditionOnReturn: $validated['condition_on_return'],
+                    notes: $validated['notes'] ?? null,
+                    settlementAmount: (float)($validated['settlement_amount'] ?? 0),
+                )
+            );
+            return response()->json(['message' => 'Asset returned'], 201);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 }

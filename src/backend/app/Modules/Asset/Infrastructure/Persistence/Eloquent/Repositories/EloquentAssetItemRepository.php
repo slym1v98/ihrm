@@ -28,10 +28,10 @@ class EloquentAssetItemRepository implements AssetItemRepositoryInterface
             ['id' => $item->getId()->value],
             [
                 'asset_code' => $item->getAssetCode(),
-                'asset_type' => $item->getType(),
+                'asset_type' => $item->getAssetType(),
                 'name' => $item->getName(),
                 'serial_number' => $item->getSerialNumber(),
-                'condition' => $item->getCondition(),
+                'condition' => $item->getCondition()->value,
                 'status' => $item->getStatus()->value,
                 'notes' => $item->getNotes(),
             ]
