@@ -22,9 +22,9 @@ export const employeeService = {
     const res = await http.patch<{ data: Employee }>(`/employees/${id}/employment`, payload);
     return res.data.data;
   },
-  async changeStatus(id: string, currentStatus: string) {
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-    const res = await http.patch<{ data: Employee }>(`/employees/${id}/status`, { status: newStatus });
+  async changeStatus(id: string, action: string) {
+    const statusValue = action === 'activate' ? 'active' : 'inactive';
+    const res = await http.patch<{ data: Employee }>(`/employees/${id}/status`, { status: statusValue });
     return res.data.data;
   },
 };
