@@ -1,0 +1,4 @@
+<?php
+namespace App\Modules\Training\Application\CommandHandlers;
+use App\Modules\Training\Application\Commands\UpdateSessionCommand; use App\Modules\Training\Domain\Aggregates\TrainingSession\TrainingSessionId; use App\Modules\Training\Domain\Repositories\TrainingSessionRepositoryInterface; use App\Modules\Training\Domain\Exceptions\TrainingSessionNotFoundException;
+class UpdateSessionHandler { public function __construct(private readonly TrainingSessionRepositoryInterface $repo) {} public function handle(UpdateSessionCommand $cmd): void { $s=$this->repo->findById(TrainingSessionId::fromString($cmd->id)) ?? throw new TrainingSessionNotFoundException($cmd->id); $s->update($cmd->code,$cmd->name,new \DateTimeImmutable($cmd->startDate),new \DateTimeImmutable($cmd->endDate),$cmd->location,$cmd->instructor,$cmd->maxParticipants); $this->repo->save($s); } }

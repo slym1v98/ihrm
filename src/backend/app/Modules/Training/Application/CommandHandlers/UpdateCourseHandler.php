@@ -1,0 +1,4 @@
+<?php
+namespace App\Modules\Training\Application\CommandHandlers;
+use App\Modules\Training\Application\Commands\UpdateCourseCommand; use App\Modules\Training\Domain\Aggregates\TrainingCourse\TrainingCourseId; use App\Modules\Training\Domain\Repositories\TrainingCourseRepositoryInterface; use App\Modules\Training\Domain\Exceptions\TrainingCourseNotFoundException;
+class UpdateCourseHandler { public function __construct(private readonly TrainingCourseRepositoryInterface $repo) {} public function handle(UpdateCourseCommand $cmd): void { $c=$this->repo->findById(TrainingCourseId::fromString($cmd->id)) ?? throw new TrainingCourseNotFoundException($cmd->id); $c->update($cmd->code,$cmd->name,$cmd->description,$cmd->category,$cmd->defaultDurationHours,$cmd->maxParticipants); $this->repo->save($c); } }
