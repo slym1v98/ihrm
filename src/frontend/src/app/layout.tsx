@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { AuthProvider } from "@/lib/auth-context";
+import type { Metadata } from 'next';
+import './globals.css';
+import { AuthProvider } from '@/domains/auth/hooks/useAuth';
 
 export const metadata: Metadata = {
-  title: "iHRM",
-  description: "IntrustDSS Human Resource Management",
+  title: 'iHRM Admin',
+  description: 'iHRM Enterprise Admin Portal',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body>
         <AuthProvider>{children}</AuthProvider>
       </body>
