@@ -1,9 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { Moon, Sun, LogOut, LayoutDashboard, Building2, Users, PanelLeftClose, PanelLeft } from 'lucide-react';
-import { useAuth } from '@/domains/auth/hooks/useAuth';
+import { usePathname } from 'next/navigation';
+import { Moon, Sun, LayoutDashboard, Building2, Users, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { useTheme } from '@/shared/hooks/useTheme';
 import { useSidebar } from '@/shared/hooks/useSidebar';
 import { cn } from '@/core/utils/cn';
@@ -21,23 +20,15 @@ const nav = [
 ];
 
 export function AppSidebar() {
-  const router = useRouter();
   const pathname = usePathname();
-  const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { collapsed, toggle } = useSidebar();
 
-  async function handleLogout() {
-    await logout();
-    router.replace('/login');
-  }
-
   return (
     <aside className={cn(
-      'flex min-h-screen flex-col border-r bg-[hsl(var(--card))] transition-all duration-200',
+      'flex min-h-full flex-col border-r bg-[hsl(var(--card))] transition-all duration-200',
       collapsed ? 'w-16' : 'w-64',
     )}>
-      {/* Header */}
       <div className={cn('flex items-center border-b', collapsed ? 'justify-center p-2' : 'justify-between p-4')}>
         {!collapsed && <p className="text-lg font-semibold truncate">iHRM Admin</p>}
         <button type="button" onClick={toggle} title={collapsed ? 'Mở rộng' : 'Thu gọn'}
@@ -46,16 +37,12 @@ export function AppSidebar() {
         </button>
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 space-y-1 p-2">
         <NavItem href="/dashboard" icon={LayoutDashboard} label="Dashboard" collapsed={collapsed} pathname={pathname} />
-
         {nav.map(group => (
           <div key={group.section}>
             {!collapsed && (
-              <p className="px-2 pb-1 pt-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                {group.section}
-              </p>
+              <p className="px-2 pb-1 pt-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{group.section}</p>
             )}
             {group.items.map(item => (
               <NavItem key={item.href} href={item.href} icon={item.icon} label={item.label} collapsed={collapsed} pathname={pathname} />
@@ -64,21 +51,12 @@ export function AppSidebar() {
         ))}
       </nav>
 
-      {/* Footer */}
-      <div className={cn('border-t', collapsed ? 'space-y-2 p-2' : 'p-4')}>
-        {!collapsed && (
-          <p className="truncate text-sm text-muted-foreground mb-2">{user?.name ?? 'Đang tải...'}</p>
-        )}
-        <div className={cn('flex', collapsed ? 'flex-col items-center gap-2' : 'items-center justify-between gap-2')}>
-          <button type="button" onClick={toggleTheme} title={theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'}
-            className="rounded-md p-1 hover:bg-muted transition-colors">
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
-          <button type="button" onClick={handleLogout} title="Đăng xuất"
-            className="rounded-md p-1 hover:bg-muted transition-colors">
-            <LogOut className="h-4 w-4" />
-          </button>
-        </div>
+      <div className={cn('border-t', collapsed ? 'flex justify-center p-2' : 'flex items-center justify-between p-4')}>
+        <button type="button" onClick={toggleTheme} title={theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'}
+          className="rounded-md p-1 hover:bg-muted transition-colors">
+          {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </button>
+        {!collapsed && <p className="text-xs text-muted-foreground">Nhấn để đổi theme</p>}
       </div>
     </aside>
   );
