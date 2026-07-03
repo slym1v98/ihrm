@@ -181,6 +181,10 @@ $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepos
         $this->app->bind(\App\Modules\Performance\Domain\Repositories\GoalRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentGoalRepository::class);
         $this->app->bind(\App\Modules\Performance\Domain\Repositories\PerformanceCycleRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentPerformanceCycleRepository::class);
         $this->app->bind(\App\Modules\Performance\Domain\Repositories\PerformanceReviewRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentPerformanceReviewRepository::class);
+        $this->app->bind(\App\Modules\Training\Domain\Repositories\TrainingCourseRepositoryInterface::class, \App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingCourseRepository::class);
+        $this->app->bind(\App\Modules\Training\Domain\Repositories\TrainingSessionRepositoryInterface::class, \App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingSessionRepository::class);
+        $this->app->bind(\App\Modules\Training\Domain\Repositories\TrainingEnrollmentRepositoryInterface::class, \App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingEnrollmentRepository::class);
+        $this->app->bind(\App\Modules\Training\Domain\Repositories\TrainingResultRepositoryInterface::class, \App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingResultRepository::class);
         $this->commands([\App\Modules\Notification\Infrastructure\Console\ProcessNotificationOutboxCommand::class]);
     }
 
