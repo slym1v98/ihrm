@@ -2,13 +2,15 @@
 namespace App\Modules\Asset\Infrastructure\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Modules\Identity\Infrastructure\Persistence\Eloquent\PermissionModel;
+use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RoleModel;
+use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RolePermissionModel;
 
 class AssetPermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        $permissions = [
+        $ps = [
             ['asset.item.view', 'item', 'view'],
             ['asset.item.create', 'item', 'create'],
             ['asset.item.update', 'item', 'update'],
@@ -19,11 +21,21 @@ class AssetPermissionSeeder extends Seeder
             ['asset.assignment.return', 'assignment', 'return'],
             ['asset.obligation.view', 'obligation', 'view'],
         ];
-        foreach ($permissions as [$code, $resource, $action]) {
-            DB::table('permissions')->updateOrInsert(
+        $codes = [];
+        foreach ($ps as [$code, $module, $action]) {
+            $p = PermissionModel::firstOrCreate(
                 ['code' => $code],
-                ['resource' => $resource, 'action' => $action, 'created_at' => now(), 'updated_at' => now()],
+                ['module' => $module, 'action' => $action, 'description' => "$module.$action"]
             );
+            $codes[] = $p->code;
         }
+        RoleModel::where('code', 'SUPER_ADMIN')->each(
+            fn($r) => array_map(
+                fn($c) => RolePermissionModel::firstOrCreate(
+                    ['role_id' => $r->id, 'permission_code' => $c]
+                ),
+                $codes
+            )
+        );
     }
 }
