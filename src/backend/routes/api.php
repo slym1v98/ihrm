@@ -17,3 +17,4 @@ require __DIR__ . '/../app/Modules/Reporting/Routes/api.php';
 require __DIR__ . '/../app/Modules/Recruitment/Routes/api.php';
 require __DIR__ . '/../app/Modules/Onboarding/Routes/api.php';
 require __DIR__ . '/../app/Modules/Offboarding/Routes/api.php';
+require __DIR__ . '/../app/Modules/Performance/Routes/api.php';

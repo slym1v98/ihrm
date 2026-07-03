@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Modules\Performance\Application\CommandHandlers;
+
+use App\Modules\Performance\Application\Commands\SubmitHrReviewCommand;
+use App\Modules\Performance\Domain\Aggregates\PerformanceReview\PerformanceReviewId;
+use App\Modules\Performance\Domain\Repositories\PerformanceReviewRepositoryInterface;
+use App\Modules\Performance\Domain\Exceptions\PerformanceReviewNotFoundException;
+
+class SubmitHrReviewHandler
+{
+    public function __construct(private readonly PerformanceReviewRepositoryInterface $repo) {}
+    public function handle(SubmitHrReviewCommand $cmd): void
+    {
+        $review = $this->repo->findById(PerformanceReviewId::fromString($cmd->id)) ?? throw new PerformanceReviewNotFoundException($cmd->id);
+        $review->submitHr($cmd->assessment);
+        $this->repo->save($review);
+    }
+}

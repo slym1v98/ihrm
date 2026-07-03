@@ -37,6 +37,18 @@ class PerformanceCycle
         return new self($id, $code, $name, $description, $startDate, $endDate, $status, $scoringRules, $workflowRequestId);
     }
 
+    public function update(string $code, string $name, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $scoringRules): void
+    {
+        if ($this->status !== CycleStatus::Draft) { throw new \RuntimeException('Cannot update non-draft cycle'); }
+        if ($startDate >= $endDate) { throw new \InvalidArgumentException('Start date must be before end date'); }
+        $this->code = $code;
+        $this->name = $name;
+        $this->description = $description;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->scoringRules = $scoringRules;
+    }
+
     public function activate(): void
     {
         if (!$this->status->canTransitionTo(CycleStatus::Active)) {
