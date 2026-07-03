@@ -121,6 +121,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        ''' + insert + '''
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, EloquentRoleRepository::class);
         $this->app->bind(LookupRepositoryInterface::class, EloquentLookupRepository::class);
@@ -187,6 +188,19 @@ $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepos
         $this->app->bind(\App\Modules\Training\Domain\Repositories\TrainingResultRepositoryInterface::class, \App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingResultRepository::class);
         $this->commands([\App\Modules\Notification\Infrastructure\Console\ProcessNotificationOutboxCommand::class]);
     }
+
+        $this->app->bind(
+            \App\Modules\Asset\Domain\Repositories\AssetItemRepositoryInterface::class,
+            \App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories\EloquentAssetItemRepository::class,
+        );
+        $this->app->bind(
+            \App\Modules\Asset\Domain\Repositories\AssetAssignmentRepositoryInterface::class,
+            \App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories\EloquentAssetAssignmentRepository::class,
+        );
+        $this->app->bind(
+            \App\Modules\Asset\Domain\Repositories\AssetReturnRepositoryInterface::class,
+            \App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories\EloquentAssetReturnRepository::class,
+        );
 
     public function boot(): void
     {
