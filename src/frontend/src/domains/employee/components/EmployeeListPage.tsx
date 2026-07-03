@@ -1,9 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Pencil } from 'lucide-react';
@@ -17,36 +14,32 @@ import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { Badge } from '@/shared/components/ui/badge';
 
-const createSchema = z.object({
-  first_name: z.string().min(1, 'Tên không được để trống').max(100),
-  last_name: z.string().min(1, 'Họ không được để trống').max(100),
-});
-type CreateForm = z.infer<typeof createSchema>;
-
 export function EmployeeListPage() {
   const router = useRouter();
   const { data, isLoading } = useEmployees();
   const createEmp = useCreateEmployee();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<CreateForm>({
-    resolver: zodResolver(createSchema),
-  });
+  const openCreate = useCallback(() => {
+    setFirstName('');
+    setLastName('');
+    setDialogOpen(true);
+  }, []);
 
-  useEffect(() => {
-    if (!dialogOpen) reset({ first_name: '', last_name: '' });
-  }, [dialogOpen, reset]);
-
-  const onSubmit = useCallback(async (v: CreateForm) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!firstName.trim() || !lastName.trim()) return;
     try {
-      const emp = await createEmp.mutateAsync(v);
+      const emp = await createEmp.mutateAsync({ first_name: firstName.trim(), last_name: lastName.trim() });
       toast.success('Tạo nhân viên thành công');
       setDialogOpen(false);
       router.push(`/employees/${emp.id}`);
     } catch (raw) {
       toast.error(extractErrorMessage(raw));
     }
-  }, [createEmp, router]);
+  }, [firstName, lastName, createEmp, router]);
 
   const employees: Employee[] = data?.data ?? [];
 
@@ -70,7 +63,7 @@ export function EmployeeListPage() {
           <h1 className="text-2xl font-semibold">Nhân viên</h1>
           <p className="text-sm text-muted-foreground">Quản lý danh sách nhân viên</p>
         </div>
-        <Button onClick={() => { reset({ first_name: '', last_name: '' }); setDialogOpen(true); }}>+ Thêm nhân viên</Button>
+        <Button onClick={openCreate}>+ Thêm nhân viên</Button>
       </div>
 
       <DataTable<Employee> columns={columns} data={employees} isLoading={isLoading} rowKey="id" emptyMessage="Chưa có nhân viên nào" />
@@ -79,18 +72,16 @@ export function EmployeeListPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Thêm nhân viên</DialogTitle>
-            <DialogDescription>Nhập họ và tên nhân viên mới. Các thông tin khác có thể bổ sung sau.</DialogDescription>
+            <DialogDescription>Nhập họ và tên nhân viên mới</DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="last_name">Họ <span className="text-destructive">*</span></Label>
-              <Input id="last_name" {...register('last_name')} />
-              {errors.last_name && <p className="text-xs text-destructive">{errors.last_name.message}</p>}
+              <Input id="last_name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="first_name">Tên <span className="text-destructive">*</span></Label>
-              <Input id="first_name" {...register('first_name')} />
-              {errors.first_name && <p className="text-xs text-destructive">{errors.first_name.message}</p>}
+              <Input id="first_name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
             </div>
             <DialogFooter>
               <Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
