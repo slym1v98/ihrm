@@ -32,6 +32,8 @@ export function AppSidebar() {
       </div>
       <nav className="flex-1 space-y-1 p-4">
         <Link className="block rounded-md px-3 py-2 text-sm hover:bg-muted" href="/dashboard">Dashboard</Link>
+        <p className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nhân sự</p>
+        <Link className="block rounded-md px-3 py-2 text-sm hover:bg-muted" href="/employees">Nhân viên</Link>
         <p className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tổ chức</p>
         <Link className="block rounded-md px-3 py-2 text-sm hover:bg-muted" href="/organization/branches">Chi nhánh</Link>
         <Link className="block rounded-md px-3 py-2 text-sm hover:bg-muted" href="/organization/departments">Phòng ban</Link>
