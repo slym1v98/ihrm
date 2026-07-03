@@ -177,6 +177,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\OffboardingTaskRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingTaskRepository::class);
         $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\FinalClearanceRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentFinalClearanceRepository::class);
 $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTaskRepository::class);
+        $this->app->bind(\App\Modules\Performance\Domain\Repositories\CompetencyTemplateRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentCompetencyTemplateRepository::class);
+        $this->app->bind(\App\Modules\Performance\Domain\Repositories\GoalRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentGoalRepository::class);
+        $this->app->bind(\App\Modules\Performance\Domain\Repositories\PerformanceCycleRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentPerformanceCycleRepository::class);
+        $this->app->bind(\App\Modules\Performance\Domain\Repositories\PerformanceReviewRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentPerformanceReviewRepository::class);
         $this->commands([\App\Modules\Notification\Infrastructure\Console\ProcessNotificationOutboxCommand::class]);
     }
 
