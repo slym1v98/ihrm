@@ -15,6 +15,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { Badge } from '@/shared/components/ui/badge';
+import { extractErrorMessage, extractFieldErrors } from '@/core/errors/messages';
 
 const deptSchema = z.object({
   code: z.string().min(2, 'Mã tối thiểu 2 ký tự').regex(/^[A-Za-z][A-Za-z0-9-]+$/, 'Chỉ chấp nhận chữ, số, dấu gạch ngang'),
@@ -85,10 +86,9 @@ export function DepartmentListPage() {
       }
       setDialogOpen(false);
     } catch (raw) {
-      const err = raw as ApiError;
-      const details = err?.response?.data?.error?.details;
-      if (details) details.forEach(({ field, message }) => form.setError(field as keyof DeptFormData, { message }));
-      else toast.error(err?.response?.data?.error?.message ?? 'Có lỗi xảy ra');
+      const details = extractFieldErrors(raw);
+      if (details.length > 0) details.forEach(({ field, message }) => form.setError(field as never, { message }));
+      else toast.error(extractErrorMessage(raw));
     }
   }, [editing, isMove, createDept, updateDept, moveDept, form]);
 
@@ -187,7 +187,7 @@ export function DepartmentListPage() {
           <DialogFooter>
             <Button variant="ghost" onClick={() => setConfirm(null)}>Hủy</Button>
             <Button variant={confirm?.action === 'deactivate' ? 'destructive' : 'primary'} disabled={toggleStatus.isPending}
-              onClick={() => confirm && toggleStatus.mutateAsync(confirm).then(() => { toast.success('Thành công'); setConfirm(null); }).catch(() => toast.error('Thất bại'))}>
+              onClick={() => confirm && toggleStatus.mutateAsync(confirm).then(() => { toast.success('Thành công'); setConfirm(null); }).catch((raw) => toast.error(extractErrorMessage(raw)))}>
               Xác nhận
             </Button>
           </DialogFooter>
