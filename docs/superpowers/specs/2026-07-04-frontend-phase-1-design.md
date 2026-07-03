@@ -62,27 +62,27 @@ src/frontend/src/
 
 Use Axios instead of the current fetch wrapper because Phase 1 explicitly needs request/response interceptors.
 
-Request flow:
+**Backend reality (Sanctum, single access token):**
+
+- `POST /auth/login` returns `{ data: { access_token, token_type, user } }`.
+- `POST /auth/logout` revokes the current token.
+- `GET /auth/me` returns the current user.
+- There is **no** `/auth/refresh` endpoint.
+
+**Request flow:**
 
 1. Client calls a domain service.
 2. Axios request interceptor adds `Authorization: Bearer <access_token>` when available.
-3. If a response returns `401`, the response interceptor calls the backend refresh endpoint.
-4. If refresh succeeds, update the in-memory access token and retry the original request once.
-5. If refresh fails, clear auth state and redirect to `/login`.
+3. If a response returns `401`, the response interceptor clears auth state and redirects to `/login`.
+4. All other errors bubble up to the caller.
 
-Refresh behavior:
+**Token persistence:**
 
-- Access token is stored in React state only.
-- Refresh token is expected to be stored by the backend as an HTTP-only cookie.
-- Axios sends cookies with `withCredentials: true`.
-- Use a single `isRefreshing` queue so concurrent `401` responses trigger one refresh request, not many.
+- Access token is stored in a cookie (`ihrm_at`) so the NextJS middleware can gate protected routes without hydrating React state.
+- On app boot, the auth hook reads the cookie, sets it into the Axios client, and calls `GET /auth/me` to hydrate user state. If `/auth/me` returns 401, clear the cookie and treat the user as logged out.
+- The cookie is set client-side after login and cleared on logout or 401. It is `SameSite=Lax`, `Secure` in production, and **not** HTTP-only because the middleware only needs presence-check and the frontend sets it after login.
 
-Expected backend endpoints:
-
-- `POST /auth/login`
-- `POST /auth/refresh`
-- `POST /auth/logout`
-- `GET /auth/me` if available; otherwise login response seeds user state.
+> Automatic refresh-token retry is deferred: the backend does not expose a refresh endpoint. When the backend adds one, the response interceptor gains the retry-once-with-queue behavior. This is called out here so a future task can add it without changing the surrounding architecture.
 
 ## Login Screen
 
@@ -124,9 +124,11 @@ Only include navigation items needed for Phase 1, such as Dashboard and Logout. 
 Create `PermissionGuard` with this behavior:
 
 - Props: `allowedPermissions: string[]`, `children`, optional `fallback`.
-- Reads current user permissions from auth context.
+- Reads current user permission codes from auth context.
 - Renders `children` if the user has at least one allowed permission.
 - Renders `fallback` or `null` otherwise.
+
+**Permission source:** Backend `/auth/me` currently returns `roles: [{ id, code, name }]` but not permission codes. Phase 1 loads permissions once after login via `GET /roles/{id}` for each user role and merges the returned `permissions` arrays into a flat set. Cached in auth context. Failures fall back to empty permissions (guard hides everything).
 
 No route-level permission matrix in Phase 1. Add it when module pages exist.
 
@@ -161,13 +163,13 @@ AC1. shadcn/ui base components are available under `src/shared/components/ui` or
 
 AC2. Login page exists at `/login` and uses a simple card form.
 
-AC3. Auth service calls backend login, refresh, logout, and optionally me endpoints.
+AC3. Auth service calls backend `POST /auth/login`, `POST /auth/logout`, and `GET /auth/me`.
 
-AC4. Axios client attaches access token and retries the original request once after successful refresh.
+AC4. Axios client attaches access token from the client-managed cookie.
 
-AC5. Concurrent `401` responses share one refresh request.
+AC5. 401 responses clear auth state and redirect to `/login`.
 
-AC6. Failed refresh clears auth state and sends the user to `/login`.
+AC6. Permission set is loaded from role endpoints once and cached in auth context.
 
 AC7. Dashboard route is protected and has a minimal sidebar shell.
 
