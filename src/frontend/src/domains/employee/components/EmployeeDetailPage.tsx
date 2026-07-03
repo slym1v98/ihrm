@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
 import { useEmployee, useUpdateEmployee, useTransferEmployee, useChangeEmployeeStatus } from '@/domains/employee/hooks/useEmployees';
 import { useContracts } from '@/domains/employee/hooks/useContracts';
 import { useBranches } from '@/domains/organization/hooks/useBranches';
+import { useDepartments } from '@/domains/organization/hooks/useDepartments';
+import { usePositions } from '@/domains/organization/hooks/usePositions';
 import { extractErrorMessage } from '@/core/errors/messages';
 import { ContractSection } from '@/domains/employee/components/ContractSection';
 import { Button } from '@/shared/components/ui/button';
@@ -25,6 +27,8 @@ export function EmployeeDetailPage() {
   const changeStatus = useChangeEmployeeStatus();
   const { data: contractsData } = useContracts(id);
   const { data: branchesData } = useBranches();
+  const { data: departmentsData } = useDepartments();
+  const { data: positionsData } = usePositions();
   const [tab, setTab] = useState<Tab>('info');
 
   const [form, setForm] = useState({
@@ -47,8 +51,23 @@ export function EmployeeDetailPage() {
     });
   }, [employee]);
 
+  const branches = useMemo(() => branchesData?.data ?? [], [branchesData]);
+  const departments = useMemo(() => departmentsData?.data ?? [], [departmentsData]);
+  const positions = useMemo(() => positionsData?.data ?? [], [positionsData]);
+
+  const filteredDepts = useMemo(() => {
+    if (!form.branch_id) return [];
+    return departments.filter(d => d.branch_id === form.branch_id && d.status === 'active');
+  }, [departments, form.branch_id]);
+
+
   const setField = useCallback((field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }));
+    setForm(prev => {
+      const next = { ...prev, [field]: value };
+      // Clear department when branch changes
+      if (field === 'branch_id') next.department_id = '';
+      return next;
+    });
   }, []);
 
   const handleSave = useCallback(async () => {
@@ -93,8 +112,6 @@ export function EmployeeDetailPage() {
 
   if (isLoading) return <div className="py-12 text-center text-muted-foreground">Đang tải...</div>;
   if (!employee) return <div className="py-12 text-center text-destructive">Không tìm thấy nhân viên</div>;
-
-  const branches = branchesData?.data ?? [];
 
   const tabs: { key: Tab; label: string }[] = [
     { key: 'info', label: 'Thông tin' },
@@ -158,24 +175,13 @@ export function EmployeeDetailPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="ed-dob">Ngày sinh</Label>
-              <div className="relative">
-                <Input
-                  id="ed-dob"
-                  type="date"
-                  value={form.dob}
-                  onChange={e => setField('dob', e.target.value)}
-                  className="[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100"
-                />
-              </div>
+              <Input id="ed-dob" type="date" value={form.dob} onChange={e => setField('dob', e.target.value)}
+                className="[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="ed-gender">Giới tính</Label>
-              <select
-                id="ed-gender"
-                className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
-                value={form.gender}
-                onChange={e => setField('gender', e.target.value)}
-              >
+              <select id="ed-gender" className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
+                value={form.gender} onChange={e => setField('gender', e.target.value)}>
                 <option value="">Chọn</option>
                 <option value="male">Nam</option>
                 <option value="female">Nữ</option>
@@ -191,41 +197,31 @@ export function EmployeeDetailPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="ed-branch">Chi nhánh</Label>
-              <select
-                id="ed-branch"
-                className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
-                value={form.branch_id}
-                onChange={e => setField('branch_id', e.target.value)}
-              >
+              <select id="ed-branch" className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
+                value={form.branch_id} onChange={e => { setField('branch_id', e.target.value); }}>
                 <option value="">Chọn chi nhánh</option>
                 {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
               </select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="ed-dept">Phòng ban</Label>
-              <input autoComplete="off"
-                id="ed-dept"
-                className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
-                value={form.department_id}
-                onChange={e => setField('department_id', e.target.value)}
-                placeholder="Nhập ID phòng ban"
-              />
+              <select id="ed-dept" className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
+                value={form.department_id} onChange={e => setField('department_id', e.target.value)} disabled={!form.branch_id}>
+                <option value="">{form.branch_id ? 'Chọn phòng ban' : 'Chọn chi nhánh trước'}</option>
+                {filteredDepts.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+              </select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="ed-pos">Chức vụ</Label>
-              <input autoComplete="off"
-                id="ed-pos"
-                className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
-                value={form.position_id}
-                onChange={e => setField('position_id', e.target.value)}
-                placeholder="Nhập ID chức vụ"
-              />
+              <select id="ed-pos" className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
+                value={form.position_id} onChange={e => setField('position_id', e.target.value)}>
+                <option value="">Chọn chức vụ</option>
+                {positions.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
             </div>
           </div>
           <div className="mt-4 flex justify-end">
-            <Button onClick={handleSave} disabled={updateEmp.isPending || transferEmp.isPending} type="button">
-              Lưu thay đổi
-            </Button>
+            <Button onClick={handleSave} disabled={updateEmp.isPending || transferEmp.isPending} type="button">Lưu thay đổi</Button>
           </div>
         </div>
       )}
