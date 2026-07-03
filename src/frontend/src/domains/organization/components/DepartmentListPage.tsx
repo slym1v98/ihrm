@@ -39,8 +39,7 @@ export function DepartmentListPage() {
   const [confirm, setConfirm] = useState<{ id: string; action: 'activate' | 'deactivate'; name: string } | null>(null);
 
   const branches = branchData?.data ?? [];
-  const departments = deptData?.data ?? [];
-
+  const departments = useMemo(() => deptData?.data ?? [], [deptData]);
   const form = useForm<DeptFormData>({
     resolver: zodResolver(deptSchema),
     defaultValues: { code: '', name: '', branch_id: '', parent_id: '' },
