@@ -203,7 +203,7 @@ export function EmployeeDetailPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="ed-dept">Phòng ban</Label>
-              <input
+              <input autoComplete="off"
                 id="ed-dept"
                 className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
                 value={form.department_id}
@@ -213,7 +213,7 @@ export function EmployeeDetailPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="ed-pos">Chức vụ</Label>
-              <input
+              <input autoComplete="off"
                 id="ed-pos"
                 className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
                 value={form.position_id}
