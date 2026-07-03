@@ -15,8 +15,8 @@ import { Label } from '@/shared/components/ui/label';
 import { Badge } from '@/shared/components/ui/badge';
 
 const branchSchema = z.object({
-  code: z.string().min(2, 'Mã tối thiểu 2 ký tự').regex(/^[A-Za-z][A-Za-z0-9-]+$/, 'Chỉ chấp nhận chữ, số, dấu gạch ngang'),
-  name: z.string().min(1, 'Tên không được để trống'),
+  code: z.string().trim().min(2, 'Mã tối thiểu 2 ký tự').max(50, 'Mã tối đa 50 ký tự').regex(/^[A-Z][A-Z0-9-]*$/, 'Mã phải viết hoa, bắt đầu bằng chữ, chỉ gồm A-Z, 0-9, dấu gạch ngang'),
+  name: z.string().trim().min(1, 'Tên không được để trống').max(255, 'Tên tối đa 255 ký tự'),
   address: z.string().optional(),
   phone: z.string().optional(),
   email: z.string().email('Email không hợp lệ').optional().or(z.literal('')),
@@ -60,25 +60,27 @@ const [confirm, setConfirm] = useState<{ id: string; action: 'activate' | 'deact
     type ApiError = { response?: { data?: { error?: { details?: { field: string; message: string }[]; message?: string } } } };
 
     try {
+      const payload = {
+        code: values.code.trim().toUpperCase(),
+        name: values.name.trim(),
+        address: values.address?.trim() || undefined,
+        phone: values.phone?.trim() || undefined,
+        email: values.email?.trim() || undefined,
+      };
+
       if (editing) {
         await updateBranch.mutateAsync({
           id: editing.id,
           payload: {
-            name: values.name,
-            address: values.address || undefined,
-            phone: values.phone || undefined,
-            email: values.email || undefined,
+            name: payload.name,
+            address: payload.address,
+            phone: payload.phone,
+            email: payload.email,
           },
         });
         toast.success('Cập nhật chi nhánh thành công');
       } else {
-        await createBranch.mutateAsync({
-          code: values.code,
-          name: values.name,
-          address: values.address || undefined,
-          phone: values.phone || undefined,
-          email: values.email || undefined,
-        });
+        await createBranch.mutateAsync(payload);
         toast.success('Tạo chi nhánh thành công');
       }
       setDialogOpen(false);
