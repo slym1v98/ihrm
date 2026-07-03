@@ -14,7 +14,6 @@ import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { Badge } from '@/shared/components/ui/badge';
-import { Select, SelectItem } from '@/shared/components/ui/select';
 
 const deptSchema = z.object({
   code: z.string().min(2, 'Mã tối thiểu 2 ký tự').regex(/^[A-Za-z][A-Za-z0-9-]+$/, 'Chỉ chấp nhận chữ, số, dấu gạch ngang'),
@@ -215,28 +214,30 @@ export function DepartmentListPage() {
             )}
             <div className="space-y-2">
               <Label htmlFor="branch_id">Chi nhánh <span className="text-destructive">*</span></Label>
-              <Select
-                value={form.watch('branch_id')}
-                onChange={(v) => form.setValue('branch_id', v)}
-                placeholder="Chọn chi nhánh"
+              <select
+                id="branch_id"
+                className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
+                {...form.register('branch_id', { required: 'Chọn chi nhánh' })}
               >
+                <option value="">Chọn chi nhánh</option>
                 {branches.map(b => (
-                  <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                  <option key={b.id} value={b.id}>{b.name}</option>
                 ))}
-              </Select>
+              </select>
               {form.formState.errors.branch_id && <p className="text-xs text-destructive">{form.formState.errors.branch_id.message}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="parent_id">Phòng ban cha</Label>
-              <Select
-                value={form.watch('parent_id') || ''}
-                onChange={(v) => form.setValue('parent_id', v)}
-                placeholder="Không có (cấp cao nhất)"
+              <select
+                id="parent_id"
+                className="h-10 w-full rounded-md border bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
+                {...form.register('parent_id')}
               >
+                <option value="">Không có (cấp cao nhất)</option>
                 {availableParents.map(p => (
-                  <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                  <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
-              </Select>
+              </select>
             </div>
             <DialogFooter>
               <Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
