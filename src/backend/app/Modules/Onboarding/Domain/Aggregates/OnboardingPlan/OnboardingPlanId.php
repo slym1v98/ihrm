@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Onboarding\Domain\Aggregates${item};
+namespace App\Modules\Onboarding\Domain\Aggregates\OnboardingPlan;
 
 use Ramsey\Uuid\Uuid;
 
