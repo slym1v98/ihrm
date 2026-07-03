@@ -91,7 +91,7 @@ class DepartmentController
         $this->moveHandler->handle(
             new MoveDepartmentCommand(
                 DepartmentId::fromString($id),
-                $request->has('new_parent_id') ? DepartmentId::fromString($request->input('new_parent_id')) : null,
+                $request->filled('new_parent_id') ? DepartmentId::fromString($request->input('new_parent_id')) : null,
             ),
             (string) $request->user()->id,
         );
