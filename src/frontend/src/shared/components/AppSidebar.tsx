@@ -2,8 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Moon, Sun, LayoutDashboard, Building2, Users, PanelLeftClose, PanelLeft } from 'lucide-react';
-import { useTheme } from '@/shared/hooks/useTheme';
+import { LayoutDashboard, Building2, Users, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { useSidebar } from '@/shared/hooks/useSidebar';
 import { cn } from '@/core/utils/cn';
 
@@ -21,19 +20,17 @@ const nav = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { theme, toggleTheme } = useTheme();
   const { collapsed, toggle } = useSidebar();
 
   return (
     <aside className={cn(
-      'flex min-h-full flex-col border-r bg-[hsl(var(--card))] transition-all duration-200',
+      'flex flex-col border-r bg-[hsl(var(--card))] transition-all duration-200',
       collapsed ? 'w-16' : 'w-64',
     )}>
       <div className={cn('flex items-center border-b', collapsed ? 'justify-center p-2' : 'justify-between p-4')}>
-        {!collapsed && <p className="text-lg font-semibold truncate">iHRM Admin</p>}
         <button type="button" onClick={toggle} title={collapsed ? 'Mở rộng' : 'Thu gọn'}
           className="rounded-md p-1 hover:bg-muted transition-colors">
-          {collapsed ? <PanelLeft className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
+          {collapsed ? <PanelLeft className="h-5 w-5 text-muted-foreground" /> : <PanelLeftClose className="h-5 w-5 text-muted-foreground" />}
         </button>
       </div>
 
@@ -50,14 +47,6 @@ export function AppSidebar() {
           </div>
         ))}
       </nav>
-
-      <div className={cn('border-t', collapsed ? 'flex justify-center p-2' : 'flex items-center justify-between p-4')}>
-        <button type="button" onClick={toggleTheme} title={theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'}
-          className="rounded-md p-1 hover:bg-muted transition-colors">
-          {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        </button>
-        {!collapsed && <p className="text-xs text-muted-foreground">Nhấn để đổi theme</p>}
-      </div>
     </aside>
   );
 }

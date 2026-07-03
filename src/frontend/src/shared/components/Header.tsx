@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Bell, User, Settings, LogOut, ChevronDown, Moon, Sun } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/domains/auth/hooks/useAuth';
+import { useTheme } from '@/shared/hooks/useTheme';
 import { toast } from 'sonner';
-import { cn } from '@/core/utils/cn';
 
 function Dropdown({ trigger, children }: { trigger: React.ReactNode; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -48,12 +48,20 @@ function DropdownItem({ icon: Icon, label, onClick }: {
 export function Header() {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="flex h-12 items-center justify-between border-b bg-[hsl(var(--card))] px-4">
-      <div />
+      <div className="flex items-center gap-2">
+        <p className="text-base font-semibold">iHRM Admin</p>
+      </div>
 
       <div className="flex items-center gap-2">
+        <button type="button" onClick={toggleTheme} title={theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'}
+          className="rounded-md p-1.5 hover:bg-muted transition-colors">
+          {theme === 'dark' ? <Sun className="h-5 w-5 text-muted-foreground" /> : <Moon className="h-5 w-5 text-muted-foreground" />}
+        </button>
+
         <Dropdown trigger={<Bell className="h-5 w-5 text-muted-foreground" />}>
           <div className="px-3 py-2 text-sm text-muted-foreground">Chưa có thông báo</div>
         </Dropdown>
