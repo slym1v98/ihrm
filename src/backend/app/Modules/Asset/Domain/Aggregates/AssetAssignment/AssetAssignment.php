@@ -56,6 +56,22 @@ class AssetAssignment
     public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
 
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id->value,
+            'asset_item_id' => $this->assetItemId->value,
+            'employee_id' => $this->employeeId,
+            'issued_at' => $this->issuedAt->format('c'),
+            'expected_return_at' => $this->expectedReturnAt?->format('c'),
+            'condition_on_issue' => $this->conditionOnIssue->value,
+            'status' => $this->status->value,
+            'created_at' => $this->createdAt?->format('c'),
+            'updated_at' => $this->updatedAt?->format('c'),
+        ];
+    }
+
     public function recordEvent(object $event): void { $this->recordedEvents[] = $event; }
     public function popRecordedEvents(): array { $events = $this->recordedEvents; $this->recordedEvents = []; return $events; }
 }

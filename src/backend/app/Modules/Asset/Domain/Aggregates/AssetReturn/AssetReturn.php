@@ -43,6 +43,19 @@ class AssetReturn
     public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
 
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id->value,
+            'asset_assignment_id' => $this->assetAssignmentId->value,
+            'returned_at' => $this->returnedAt->format('c'),
+            'condition_on_return' => $this->conditionOnReturn->value,
+            'notes' => $this->notes,
+            'settlement_amount' => $this->settlementAmount,
+        ];
+    }
+
     public function recordEvent(object $event): void { $this->recordedEvents[] = $event; }
     public function popRecordedEvents(): array { $events = $this->recordedEvents; $this->recordedEvents = []; return $events; }
 }

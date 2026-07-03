@@ -17,6 +17,6 @@ class AssetObligationController extends Controller
         $obligations = $this->handler->handle(
             new GetEmployeeObligationsQuery(employeeId: $employeeId)
         );
-        return response()->json(['data' => $obligations]);
+        return response()->json(['data' => array_map(fn($a) => $a->toArray(), $obligations)]);
     }
 }

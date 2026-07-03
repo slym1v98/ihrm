@@ -85,6 +85,23 @@ class AssetItem
     public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
 
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id->value,
+            'asset_code' => $this->assetCode,
+            'asset_type' => $this->assetType,
+            'name' => $this->name,
+            'serial_number' => $this->serialNumber,
+            'condition' => $this->condition->value,
+            'status' => $this->status->value,
+            'notes' => $this->notes,
+            'created_at' => $this->createdAt?->format('c'),
+            'updated_at' => $this->updatedAt?->format('c'),
+        ];
+    }
+
     public function recordEvent(object $event): void { $this->recordedEvents[] = $event; }
     public function popRecordedEvents(): array { $events = $this->recordedEvents; $this->recordedEvents = []; return $events; }
 }

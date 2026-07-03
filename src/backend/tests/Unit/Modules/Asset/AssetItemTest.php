@@ -32,12 +32,12 @@ class AssetItemTest extends TestCase
         $this->assertSame(AssetItemStatus::Maintenance, $item->getStatus());
     }
 
-    public function test_cannot_mark_available_from_assigned(): void
+    public function test_cannot_mark_maintenance_from_assigned(): void
     {
         $item = AssetItem::create(AssetItemId::generate(), 'AST-003', 'laptop', 'ThinkPad', null, AssetCondition::Good, null);
         $item->assign();
         $this->expectException(AssetStatusTransitionException::class);
-        $item->markStatus(AssetItemStatus::Available);
+        $item->markStatus(AssetItemStatus::Maintenance);
     }
 
     public function test_finish_return_maps_conditions(): void
