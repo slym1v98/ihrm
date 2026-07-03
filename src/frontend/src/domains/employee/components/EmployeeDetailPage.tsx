@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
@@ -29,7 +29,7 @@ export function EmployeeDetailPage() {
   const form = useForm({ defaultValues: {} as Record<string, string> });
 
   // Set form values when employee loads
-  useState(() => {
+  useEffect(() => {
     if (employee) {
       form.reset({
         first_name: employee.first_name,
