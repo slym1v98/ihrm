@@ -40,7 +40,7 @@ export function DepartmentListPage() {
 
   const branches = branchData?.data ?? [];
   const departments = useMemo(() => deptData?.data ?? [], [deptData]);
-  const form = useForm<DeptFormData>({
+  const form = useForm<DeptFormData, unknown>({
     resolver: zodResolver(deptSchema),
     defaultValues: { code: '', name: '', branch_id: '', parent_id: '' },
   });
@@ -84,6 +84,8 @@ export function DepartmentListPage() {
   }
 
   async function onSubmit(values: DeptFormData) {
+    type ApiError = { response?: { data?: { error?: { details?: { field: string; message: string }[]; message?: string } } } };
+
     try {
       if (isMove && editing) {
         await moveDept.mutateAsync({ id: editing.id, payload: { new_parent_id: values.parent_id || null } });
@@ -101,9 +103,14 @@ export function DepartmentListPage() {
         toast.success('Tạo phòng ban thành công');
       }
       setDialogOpen(false);
-    } catch (err) {
-      const message = (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error?.message ?? 'Có lỗi xảy ra';
-      toast.error(message);
+    } catch (raw) {
+      const err = raw as ApiError;
+      const details = err?.response?.data?.error?.details;
+      if (details) {
+        details.forEach(({ field, message }) => form.setError(field as keyof DeptFormData, { message }));
+      } else {
+        toast.error(err?.response?.data?.error?.message ?? 'Có lỗi xảy ra');
+      }
     }
   }
 

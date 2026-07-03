@@ -26,14 +26,14 @@ type BranchFormData = z.infer<typeof branchSchema>;
 
 export function BranchListPage() {
   const { data, isLoading, error } = useBranches();
-  const createBranch = useCreateBranch();
-  const updateBranch = useUpdateBranch();
-  const toggleStatus = useToggleBranchStatus();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<Branch | null>(null);
-  const [confirm, setConfirm] = useState<{ id: string; action: 'activate' | 'deactivate'; name: string } | null>(null);
+const createBranch = useCreateBranch();
+const updateBranch = useUpdateBranch();
+const toggleStatus = useToggleBranchStatus();
+const [dialogOpen, setDialogOpen] = useState(false);
+const [editing, setEditing] = useState<Branch | null>(null);
+const [confirm, setConfirm] = useState<{ id: string; action: 'activate' | 'deactivate'; name: string } | null>(null);
 
-  const form = useForm<BranchFormData>({
+  const form = useForm<BranchFormData, unknown>({
     resolver: zodResolver(branchSchema),
     defaultValues: { code: '', name: '', address: '', phone: '', email: '' },
   });
@@ -57,6 +57,8 @@ export function BranchListPage() {
   }
 
   async function onSubmit(values: BranchFormData) {
+    type ApiError = { response?: { data?: { error?: { details?: { field: string; message: string }[]; message?: string } } } };
+
     try {
       if (editing) {
         await updateBranch.mutateAsync({
@@ -80,9 +82,14 @@ export function BranchListPage() {
         toast.success('Tạo chi nhánh thành công');
       }
       setDialogOpen(false);
-    } catch (err) {
-      const message = (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error?.message ?? 'Có lỗi xảy ra';
-      toast.error(message);
+    } catch (raw) {
+      const err = raw as ApiError;
+      const details = err?.response?.data?.error?.details;
+      if (details) {
+        details.forEach(({ field, message }) => form.setError(field as keyof BranchFormData, { message }));
+      } else {
+        toast.error(err?.response?.data?.error?.message ?? 'Có lỗi xảy ra');
+      }
     }
   }
 

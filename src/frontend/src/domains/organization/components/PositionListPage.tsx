@@ -35,14 +35,14 @@ function toPayload(values: PositionFormData) {
 
 export function PositionListPage() {
   const { data, isLoading, error } = usePositions();
-  const createPosition = useCreatePosition();
-  const updatePosition = useUpdatePosition();
-  const toggleStatus = useTogglePositionStatus();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<Position | null>(null);
-  const [confirm, setConfirm] = useState<{ id: string; action: 'activate' | 'deactivate'; name: string } | null>(null);
+const createPosition = useCreatePosition();
+const updatePosition = useUpdatePosition();
+const toggleStatus = useTogglePositionStatus();
+const [dialogOpen, setDialogOpen] = useState(false);
+const [editing, setEditing] = useState<Position | null>(null);
+const [confirm, setConfirm] = useState<{ id: string; action: 'activate' | 'deactivate'; name: string } | null>(null);
 
-  const form = useForm<PositionFormData>({
+  const form = useForm<PositionFormData, unknown>({
     resolver: zodResolver(positionSchema),
     defaultValues: { code: '', name: '', level: '', description: '' },
   });
@@ -65,6 +65,8 @@ export function PositionListPage() {
   }
 
   async function onSubmit(values: PositionFormData) {
+    type ApiError = { response?: { data?: { error?: { details?: { field: string; message: string }[]; message?: string } } } };
+
     try {
       if (editing) {
         await updatePosition.mutateAsync({ id: editing.id, payload: toPayload(values) });
@@ -74,9 +76,14 @@ export function PositionListPage() {
         toast.success('Tạo chức vụ thành công');
       }
       setDialogOpen(false);
-    } catch (err) {
-      const message = (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error?.message ?? 'Có lỗi xảy ra';
-      toast.error(message);
+    } catch (raw) {
+      const err = raw as ApiError;
+      const details = err?.response?.data?.error?.details;
+      if (details) {
+        details.forEach(({ field, message }) => form.setError(field as keyof PositionFormData, { message }));
+      } else {
+        toast.error(err?.response?.data?.error?.message ?? 'Có lỗi xảy ra');
+      }
     }
   }
 
