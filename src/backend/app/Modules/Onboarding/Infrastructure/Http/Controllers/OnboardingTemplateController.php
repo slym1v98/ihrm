@@ -32,7 +32,14 @@ class OnboardingTemplateController extends Controller
             $request->input('location_id'),
             $request->input('employment_type'),
         );
-        return response()->json(['data' => $this->listHandler->handle($query)]);
+        $templates = $this->listHandler->handle($query);
+        $data = array_map(fn($t) => [
+            'id' => $t->getId()->value,
+            'code' => $t->getCode(),
+            'name' => $t->getName(),
+            'active' => $t->isActive(),
+        ], $templates);
+        return response()->json(['data' => $data]);
     }
 
     public function store(Request $request): JsonResponse

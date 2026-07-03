@@ -33,7 +33,14 @@ class OnboardingPlanController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = new ListPlansQuery($request->input('employee_id'));
-        return response()->json(['data' => $this->listHandler->handle($query)]);
+        $plans = $this->listHandler->handle($query);
+        $data = array_map(fn($p) => [
+            'id' => $p->getId()->value,
+            'employee_id' => $p->getEmployeeId(),
+            'status' => $p->getStatus()->value,
+            'start_date' => $p->getStartDate()->format('Y-m-d'),
+        ], $plans);
+        return response()->json(['data' => $data]);
     }
 
     public function store(Request $request): JsonResponse
@@ -79,13 +86,21 @@ class OnboardingPlanController extends Controller
 
     public function activate(string $id): JsonResponse
     {
-        $this->activateHandler->handle(new ActivateOnboardingPlanCommand($id));
+        try {
+            $this->activateHandler->handle(new ActivateOnboardingPlanCommand($id));
+        } catch (\Throwable $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
         return response()->json(['message' => 'Plan activated']);
     }
 
     public function cancel(string $id): JsonResponse
     {
-        $this->cancelHandler->handle(new CancelOnboardingPlanCommand($id));
+        try {
+            $this->cancelHandler->handle(new CancelOnboardingPlanCommand($id));
+        } catch (\Throwable $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
         return response()->json(['message' => 'Plan cancelled']);
     }
 
@@ -95,7 +110,11 @@ class OnboardingPlanController extends Controller
             planId: $id,
             workflowTemplateId: $request->input('workflow_template_id'),
         );
-        $this->completeHandler->handle($command);
+        try {
+            $this->completeHandler->handle($command);
+        } catch (\Throwable $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
         return response()->json(['message' => 'Plan completed']);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Modules\Onboarding\Infrastructure\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\PermissionModel;
+use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RoleModel;
+use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RolePermissionModel;
 
 class OnboardingPermissionSeeder extends Seeder
 {
@@ -28,8 +30,9 @@ class OnboardingPermissionSeeder extends Seeder
             ['onboarding.task.waive', 'task', 'waive'],
         ];
 
+        $createdCodes = [];
         foreach ($permissions as [$code, $module, $action]) {
-            PermissionModel::updateOrCreate(
+            $perm = PermissionModel::firstOrCreate(
                 ['code' => $code],
                 [
                     'module' => $module,
@@ -37,6 +40,17 @@ class OnboardingPermissionSeeder extends Seeder
                     'description' => "{$module}.{$action}",
                 ],
             );
+            $createdCodes[] = $perm->code;
         }
+
+        // Grant all onboarding permissions to SUPER_ADMIN role
+        RoleModel::where('code', 'SUPER_ADMIN')->each(function (RoleModel $role) use ($createdCodes) {
+            foreach ($createdCodes as $code) {
+                RolePermissionModel::firstOrCreate([
+                    'role_id' => $role->id,
+                    'permission_code' => $code,
+                ]);
+            }
+        });
     }
 }

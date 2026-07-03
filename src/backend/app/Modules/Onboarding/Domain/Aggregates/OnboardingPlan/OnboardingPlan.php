@@ -112,8 +112,8 @@ class OnboardingPlan
 
     public function addTask(OnboardingTask $task): void
     {
-        if ($this->status !== OnboardingPlanStatus::Active) {
-            throw new \RuntimeException('Can only add tasks to active plans');
+        if (!in_array($this->status, [OnboardingPlanStatus::Draft, OnboardingPlanStatus::Active], true)) {
+            throw new \RuntimeException('Can only add tasks to draft or active plans');
         }
         if ($task->getTaskType() !== TaskType::Custom) {
             throw new \RuntimeException('Only custom tasks can be added manually');

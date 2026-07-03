@@ -36,7 +36,19 @@ class OnboardingTaskController extends Controller
     public function index(string $planId): JsonResponse
     {
         $query = new ListTasksQuery($planId);
-        return response()->json(['data' => $this->listHandler->handle($query)]);
+        $tasks = $this->listHandler->handle($query);
+        return response()->json(['data' => array_map(fn($t) => [
+            'id' => $t->getId()->value,
+            'title' => $t->getTitle(),
+            'status' => $t->getStatus()->value,
+            'task_type' => $t->getTaskType()->value,
+            'owner_type' => $t->getOwnerType()->value,
+            'owner_id' => $t->getOwnerId(),
+            'due_date' => $t->getDueDate()?->format('Y-m-d'),
+            'requires_approval' => $t->isRequiresApproval(),
+            'is_pre_start' => $t->isPreStart(),
+            'sort_order' => $t->getSortOrder(),
+        ], $tasks)]);
     }
 
     public function store(Request $request, string $planId): JsonResponse
@@ -63,7 +75,11 @@ class OnboardingTaskController extends Controller
             isPreStart: $request->boolean('is_pre_start', false),
             sortOrder: (int) $request->input('sort_order', 0),
         );
-        $task = $this->addHandler->handle($command);
+        try {
+            $task = $this->addHandler->handle($command);
+        } catch (\Throwable $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
         return response()->json(['data' => [
             'id' => $task->getId()->value,
             'title' => $task->getTitle(),
@@ -96,7 +112,11 @@ class OnboardingTaskController extends Controller
 
     public function start(string $id): JsonResponse
     {
-        $this->startHandler->handle(new StartTaskCommand($id));
+        try {
+            $this->startHandler->handle(new StartTaskCommand($id));
+        } catch (\Throwable $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
         return response()->json(['message' => 'Task started']);
     }
 
@@ -107,7 +127,11 @@ class OnboardingTaskController extends Controller
             proofFileObjectId: $request->input('proof_file_object_id'),
             workflowTemplateId: $request->input('workflow_template_id'),
         );
-        $this->completeHandler->handle($command);
+        try {
+            $this->completeHandler->handle($command);
+        } catch (\Throwable $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
         return response()->json(['message' => 'Task completed']);
     }
 
@@ -117,7 +141,11 @@ class OnboardingTaskController extends Controller
             taskId: $id,
             reason: $request->input('reason'),
         );
-        $this->waiveHandler->handle($command);
+        try {
+            $this->waiveHandler->handle($command);
+        } catch (\Throwable $exception) {
+            return response()->json(['message' => $exception->getMessage()], 422);
+        }
         return response()->json(['message' => 'Task waived']);
     }
 }
