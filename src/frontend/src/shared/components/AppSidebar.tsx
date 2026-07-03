@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Building2, Users, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { LayoutDashboard, Building2, Users } from 'lucide-react';
 import { useSidebar } from '@/shared/hooks/useSidebar';
 import { cn } from '@/core/utils/cn';
 
@@ -20,21 +20,14 @@ const nav = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { collapsed, toggle } = useSidebar();
+  const { collapsed } = useSidebar();
 
   return (
     <aside className={cn(
-      'flex flex-col border-r bg-[hsl(var(--card))] transition-all duration-200',
+      'flex flex-col border-r bg-[hsl(var(--card))] transition-all duration-200 pt-4',
       collapsed ? 'w-16' : 'w-64',
     )}>
-      <div className={cn('flex items-center border-b', collapsed ? 'justify-center p-2' : 'justify-between p-4')}>
-        <button type="button" onClick={toggle} title={collapsed ? 'Mở rộng' : 'Thu gọn'}
-          className="rounded-md p-1 hover:bg-muted transition-colors">
-          {collapsed ? <PanelLeft className="h-5 w-5 text-muted-foreground" /> : <PanelLeftClose className="h-5 w-5 text-muted-foreground" />}
-        </button>
-      </div>
-
-      <nav className="flex-1 space-y-1 p-2">
+      <nav className="flex-1 space-y-1 px-2">
         <NavItem href="/dashboard" icon={LayoutDashboard} label="Dashboard" collapsed={collapsed} pathname={pathname} />
         {nav.map(group => (
           <div key={group.section}>

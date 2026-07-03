@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, User, Settings, LogOut, ChevronDown, Moon, Sun } from 'lucide-react';
+import { Bell, User, Settings, LogOut, ChevronDown, Moon, Sun, PanelLeft, PanelLeftClose } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/domains/auth/hooks/useAuth';
 import { useTheme } from '@/shared/hooks/useTheme';
+import { useSidebar } from '@/shared/hooks/useSidebar';
 import { toast } from 'sonner';
 
 function Dropdown({ trigger, children }: { trigger: React.ReactNode; children: React.ReactNode }) {
@@ -49,11 +50,15 @@ export function Header() {
   const router = useRouter();
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { collapsed, toggle } = useSidebar();
 
   return (
     <header className="flex h-12 items-center justify-between border-b bg-[hsl(var(--card))] px-4">
       <div className="flex items-center gap-2">
-        <p className="text-base font-semibold">iHRM Admin</p>
+        <button type="button" onClick={toggle} title={collapsed ? 'Mở rộng' : 'Thu gọn'}
+          className="rounded-md p-1.5 hover:bg-muted transition-colors">
+          {collapsed ? <PanelLeft className="h-5 w-5 text-muted-foreground" /> : <PanelLeftClose className="h-5 w-5 text-muted-foreground" />}
+        </button>
       </div>
 
       <div className="flex items-center gap-2">
@@ -66,17 +71,8 @@ export function Header() {
           <div className="px-3 py-2 text-sm text-muted-foreground">Chưa có thông báo</div>
         </Dropdown>
 
-        <Dropdown
-          trigger={
-            <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-muted transition-colors">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                {user?.name?.charAt(0)?.toUpperCase() ?? 'A'}
-              </div>
-              <span className="hidden md:inline text-sm font-medium">{user?.name ?? 'Admin'}</span>
-              <ChevronDown className="h-3 w-3 text-muted-foreground" />
-            </div>
-          }
-        >
+        <Dropdown trigger={<User className="h-5 w-5 text-muted-foreground" />}>
+          <div className="border-b px-3 py-2 text-sm font-medium">Welcome, {user?.name ?? 'Admin'}</div>
           <DropdownItem icon={User} label="Hồ sơ nhân sự" onClick={() => router.push('/employees')} />
           <DropdownItem icon={Settings} label="Cài đặt" onClick={() => toast.info('Chưa có trang cài đặt')} />
           <div className="my-1 border-t" />
