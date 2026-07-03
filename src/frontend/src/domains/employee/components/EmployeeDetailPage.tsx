@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
 import { useEmployee, useUpdateEmployee, useTransferEmployee, useChangeEmployeeStatus } from '@/domains/employee/hooks/useEmployees';
 import { useContracts } from '@/domains/employee/hooks/useContracts';
+import { useBranches } from '@/domains/organization/hooks/useBranches';
 import { extractErrorMessage } from '@/core/errors/messages';
 import { ContractSection } from '@/domains/employee/components/ContractSection';
 import { Button } from '@/shared/components/ui/button';
@@ -23,15 +24,14 @@ export function EmployeeDetailPage() {
   const transferEmp = useTransferEmployee();
   const changeStatus = useChangeEmployeeStatus();
   const { data: contractsData } = useContracts(id);
+  const { data: branchesData } = useBranches();
   const [tab, setTab] = useState<Tab>('info');
 
-  // Local form state
   const [form, setForm] = useState({
     first_name: '', last_name: '', dob: '', gender: '',
     personal_email: '', phone: '', branch_id: '', department_id: '', position_id: '',
   });
 
-  // Sync from loaded employee data
   useEffect(() => {
     if (!employee) return;
     setForm({
@@ -93,6 +93,8 @@ export function EmployeeDetailPage() {
 
   if (isLoading) return <div className="py-12 text-center text-muted-foreground">Đang tải...</div>;
   if (!employee) return <div className="py-12 text-center text-destructive">Không tìm thấy nhân viên</div>;
+
+  const branches = branchesData?.data ?? [];
 
   const tabs: { key: Tab; label: string }[] = [
     { key: 'info', label: 'Thông tin' },
@@ -156,7 +158,15 @@ export function EmployeeDetailPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="ed-dob">Ngày sinh</Label>
-              <Input id="ed-dob" type="date" value={form.dob} onChange={e => setField('dob', e.target.value)} />
+              <div className="relative">
+                <Input
+                  id="ed-dob"
+                  type="date"
+                  value={form.dob}
+                  onChange={e => setField('dob', e.target.value)}
+                  className="[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100"
+                />
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="ed-gender">Giới tính</Label>
@@ -180,16 +190,36 @@ export function EmployeeDetailPage() {
               <Input id="ed-phone" value={form.phone} onChange={e => setField('phone', e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="ed-branch">Chi nhánh (ID)</Label>
-              <Input id="ed-branch" value={form.branch_id} onChange={e => setField('branch_id', e.target.value)} />
+              <Label htmlFor="ed-branch">Chi nhánh</Label>
+              <select
+                id="ed-branch"
+                className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
+                value={form.branch_id}
+                onChange={e => setField('branch_id', e.target.value)}
+              >
+                <option value="">Chọn chi nhánh</option>
+                {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+              </select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="ed-dept">Phòng ban (ID)</Label>
-              <Input id="ed-dept" value={form.department_id} onChange={e => setField('department_id', e.target.value)} />
+              <Label htmlFor="ed-dept">Phòng ban</Label>
+              <input
+                id="ed-dept"
+                className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
+                value={form.department_id}
+                onChange={e => setField('department_id', e.target.value)}
+                placeholder="Nhập ID phòng ban"
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="ed-pos">Chức vụ (ID)</Label>
-              <Input id="ed-pos" value={form.position_id} onChange={e => setField('position_id', e.target.value)} />
+              <Label htmlFor="ed-pos">Chức vụ</Label>
+              <input
+                id="ed-pos"
+                className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
+                value={form.position_id}
+                onChange={e => setField('position_id', e.target.value)}
+                placeholder="Nhập ID chức vụ"
+              />
             </div>
           </div>
           <div className="mt-4 flex justify-end">
