@@ -5,14 +5,17 @@ import { useEffect, useState } from 'react';
 type Theme = 'light' | 'dark';
 const STORAGE_KEY = 'ihrm-theme';
 
+function getInitialTheme(): Theme {
+  if (typeof window === 'undefined') return 'light';
+  return (localStorage.getItem(STORAGE_KEY) as Theme) === 'dark' ? 'dark' : 'light';
+}
+
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    const next = stored === 'dark' ? 'dark' : 'light';
-    setTheme(next);
-    document.documentElement.classList.toggle('dark', next === 'dark');
+    // Sync state with actual DOM after hydration
+    setTheme(getInitialTheme());
   }, []);
 
   function toggleTheme() {

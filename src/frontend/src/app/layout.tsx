@@ -7,9 +7,23 @@ export const metadata: Metadata = {
   description: 'iHRM Enterprise Admin Portal',
 };
 
+const themeScript = `
+(function() {
+  try {
+    var theme = localStorage.getItem('ihrm-theme');
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  } catch(e) {}
+})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi">
+    <html lang="vi" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="font-sans" style={{ fontSize: 13 }}>
         <Providers>{children}</Providers>
       </body>
