@@ -4,24 +4,24 @@ Hệ thống quản trị nhân sự doanh nghiệp (single-tenant), hỗ trợ 
 
 ## Tính năng cốt lõi
 
-| Phase | Modules |
-|---|---|
-| **1. Core Platform** | Identity & Access, Organization, Employee Master, Configuration, Audit, Document |
-| **2. Workforce Operations** | Attendance, Shift, Leave, Payroll, Reporting, Workflow, Notification |
-| **3. Talent Lifecycle** | Recruitment, Onboarding, Offboarding, Performance, Training, Asset |
-| **4. Enterprise Extensions** | SSO, Mobile, Advanced Analytics, Compliance |
+| Phase                        | Modules                                                                          |
+|------------------------------|----------------------------------------------------------------------------------|
+| **1. Core Platform**         | Identity & Access, Organization, Employee Master, Configuration, Audit, Document |
+| **2. Workforce Operations**  | Attendance, Shift, Leave, Payroll, Reporting, Workflow, Notification             |
+| **3. Talent Lifecycle**      | Recruitment, Onboarding, Offboarding, Performance, Training, Asset               |
+| **4. Enterprise Extensions** | SSO, Mobile, Advanced Analytics, Compliance                                      |
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Backend | PHP 8.4, Laravel 12, Sanctum, PHPStan, PHPUnit |
-| Frontend | Next.js 14, React 18, Tailwind CSS, shadcn/ui |
-| Database | PostgreSQL 16 |
-| Cache | Redis 7 |
-| Storage | MinIO (S3-compatible object storage) |
-| Proxy | Nginx 1.27 (dev) |
-| Dev environment | Docker Compose |
+| Layer           | Technology                                     |
+|-----------------|------------------------------------------------|
+| Backend         | PHP 8.4, Laravel 12, Sanctum, PHPStan, PHPUnit |
+| Frontend        | Next.js 14, React 18, Tailwind CSS, shadcn/ui  |
+| Database        | PostgreSQL 16                                  |
+| Cache           | Redis 7                                        |
+| Storage         | MinIO (S3-compatible object storage)           |
+| Proxy           | Nginx 1.27 (dev)                               |
+| Dev environment | Docker Compose                                 |
 
 ## Yêu cầu
 
@@ -51,18 +51,18 @@ make fresh
 
 ## Makefile Reference
 
-| Target | Usage |
-|---|---|
-| `make up` | `docker compose up -d` |
-| `make down` | `docker compose down` |
-| `make build` | Rebuild images |
-| `make test` | Run backend tests (`--compact`) |
-| `make shell` | `sh` vào container app |
-| `make artisan cmd=...` | Chạy artisan command |
-| `make migrate` | `php artisan migrate` |
-| `make fresh` | `migrate:fresh --seed` |
-| `make logs` | Tail logs |
-| `make lint` | PHPStan analysis |
+| Target                 | Usage                           |
+|------------------------|---------------------------------|
+| `make up`              | `docker compose up -d`          |
+| `make down`            | `docker compose down`           |
+| `make build`           | Rebuild images                  |
+| `make test`            | Run backend tests (`--compact`) |
+| `make shell`           | `sh` vào container app          |
+| `make artisan cmd=...` | Chạy artisan command            |
+| `make migrate`         | `php artisan migrate`           |
+| `make fresh`           | `migrate:fresh --seed`          |
+| `make logs`            | Tail logs                       |
+| `make lint`            | PHPStan analysis                |
 
 ## Kiến trúc
 
@@ -147,10 +147,10 @@ Mỗi module mới cần ít nhất một feature test cho auth/permission bound
 
 ## Domain Access
 
-| URL | Service |
-|---|---|
-| http://ihrm.test | Frontend (Next.js) |
-| http://api.ihrm.test/api/v1 | Backend API |
+| URL                         | Service            |
+|-----------------------------|--------------------|
+| http://ihrm.test            | Frontend (Next.js) |
+| http://api.ihrm.test/api/v1 | Backend API        |
 
 ## Roadmap
 
