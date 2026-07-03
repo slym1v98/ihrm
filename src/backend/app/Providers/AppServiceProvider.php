@@ -170,6 +170,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\CandidateRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentCandidateRepository::class);
         $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\InterviewRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentInterviewRepository::class);
         $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\OfferRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentOfferRepository::class);
+        $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTemplateRepository::class);
+        $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingPlanRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingPlanRepository::class);
+        $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTaskRepository::class);
         $this->commands([\App\Modules\Notification\Infrastructure\Console\ProcessNotificationOutboxCommand::class]);
     }
 
