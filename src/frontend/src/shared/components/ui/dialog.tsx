@@ -24,8 +24,8 @@ export function DialogContent({ children, className }: { children: React.ReactNo
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="fixed inset-0 bg-black/50" onClick={() => onOpenChange(false)} />
-      <div className={cn('relative z-50 w-full max-w-lg rounded-lg border bg-[hsl(var(--card))] text-foreground p-6 shadow-lg', className)}>
+      <div className="absolute inset-0 bg-black/50" onClick={() => onOpenChange(false)} />
+      <div className={cn('relative z-10 w-full max-w-lg rounded-lg border bg-[hsl(var(--card))] p-6 shadow-lg', className)}>
         {children}
       </div>
     </div>
@@ -35,8 +35,6 @@ export function DialogContent({ children, className }: { children: React.ReactNo
 export function DialogHeader({ children, className }: { children: React.ReactNode; className?: string }) {
   return <div className={cn('mb-4 space-y-1.5', className)}>{children}</div>;
 }
-
-export { DialogHeader as DialogHeaderComponent };
 
 export function DialogTitle({ children, className }: { children: React.ReactNode; className?: string }) {
   return <h2 className={cn('text-lg font-semibold', className)}>{children}</h2>;
