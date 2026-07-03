@@ -25,7 +25,7 @@ export function DialogContent({ children, className }: { children: React.ReactNo
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/50" onClick={() => onOpenChange(false)} />
-      <div className={cn('relative z-50 w-full max-w-lg rounded-lg border bg-white p-6 shadow-lg', className)}>
+      <div className={cn('relative z-50 w-full max-w-lg rounded-lg border bg-[hsl(var(--card))] text-foreground p-6 shadow-lg', className)}>
         {children}
       </div>
     </div>
