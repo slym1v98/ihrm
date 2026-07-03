@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
+import { Pencil, ToggleLeft, ToggleRight } from 'lucide-react';
 import { Badge } from '@/shared/components/ui/badge';
 
 const branchSchema = z.object({
@@ -146,12 +147,14 @@ const [confirm, setConfirm] = useState<{ id: string; action: 'activate' | 'deact
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
-                    <Button variant="ghost" onClick={() => openEdit(branch)}>Sửa</Button>
-                    <Button
-                      variant="ghost"
+                    <Button variant="ghost" size="sm" title="Sửa" onClick={() => openEdit(branch)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm"
+                      title={branch.status === 'active' ? 'Vô hiệu hóa' : 'Kích hoạt'}
                       onClick={() => setConfirm({ id: branch.id, action: branch.status === 'active' ? 'deactivate' : 'activate', name: branch.name })}
                     >
-                      {branch.status === 'active' ? 'Vô hiệu' : 'Kích hoạt'}
+                      {branch.status === 'active' ? <ToggleLeft className="h-4 w-4" /> : <ToggleRight className="h-4 w-4" />}
                     </Button>
                   </div>
                 </TableCell>

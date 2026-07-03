@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
+import { Pencil, ToggleLeft, ToggleRight, ArrowRight } from 'lucide-react';
 import { Badge } from '@/shared/components/ui/badge';
 
 const deptSchema = z.object({
@@ -171,10 +172,17 @@ export function DepartmentListPage() {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
-                    <Button variant="ghost" onClick={() => openEdit(dept)}>Sửa</Button>
-                    <Button variant="ghost" onClick={() => openMove(dept)}>Di chuyển</Button>
-                    <Button variant="ghost" onClick={() => setConfirm({ id: dept.id, action: dept.status === 'active' ? 'deactivate' : 'activate', name: dept.name })}>
-                      {dept.status === 'active' ? 'Vô hiệu' : 'Kích hoạt'}
+                    <Button variant="ghost" size="sm" title="Sửa" onClick={() => openEdit(dept)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" title="Di chuyển" onClick={() => openMove(dept)}>
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm"
+                      title={dept.status === 'active' ? 'Vô hiệu hóa' : 'Kích hoạt'}
+                      onClick={() => setConfirm({ id: dept.id, action: dept.status === 'active' ? 'deactivate' : 'activate', name: dept.name })}
+                    >
+                      {dept.status === 'active' ? <ToggleLeft className="h-4 w-4" /> : <ToggleRight className="h-4 w-4" />}
                     </Button>
                   </div>
                 </TableCell>
