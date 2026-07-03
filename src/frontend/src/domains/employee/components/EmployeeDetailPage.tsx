@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
 import { useEmployee, useUpdateEmployee, useTransferEmployee, useChangeEmployeeStatus } from '@/domains/employee/hooks/useEmployees';
@@ -26,37 +25,60 @@ export function EmployeeDetailPage() {
   const { data: contractsData } = useContracts(id);
   const [tab, setTab] = useState<Tab>('info');
 
-  const form = useForm({ defaultValues: {} as Record<string, string> });
-
-  // Set form values when employee loads
-  useEffect(() => {
-    if (employee) {
-      form.reset({
-        first_name: employee.first_name,
-        last_name: employee.last_name,
-        dob: employee.dob ?? '',
-        gender: employee.gender ?? '',
-        personal_email: employee.personal_email ?? '',
-        phone: employee.phone ?? '',
-        branch_id: employee.branch_id ?? '',
-        department_id: employee.department_id ?? '',
-        position_id: employee.position_id ?? '',
-      });
-    }
+  // Local form state
+  const [form, setForm] = useState({
+    first_name: '', last_name: '', dob: '', gender: '',
+    personal_email: '', phone: '', branch_id: '', department_id: '', position_id: '',
   });
 
+  // Sync from loaded employee data
+  useEffect(() => {
+    if (!employee) return;
+    setForm({
+      first_name: employee.first_name,
+      last_name: employee.last_name,
+      dob: employee.dob ?? '',
+      gender: employee.gender ?? '',
+      personal_email: employee.personal_email ?? '',
+      phone: employee.phone ?? '',
+      branch_id: employee.branch_id ?? '',
+      department_id: employee.department_id ?? '',
+      position_id: employee.position_id ?? '',
+    });
+  }, [employee]);
+
+  const setField = useCallback((field: string, value: string) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+  }, []);
+
   const handleSave = useCallback(async () => {
-    const v = form.getValues();
     try {
-      await updateEmp.mutateAsync({ id, payload: { first_name: v.first_name, last_name: v.last_name, dob: v.dob || undefined, gender: v.gender || undefined, personal_email: v.personal_email || undefined, phone: v.phone || undefined } });
-      if (v.branch_id || v.department_id || v.position_id) {
-        await transferEmp.mutateAsync({ id, payload: { branch_id: v.branch_id || undefined, department_id: v.department_id || undefined, position_id: v.position_id || undefined } });
+      await updateEmp.mutateAsync({
+        id,
+        payload: {
+          first_name: form.first_name,
+          last_name: form.last_name,
+          dob: form.dob || undefined,
+          gender: form.gender || undefined,
+          personal_email: form.personal_email || undefined,
+          phone: form.phone || undefined,
+        },
+      });
+      if (form.branch_id || form.department_id || form.position_id) {
+        await transferEmp.mutateAsync({
+          id,
+          payload: {
+            branch_id: form.branch_id || undefined,
+            department_id: form.department_id || undefined,
+            position_id: form.position_id || undefined,
+          },
+        });
       }
       toast.success('Cập nhật thành công');
     } catch (raw) {
       toast.error(extractErrorMessage(raw));
     }
-  }, [id, updateEmp, transferEmp, form]);
+  }, [id, form, updateEmp, transferEmp]);
 
   const handleToggleStatus = useCallback(async () => {
     if (!employee) return;
@@ -81,22 +103,41 @@ export function EmployeeDetailPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="sm" onClick={() => router.push('/employees')}>
+        <Button variant="ghost" size="sm" onClick={() => router.push('/employees')} type="button">
           <ChevronLeft className="h-4 w-4" />
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-semibold">{employee.last_name} {employee.first_name}</h1>
-          <p className="text-sm text-muted-foreground">{employee.employee_code} · <Badge variant={employee.status === 'active' ? 'default' : 'secondary'}>{employee.status === 'active' ? 'Đang làm' : 'Đã nghỉ'}</Badge></p>
+          <p className="text-sm text-muted-foreground">
+            {employee.employee_code} ·{' '}
+            <Badge variant={employee.status === 'active' ? 'default' : 'secondary'}>
+              {employee.status === 'active' ? 'Đang làm' : 'Đã nghỉ'}
+            </Badge>
+          </p>
         </div>
-        <Button variant={employee.status === 'active' ? 'destructive' : 'primary'} size="sm" onClick={handleToggleStatus} disabled={changeStatus.isPending}>
+        <Button
+          variant={employee.status === 'active' ? 'destructive' : 'primary'}
+          size="sm"
+          onClick={handleToggleStatus}
+          disabled={changeStatus.isPending}
+          type="button"
+        >
           {employee.status === 'active' ? 'Vô hiệu hóa' : 'Kích hoạt'}
         </Button>
       </div>
 
       <div className="flex gap-1 border-b">
         {tabs.map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)}
-            className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium transition-colors ${tab === t.key ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>
+          <button
+            key={t.key}
+            type="button"
+            onClick={() => setTab(t.key)}
+            className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
+              tab === t.key
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+            }`}
+          >
             {t.label}
           </button>
         ))}
@@ -105,23 +146,56 @@ export function EmployeeDetailPage() {
       {tab === 'info' && (
         <div className="rounded-lg border bg-[hsl(var(--card))] p-4">
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2"><Label>Họ</Label><Input {...form.register('last_name')} /></div>
-            <div className="space-y-2"><Label>Tên</Label><Input {...form.register('first_name')} /></div>
-            <div className="space-y-2"><Label>Ngày sinh</Label><Input type="date" {...form.register('dob')} /></div>
             <div className="space-y-2">
-              <Label>Giới tính</Label>
-              <select className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary" {...form.register('gender')}>
-                <option value="">Chọn</option><option value="male">Nam</option><option value="female">Nữ</option>
+              <Label htmlFor="ed-last_name">Họ</Label>
+              <Input id="ed-last_name" value={form.last_name} onChange={e => setField('last_name', e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ed-first_name">Tên</Label>
+              <Input id="ed-first_name" value={form.first_name} onChange={e => setField('first_name', e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ed-dob">Ngày sinh</Label>
+              <Input id="ed-dob" type="date" value={form.dob} onChange={e => setField('dob', e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ed-gender">Giới tính</Label>
+              <select
+                id="ed-gender"
+                className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 text-[13px] outline-none focus:ring-2 focus:ring-primary"
+                value={form.gender}
+                onChange={e => setField('gender', e.target.value)}
+              >
+                <option value="">Chọn</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
               </select>
             </div>
-            <div className="space-y-2"><Label>Email cá nhân</Label><Input type="email" {...form.register('personal_email')} /></div>
-            <div className="space-y-2"><Label>Số điện thoại</Label><Input {...form.register('phone')} /></div>
-            <div className="space-y-2"><Label>Chi nhánh</Label><Input {...form.register('branch_id')} placeholder="ID chi nhánh" /></div>
-            <div className="space-y-2"><Label>Phòng ban</Label><Input {...form.register('department_id')} placeholder="ID phòng ban" /></div>
-            <div className="space-y-2"><Label>Chức vụ</Label><Input {...form.register('position_id')} placeholder="ID chức vụ" /></div>
+            <div className="space-y-2">
+              <Label htmlFor="ed-email">Email cá nhân</Label>
+              <Input id="ed-email" type="email" value={form.personal_email} onChange={e => setField('personal_email', e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ed-phone">Số điện thoại</Label>
+              <Input id="ed-phone" value={form.phone} onChange={e => setField('phone', e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ed-branch">Chi nhánh (ID)</Label>
+              <Input id="ed-branch" value={form.branch_id} onChange={e => setField('branch_id', e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ed-dept">Phòng ban (ID)</Label>
+              <Input id="ed-dept" value={form.department_id} onChange={e => setField('department_id', e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ed-pos">Chức vụ (ID)</Label>
+              <Input id="ed-pos" value={form.position_id} onChange={e => setField('position_id', e.target.value)} />
+            </div>
           </div>
           <div className="mt-4 flex justify-end">
-            <Button onClick={handleSave} disabled={updateEmp.isPending || transferEmp.isPending}>Lưu thay đổi</Button>
+            <Button onClick={handleSave} disabled={updateEmp.isPending || transferEmp.isPending} type="button">
+              Lưu thay đổi
+            </Button>
           </div>
         </div>
       )}
