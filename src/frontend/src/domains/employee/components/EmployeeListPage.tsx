@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,10 +29,13 @@ export function EmployeeListPage() {
   const createEmp = useCreateEmployee();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const form = useForm<CreateForm, unknown>({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<CreateForm>({
     resolver: zodResolver(createSchema),
-    defaultValues: { first_name: '', last_name: '' },
   });
+
+  useEffect(() => {
+    if (!dialogOpen) reset({ first_name: '', last_name: '' });
+  }, [dialogOpen, reset]);
 
   const onSubmit = useCallback(async (v: CreateForm) => {
     try {
@@ -67,27 +70,27 @@ export function EmployeeListPage() {
           <h1 className="text-2xl font-semibold">Nhân viên</h1>
           <p className="text-sm text-muted-foreground">Quản lý danh sách nhân viên</p>
         </div>
-        <Button onClick={() => { form.reset({ first_name: '', last_name: '' }); setDialogOpen(true); }}>+ Thêm nhân viên</Button>
+        <Button onClick={() => { reset({ first_name: '', last_name: '' }); setDialogOpen(true); }}>+ Thêm nhân viên</Button>
       </div>
 
       <DataTable<Employee> columns={columns} data={employees} isLoading={isLoading} rowKey="id" emptyMessage="Chưa có nhân viên nào" />
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog open={dialogOpen} onOpenChange={(o) => { if (!o) setDialogOpen(false); }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Thêm nhân viên</DialogTitle>
             <DialogDescription>Nhập họ và tên nhân viên mới. Các thông tin khác có thể bổ sung sau.</DialogDescription>
           </DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="last_name">Họ <span className="text-destructive">*</span></Label>
-              <Input id="last_name" {...form.register('last_name')} />
-              {form.formState.errors.last_name && <p className="text-xs text-destructive">{form.formState.errors.last_name.message}</p>}
+              <Input id="last_name" {...register('last_name')} />
+              {errors.last_name && <p className="text-xs text-destructive">{errors.last_name.message}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="first_name">Tên <span className="text-destructive">*</span></Label>
-              <Input id="first_name" {...form.register('first_name')} />
-              {form.formState.errors.first_name && <p className="text-xs text-destructive">{form.formState.errors.first_name.message}</p>}
+              <Input id="first_name" {...register('first_name')} />
+              {errors.first_name && <p className="text-xs text-destructive">{errors.first_name.message}</p>}
             </div>
             <DialogFooter>
               <Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
