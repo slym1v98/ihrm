@@ -11,6 +11,7 @@ use App\Modules\Payroll\Infrastructure\Seeders\PayrollComponentSeeder;
 use App\Modules\Organization\Infrastructure\Seeders\OrgStructureSeeder;
 use App\Modules\Notification\Infrastructure\Seeders\NotificationTemplateSeeder;
 use App\Modules\Reporting\Infrastructure\Seeders\ReportingDefinitionSeeder;
+use App\Modules\Onboarding\Infrastructure\Seeders\OnboardingPermissionSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -27,6 +28,7 @@ class DatabaseSeeder extends Seeder
             PayrollComponentSeeder::class,
             NotificationTemplateSeeder::class,
             ReportingDefinitionSeeder::class,
+            OnboardingPermissionSeeder::class,
         ]);
     }
 }
