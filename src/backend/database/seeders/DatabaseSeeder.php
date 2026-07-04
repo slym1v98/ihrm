@@ -4,10 +4,14 @@ namespace Database\Seeders;
 
 use App\Modules\Configuration\Infrastructure\Seeders\ConfigurationSeeder;
 use App\Modules\Identity\Infrastructure\Seeders\AdminUserSeeder;
+use App\Modules\Identity\Infrastructure\Seeders\DemoUserSeeder;
 use App\Modules\Identity\Infrastructure\Seeders\PermissionSeeder;
 use App\Modules\Identity\Infrastructure\Seeders\RoleSeeder;
+use App\Modules\Employee\Infrastructure\Seeders\DemoEmployeeSeeder;
 use App\Modules\Leave\Infrastructure\Seeders\LeaveTypeSeeder;
+use App\Modules\Leave\Infrastructure\Seeders\DemoLeaveSeeder;
 use App\Modules\Payroll\Infrastructure\Seeders\PayrollComponentSeeder;
+use App\Modules\Payroll\Infrastructure\Seeders\DemoPayrollSeeder;
 use App\Modules\Organization\Infrastructure\Seeders\OrgStructureSeeder;
 use App\Modules\Notification\Infrastructure\Seeders\NotificationTemplateSeeder;
 use App\Modules\Reporting\Infrastructure\Seeders\ReportingDefinitionSeeder;
@@ -37,6 +41,10 @@ class DatabaseSeeder extends Seeder
             PerformancePermissionSeeder::class,
             TrainingPermissionSeeder::class,
             AssetPermissionSeeder::class,
+            DemoUserSeeder::class,
+            DemoEmployeeSeeder::class,
+            DemoLeaveSeeder::class,
+            DemoPayrollSeeder::class,
         ]);
     }
 }

@@ -1,0 +1,1 @@
+export interface AuditLog { id: string; user_id: string | null; event: string; auditable_type: string; auditable_id: string; old_values: unknown; new_values: unknown; ip_address: string | null; user_agent: string | null; created_at: string | null }

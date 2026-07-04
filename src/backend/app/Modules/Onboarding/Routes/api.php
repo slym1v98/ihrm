@@ -1,50 +1,69 @@
 <?php
 
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\{
+    ActivateOnboardingPlanController,
+    CancelOnboardingPlanController,
+    CompleteOnboardingPlanController,
+    CompleteOnboardingTaskController,
+    DeleteOnboardingTemplateController,
+    ListOnboardingPlanController,
+    ListOnboardingTaskController,
+    ListOnboardingTemplateController,
+    ShowOnboardingPlanController,
+    ShowOnboardingTaskController,
+    ShowOnboardingTemplateController,
+    StartOnboardingTaskController,
+    StoreOnboardingPlanController,
+    StoreOnboardingTaskController,
+    StoreOnboardingTemplateController,
+    UpdateOnboardingTaskController,
+    UpdateOnboardingTemplateController,
+    WaiveOnboardingTaskController,
+};
 use Illuminate\Support\Facades\Route;
-use App\Modules\Onboarding\Infrastructure\Http\Controllers\OnboardingTemplateController;
-use App\Modules\Onboarding\Infrastructure\Http\Controllers\OnboardingPlanController;
-use App\Modules\Onboarding\Infrastructure\Http\Controllers\OnboardingTaskController;
+
+
 
 Route::prefix('v1/onboarding')
     ->middleware(['auth:sanctum'])
     ->group(function () {
 
-        Route::get('templates', [OnboardingTemplateController::class, 'index'])
+        Route::get('templates', ListOnboardingTemplateController::class)
             ->middleware('permission:onboarding.template.view');
-        Route::post('templates', [OnboardingTemplateController::class, 'store'])
+        Route::post('templates', StoreOnboardingTemplateController::class)
             ->middleware('permission:onboarding.template.create');
-        Route::get('templates/{id}', [OnboardingTemplateController::class, 'show'])
+        Route::get('templates/{id}', ShowOnboardingTemplateController::class)
             ->middleware('permission:onboarding.template.view');
-        Route::patch('templates/{id}', [OnboardingTemplateController::class, 'update'])
+        Route::patch('templates/{id}', UpdateOnboardingTemplateController::class)
             ->middleware('permission:onboarding.template.update');
-        Route::delete('templates/{id}', [OnboardingTemplateController::class, 'destroy'])
+        Route::delete('templates/{id}', DeleteOnboardingTemplateController::class)
             ->middleware('permission:onboarding.template.delete');
 
-        Route::get('plans', [OnboardingPlanController::class, 'index'])
+        Route::get('plans', ListOnboardingPlanController::class)
             ->middleware('permission:onboarding.plan.view');
-        Route::post('plans', [OnboardingPlanController::class, 'store'])
+        Route::post('plans', StoreOnboardingPlanController::class)
             ->middleware('permission:onboarding.plan.create');
-        Route::get('plans/{id}', [OnboardingPlanController::class, 'show'])
+        Route::get('plans/{id}', ShowOnboardingPlanController::class)
             ->middleware('permission:onboarding.plan.view');
-        Route::post('plans/{id}/activate', [OnboardingPlanController::class, 'activate'])
+        Route::post('plans/{id}/activate', ActivateOnboardingPlanController::class)
             ->middleware('permission:onboarding.plan.activate');
-        Route::post('plans/{id}/cancel', [OnboardingPlanController::class, 'cancel'])
+        Route::post('plans/{id}/cancel', CancelOnboardingPlanController::class)
             ->middleware('permission:onboarding.plan.cancel');
-        Route::post('plans/{id}/complete', [OnboardingPlanController::class, 'complete'])
+        Route::post('plans/{id}/complete', CompleteOnboardingPlanController::class)
             ->middleware('permission:onboarding.plan.complete');
 
-        Route::get('plans/{planId}/tasks', [OnboardingTaskController::class, 'index'])
+        Route::get('plans/{planId}/tasks', ListOnboardingTaskController::class)
             ->middleware('permission:onboarding.task.view');
-        Route::post('plans/{planId}/tasks', [OnboardingTaskController::class, 'store'])
+        Route::post('plans/{planId}/tasks', StoreOnboardingTaskController::class)
             ->middleware('permission:onboarding.task.create');
-        Route::get('tasks/{id}', [OnboardingTaskController::class, 'show'])
+        Route::get('tasks/{id}', ShowOnboardingTaskController::class)
             ->middleware('permission:onboarding.task.view');
-        Route::patch('tasks/{id}', [OnboardingTaskController::class, 'update'])
+        Route::patch('tasks/{id}', UpdateOnboardingTaskController::class)
             ->middleware('permission:onboarding.task.update');
-        Route::post('tasks/{id}/start', [OnboardingTaskController::class, 'start'])
+        Route::post('tasks/{id}/start', StartOnboardingTaskController::class)
             ->middleware('permission:onboarding.task.start');
-        Route::post('tasks/{id}/complete', [OnboardingTaskController::class, 'complete'])
+        Route::post('tasks/{id}/complete', CompleteOnboardingTaskController::class)
             ->middleware('permission:onboarding.task.complete');
-        Route::post('tasks/{id}/waive', [OnboardingTaskController::class, 'waive'])
+        Route::post('tasks/{id}/waive', WaiveOnboardingTaskController::class)
             ->middleware('permission:onboarding.task.waive');
     });

@@ -1,17 +1,31 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { AuthProvider } from "@/lib/auth-context";
+import type { Metadata } from 'next';
+import './globals.css';
+import { Providers } from '@/core/providers';
 
 export const metadata: Metadata = {
-  title: "iHRM",
-  description: "IntrustDSS Human Resource Management",
+  title: 'iHRM Admin',
+  description: 'iHRM Enterprise Admin Portal',
 };
+
+const themeScript = `
+(function() {
+  try {
+    var theme = localStorage.getItem('ihrm-theme');
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  } catch(e) {}
+})();
+`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
-        <AuthProvider>{children}</AuthProvider>
+    <html lang="vi" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="font-sans" style={{ fontSize: 13 }}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

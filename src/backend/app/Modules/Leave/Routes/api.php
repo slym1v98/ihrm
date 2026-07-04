@@ -1,38 +1,48 @@
 <?php
 
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\{
+    ApproveLeaveRequestController,
+    CancelLeaveRequestController,
+    ListLeaveBalanceController,
+    ListLeavePolicyController,
+    ListLeaveRequestController,
+    ListLeaveTypeController,
+    RejectLeaveRequestController,
+    ShowLeaveRequestController,
+    StoreLeaveRequestController,
+    SummaryLeaveBalanceController,
+};
 use Illuminate\Support\Facades\Route;
-use App\Modules\Leave\Infrastructure\Http\Controllers\LeaveTypeController;
-use App\Modules\Leave\Infrastructure\Http\Controllers\LeavePolicyController;
-use App\Modules\Leave\Infrastructure\Http\Controllers\LeaveRequestController;
-use App\Modules\Leave\Infrastructure\Http\Controllers\LeaveBalanceController;
+
+
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
     // Leave types
-    Route::get('leave-types', [LeaveTypeController::class, 'index'])
+    Route::get('leave-types', ListLeaveTypeController::class)
         ->middleware('permission:leave.type.view');
 
     // Leave policies
-    Route::get('leave-policies', [LeavePolicyController::class, 'index'])
+    Route::get('leave-policies', ListLeavePolicyController::class)
         ->middleware('permission:leave.policy.view');
 
     // Leave requests
-    Route::post('leave-requests', [LeaveRequestController::class, 'store'])
+    Route::post('leave-requests', StoreLeaveRequestController::class)
         ->middleware('permission:leave.request.create');
-    Route::get('leave-requests', [LeaveRequestController::class, 'index'])
+    Route::get('leave-requests', ListLeaveRequestController::class)
         ->middleware('permission:leave.request.view');
-    Route::get('leave-requests/{id}', [LeaveRequestController::class, 'show'])
+    Route::get('leave-requests/{id}', ShowLeaveRequestController::class)
         ->middleware('permission:leave.request.view');
-    Route::post('leave-requests/{id}/approve', [LeaveRequestController::class, 'approve'])
+    Route::post('leave-requests/{id}/approve', ApproveLeaveRequestController::class)
         ->middleware('permission:leave.request.approve');
-    Route::post('leave-requests/{id}/reject', [LeaveRequestController::class, 'reject'])
+    Route::post('leave-requests/{id}/reject', RejectLeaveRequestController::class)
         ->middleware('permission:leave.request.reject');
-    Route::post('leave-requests/{id}/cancel', [LeaveRequestController::class, 'cancel'])
+    Route::post('leave-requests/{id}/cancel', CancelLeaveRequestController::class)
         ->middleware('permission:leave.request.cancel');
 
     // Leave balances
-    Route::get('leave-balances', [LeaveBalanceController::class, 'index'])
+    Route::get('leave-balances', ListLeaveBalanceController::class)
         ->middleware('permission:leave.balance.view');
-    Route::get('leave-balances/summary', [LeaveBalanceController::class, 'summary'])
+    Route::get('leave-balances/summary', SummaryLeaveBalanceController::class)
         ->middleware('permission:leave.balance.view');
 });

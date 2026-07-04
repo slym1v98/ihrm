@@ -1,40 +1,64 @@
 <?php
 
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\{
+    ActivatePerformanceCycleController,
+    CancelPerformanceCycleController,
+    CompleteGoalController,
+    CompletePerformanceCycleController,
+    DeleteCompetencyTemplateController,
+    FinalizePerformanceReviewController,
+    ListCompetencyTemplateController,
+    ListGoalController,
+    ListPerformanceCycleController,
+    ListPerformanceReviewController,
+    ShowCompetencyTemplateController,
+    ShowGoalController,
+    ShowPerformanceCycleController,
+    ShowPerformanceReviewController,
+    StoreCompetencyTemplateController,
+    StoreGoalController,
+    StorePerformanceCycleController,
+    StorePerformanceReviewController,
+    SubmitHrPerformanceReviewController,
+    SubmitManagerPerformanceReviewController,
+    SubmitSelfPerformanceReviewController,
+    UpdateCompetencyTemplateController,
+    UpdateGoalController,
+    UpdatePerformanceCycleController,
+};
 use Illuminate\Support\Facades\Route;
-use App\Modules\Performance\Infrastructure\Http\Controllers\PerformanceCycleController;
-use App\Modules\Performance\Infrastructure\Http\Controllers\PerformanceReviewController;
-use App\Modules\Performance\Infrastructure\Http\Controllers\GoalController;
-use App\Modules\Performance\Infrastructure\Http\Controllers\CompetencyTemplateController;
+
+
 
 Route::prefix('v1/performance')
     ->middleware(['auth:sanctum'])
     ->group(function () {
         // Cycles
-        Route::get('cycles', [PerformanceCycleController::class, 'index'])->middleware('permission:performance.cycle.view');
-        Route::post('cycles', [PerformanceCycleController::class, 'store'])->middleware('permission:performance.cycle.create');
-        Route::get('cycles/{id}', [PerformanceCycleController::class, 'show'])->middleware('permission:performance.cycle.view');
-        Route::put('cycles/{id}', [PerformanceCycleController::class, 'update'])->middleware('permission:performance.cycle.update');
-        Route::post('cycles/{id}/activate', [PerformanceCycleController::class, 'activate'])->middleware('permission:performance.cycle.activate');
-        Route::post('cycles/{id}/complete', [PerformanceCycleController::class, 'complete'])->middleware('permission:performance.cycle.complete');
-        Route::post('cycles/{id}/cancel', [PerformanceCycleController::class, 'cancel'])->middleware('permission:performance.cycle.cancel');
+        Route::get('cycles', ListPerformanceCycleController::class)->middleware('permission:performance.cycle.view');
+        Route::post('cycles', StorePerformanceCycleController::class)->middleware('permission:performance.cycle.create');
+        Route::get('cycles/{id}', ShowPerformanceCycleController::class)->middleware('permission:performance.cycle.view');
+        Route::put('cycles/{id}', UpdatePerformanceCycleController::class)->middleware('permission:performance.cycle.update');
+        Route::post('cycles/{id}/activate', ActivatePerformanceCycleController::class)->middleware('permission:performance.cycle.activate');
+        Route::post('cycles/{id}/complete', CompletePerformanceCycleController::class)->middleware('permission:performance.cycle.complete');
+        Route::post('cycles/{id}/cancel', CancelPerformanceCycleController::class)->middleware('permission:performance.cycle.cancel');
         // Reviews
-        Route::get('reviews', [PerformanceReviewController::class, 'index'])->middleware('permission:performance.review.view');
-        Route::post('reviews', [PerformanceReviewController::class, 'store'])->middleware('permission:performance.review.create');
-        Route::get('reviews/{id}', [PerformanceReviewController::class, 'show'])->middleware('permission:performance.review.view');
-        Route::post('reviews/{id}/self', [PerformanceReviewController::class, 'submitSelf'])->middleware('permission:performance.review.submit_self');
-        Route::post('reviews/{id}/manager', [PerformanceReviewController::class, 'submitManager'])->middleware('permission:performance.review.submit_manager');
-        Route::post('reviews/{id}/hr', [PerformanceReviewController::class, 'submitHr'])->middleware('permission:performance.review.submit_hr');
-        Route::post('reviews/{id}/finalize', [PerformanceReviewController::class, 'finalize'])->middleware('permission:performance.review.finalize');
+        Route::get('reviews', ListPerformanceReviewController::class)->middleware('permission:performance.review.view');
+        Route::post('reviews', StorePerformanceReviewController::class)->middleware('permission:performance.review.create');
+        Route::get('reviews/{id}', ShowPerformanceReviewController::class)->middleware('permission:performance.review.view');
+        Route::post('reviews/{id}/self', SubmitSelfPerformanceReviewController::class)->middleware('permission:performance.review.submit_self');
+        Route::post('reviews/{id}/manager', SubmitManagerPerformanceReviewController::class)->middleware('permission:performance.review.submit_manager');
+        Route::post('reviews/{id}/hr', SubmitHrPerformanceReviewController::class)->middleware('permission:performance.review.submit_hr');
+        Route::post('reviews/{id}/finalize', FinalizePerformanceReviewController::class)->middleware('permission:performance.review.finalize');
         // Goals
-        Route::get('goals', [GoalController::class, 'index'])->middleware('permission:performance.goal.view');
-        Route::post('goals', [GoalController::class, 'store'])->middleware('permission:performance.goal.create');
-        Route::get('goals/{id}', [GoalController::class, 'show'])->middleware('permission:performance.goal.view');
-        Route::put('goals/{id}', [GoalController::class, 'update'])->middleware('permission:performance.goal.update');
-        Route::post('goals/{id}/complete', [GoalController::class, 'complete'])->middleware('permission:performance.goal.complete');
+        Route::get('goals', ListGoalController::class)->middleware('permission:performance.goal.view');
+        Route::post('goals', StoreGoalController::class)->middleware('permission:performance.goal.create');
+        Route::get('goals/{id}', ShowGoalController::class)->middleware('permission:performance.goal.view');
+        Route::put('goals/{id}', UpdateGoalController::class)->middleware('permission:performance.goal.update');
+        Route::post('goals/{id}/complete', CompleteGoalController::class)->middleware('permission:performance.goal.complete');
         // Competency Templates
-        Route::get('templates', [CompetencyTemplateController::class, 'index'])->middleware('permission:performance.template.view');
-        Route::post('templates', [CompetencyTemplateController::class, 'store'])->middleware('permission:performance.template.create');
-        Route::get('templates/{id}', [CompetencyTemplateController::class, 'show'])->middleware('permission:performance.template.view');
-        Route::put('templates/{id}', [CompetencyTemplateController::class, 'update'])->middleware('permission:performance.template.update');
-        Route::delete('templates/{id}', [CompetencyTemplateController::class, 'destroy'])->middleware('permission:performance.template.delete');
+        Route::get('templates', ListCompetencyTemplateController::class)->middleware('permission:performance.template.view');
+        Route::post('templates', StoreCompetencyTemplateController::class)->middleware('permission:performance.template.create');
+        Route::get('templates/{id}', ShowCompetencyTemplateController::class)->middleware('permission:performance.template.view');
+        Route::put('templates/{id}', UpdateCompetencyTemplateController::class)->middleware('permission:performance.template.update');
+        Route::delete('templates/{id}', DeleteCompetencyTemplateController::class)->middleware('permission:performance.template.delete');
     });

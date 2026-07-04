@@ -51,6 +51,8 @@ services:
     working_dir: /app/src/frontend
     depends_on:
       - app
+    environment:
+      NEXT_PUBLIC_API_URL: http://api.ihrm.test/api/v1
     expose:
       - "3000"
     volumes:

@@ -43,25 +43,25 @@ class PerformanceReviewController extends Controller
             'hr_assessment' => $rv->getHrAssessment(), 'final_score' => $rv->getFinalScore(),
             'status' => $rv->getStatus()->value, 'finalized_at' => $rv->getFinalizedAt()?->format('Y-m-d H:i:s'),
         ], $items);
-        return response()->json($data);
+        return response()->json(["data" => $data]);
     }
 
     public function store(Request $r): JsonResponse
     {
         $cmd = new CreateReviewCommand($r->input('cycle_id'), $r->input('employee_id'));
         $rv = $this->createHandler->handle($cmd);
-        return response()->json(['id' => $rv->getId()->value], 201);
+        return response()->json(['data' => ['id' => $rv->getId()->value]], 201);
     }
 
     public function show(string $id): JsonResponse
     {
         $rv = $this->reviewRepo->findById(PerformanceReviewId::fromString($id)) ?? throw new PerformanceReviewNotFoundException($id);
-        return response()->json([
+        return response()->json(['data' => [
             'id' => $rv->getId()->value, 'cycle_id' => $rv->getCycleId(), 'employee_id' => $rv->getEmployeeId(),
             'self_assessment' => $rv->getSelfAssessment(), 'manager_assessment' => $rv->getManagerAssessment(),
             'hr_assessment' => $rv->getHrAssessment(), 'final_score' => $rv->getFinalScore(),
             'status' => $rv->getStatus()->value, 'finalized_at' => $rv->getFinalizedAt()?->format('Y-m-d H:i:s'),
-        ]);
+        ]]);
     }
 
     public function submitSelf(Request $r, string $id): JsonResponse

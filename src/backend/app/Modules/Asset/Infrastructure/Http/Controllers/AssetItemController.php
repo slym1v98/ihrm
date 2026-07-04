@@ -38,7 +38,7 @@ class AssetItemController extends Controller
                 assetType: $request->query('asset_type'),
             )
         );
-        return response()->json(['data' => $items]);
+        return response()->json(['data' => array_map(fn($i) => $i->toArray(), $items)]);
     }
 
     public function store(Request $request): JsonResponse

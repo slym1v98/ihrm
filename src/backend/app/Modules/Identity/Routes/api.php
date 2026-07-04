@@ -1,37 +1,58 @@
 <?php
 
-use App\Modules\Identity\Infrastructure\Http\Controllers\AuthController;
-use App\Modules\Identity\Infrastructure\Http\Controllers\PermissionController;
-use App\Modules\Identity\Infrastructure\Http\Controllers\RoleController;
-use App\Modules\Identity\Infrastructure\Http\Controllers\UserController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\{
+    ActivateRoleController,
+    AssignRoleUserController,
+    ChangePasswordAuthController,
+    DeactivateRoleController,
+    DisableUserController,
+    GrantPermissionRoleController,
+    ListPermissionController,
+    ListRoleController,
+    ListUserController,
+    LoginAuthController,
+    LogoutAuthController,
+    MeAuthController,
+    ReactivateUserController,
+    RevokePermissionRoleController,
+    RevokeRoleUserController,
+    ShowRoleController,
+    ShowUserController,
+    StoreRoleController,
+    StoreUserController,
+    UpdateRoleController,
+    UpdateUserController,
+};
 use Illuminate\Support\Facades\Route;
 
+
+
 Route::prefix('v1')->group(function () {
-    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/login', LoginAuthController::class);
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/auth/logout', [AuthController::class, 'logout']);
-        Route::get('/auth/me', [AuthController::class, 'me']);
-        Route::post('/auth/change-password', [AuthController::class, 'changePassword']);
+        Route::post('/auth/logout', LogoutAuthController::class);
+        Route::get('/auth/me', MeAuthController::class);
+        Route::post('/auth/change-password', ChangePasswordAuthController::class);
 
-        Route::get('/users', [UserController::class, 'index'])->middleware('permission:identity.user.list');
-        Route::post('/users', [UserController::class, 'store'])->middleware('permission:identity.user.create');
-        Route::get('/users/{id}', [UserController::class, 'show'])->middleware('permission:identity.user.view');
-        Route::patch('/users/{id}', [UserController::class, 'update'])->middleware('permission:identity.user.update');
-        Route::post('/users/{id}/disable', [UserController::class, 'disable'])->middleware('permission:identity.user.disable');
-        Route::post('/users/{id}/reactivate', [UserController::class, 'reactivate'])->middleware('permission:identity.user.reactivate');
-        Route::post('/users/{id}/roles', [UserController::class, 'assignRole'])->middleware('permission:identity.user.assign_role');
-        Route::delete('/users/{id}/roles/{roleId}', [UserController::class, 'revokeRole'])->middleware('permission:identity.user.revoke_role');
+        Route::get('/users', ListUserController::class)->middleware('permission:identity.user.list');
+        Route::post('/users', StoreUserController::class)->middleware('permission:identity.user.create');
+        Route::get('/users/{id}', ShowUserController::class)->middleware('permission:identity.user.view');
+        Route::patch('/users/{id}', UpdateUserController::class)->middleware('permission:identity.user.update');
+        Route::post('/users/{id}/disable', DisableUserController::class)->middleware('permission:identity.user.disable');
+        Route::post('/users/{id}/reactivate', ReactivateUserController::class)->middleware('permission:identity.user.reactivate');
+        Route::post('/users/{id}/roles', AssignRoleUserController::class)->middleware('permission:identity.user.assign_role');
+        Route::delete('/users/{id}/roles/{roleId}', RevokeRoleUserController::class)->middleware('permission:identity.user.revoke_role');
 
-        Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:identity.role.list');
-        Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:identity.role.create');
-        Route::get('/roles/{id}', [RoleController::class, 'show'])->middleware('permission:identity.role.view');
-        Route::patch('/roles/{id}', [RoleController::class, 'update'])->middleware('permission:identity.role.update');
-        Route::post('/roles/{id}/activate', [RoleController::class, 'activate'])->middleware('permission:identity.role.update');
-        Route::post('/roles/{id}/deactivate', [RoleController::class, 'deactivate'])->middleware('permission:identity.role.update');
-        Route::post('/roles/{id}/permissions', [RoleController::class, 'grantPermission'])->middleware('permission:identity.role.grant_permission');
-        Route::delete('/roles/{id}/permissions/{code}', [RoleController::class, 'revokePermission'])->middleware('permission:identity.role.revoke_permission');
+        Route::get('/roles', ListRoleController::class)->middleware('permission:identity.role.list');
+        Route::post('/roles', StoreRoleController::class)->middleware('permission:identity.role.create');
+        Route::get('/roles/{id}', ShowRoleController::class)->middleware('permission:identity.role.view');
+        Route::patch('/roles/{id}', UpdateRoleController::class)->middleware('permission:identity.role.update');
+        Route::post('/roles/{id}/activate', ActivateRoleController::class)->middleware('permission:identity.role.update');
+        Route::post('/roles/{id}/deactivate', DeactivateRoleController::class)->middleware('permission:identity.role.update');
+        Route::post('/roles/{id}/permissions', GrantPermissionRoleController::class)->middleware('permission:identity.role.grant_permission');
+        Route::delete('/roles/{id}/permissions/{code}', RevokePermissionRoleController::class)->middleware('permission:identity.role.revoke_permission');
 
-        Route::get('/permissions', [PermissionController::class, 'index'])->middleware('permission:identity.permission.list');
+        Route::get('/permissions', ListPermissionController::class)->middleware('permission:identity.permission.list');
     });
 });

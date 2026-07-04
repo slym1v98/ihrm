@@ -44,6 +44,12 @@ class ConfigurationSeeder extends Seeder
             ['company.tax_id', '', 'string'],
             ['locale.default', 'vi', 'string'],
             ['locale.timezone', 'Asia/Ho_Chi_Minh', 'string'],
+            ['locale.date_format', 'd/m/Y', 'string'],
+            ['locale.datetime_format', 'd/m/Y H:i:s', 'string'],
+            ['currency.symbol', 'đ', 'string'],
+            ['currency.position', 'suffix', 'string'],
+            ['currency.decimal_separator', ',', 'string'],
+            ['currency.thousands_separator', '.', 'string'],
             ['employee.code_generation_rule', 'employee', 'string'],
         ] as [$key, $value, $type]) {
             SystemSettingModel::updateOrCreate(['key' => $key], ['value' => $value, 'value_type' => $type, 'editable' => true]);
