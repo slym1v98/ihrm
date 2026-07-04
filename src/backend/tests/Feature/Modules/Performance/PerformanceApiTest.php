@@ -32,14 +32,14 @@ class PerformanceApiTest extends TestCase
             'start_date' => '2026-07-01', 'end_date' => '2026-09-30',
             'scoring_rules' => ['weights' => ['goals' => 0.6, 'competencies' => 0.4], 'max_score' => 5.0],
         ])->assertCreated();
-        $cycleId = $cycle->json('id');
+        $cycleId = $cycle->json('data.id');
 
         $this->withToken($this->token)->postJson("/api/v1/performance/cycles/{$cycleId}/activate")->assertOk();
 
         $review = $this->withToken($this->token)->postJson('/api/v1/performance/reviews', [
             'cycle_id' => $cycleId, 'employee_id' => '00000000-0000-0000-0000-000000000001',
         ])->assertCreated();
-        $reviewId = $review->json('id');
+        $reviewId = $review->json('data.id');
 
         $goal = $this->withToken($this->token)->postJson('/api/v1/performance/goals', [
             'cycle_id' => $cycleId, 'employee_id' => '00000000-0000-0000-0000-000000000001',
@@ -54,7 +54,7 @@ class PerformanceApiTest extends TestCase
         $this->withToken($this->token)->postJson("/api/v1/performance/goals/{$goalId}/complete", ['actual_value' => 'Launched'])->assertOk();
 
         $show = $this->withToken($this->token)->getJson("/api/v1/performance/reviews/{$reviewId}")->assertOk();
-        $this->assertSame('finalized', $show->json('status'));
+        $this->assertSame('finalized', $show->json('data.status'));
     }
 
     public function test_review_rejects_out_of_order_stage(): void
@@ -64,12 +64,12 @@ class PerformanceApiTest extends TestCase
             'start_date' => '2026-10-01', 'end_date' => '2026-12-31',
             'scoring_rules' => [],
         ])->assertCreated();
-        $cycleId = $cycle->json('id');
+        $cycleId = $cycle->json('data.id');
 
         $review = $this->withToken($this->token)->postJson('/api/v1/performance/reviews', [
             'cycle_id' => $cycleId, 'employee_id' => '00000000-0000-0000-0000-000000000002',
         ])->assertCreated();
-        $reviewId = $review->json('id');
+        $reviewId = $review->json('data.id');
 
         // Skip self -> submit manager should fail
         $this->withToken($this->token)->postJson("/api/v1/performance/reviews/{$reviewId}/manager", ['assessment' => ['rating' => 3]])->assertStatus(422);

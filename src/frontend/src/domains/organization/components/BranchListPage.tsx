@@ -9,7 +9,7 @@ import { Pencil, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useBranches, useCreateBranch, useUpdateBranch, useToggleBranchStatus } from '@/domains/organization/hooks/useBranches';
 import type { Branch } from '@/domains/organization/models/branch';
 import { DataTable, type Column } from '@/shared/components/DataTable';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/shared/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
@@ -113,23 +113,20 @@ export function BranchListPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Chi nhánh</h1>
-          <p className="text-sm text-muted-foreground">Quản lý danh sách chi nhánh công ty</p>
-        </div>
         <Button onClick={openCreate}>+ Thêm chi nhánh</Button>
       </div>
 
       <DataTable<Branch> columns={columns} data={branches} isLoading={isLoading} rowKey="id" emptyMessage="Chưa có chi nhánh nào" />
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editing ? 'Sửa chi nhánh' : 'Thêm chi nhánh'}</DialogTitle>
-            <DialogDescription>{editing ? 'Cập nhật thông tin chi nhánh' : 'Nhập thông tin chi nhánh mới'}</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
+      <Drawer open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DrawerContent size="sm">
+          <DrawerHeader>
+            <DrawerTitle>{editing ? 'Sửa chi nhánh' : 'Thêm chi nhánh'}</DrawerTitle>
+            <DrawerDescription>{editing ? 'Cập nhật thông tin chi nhánh' : 'Nhập thông tin chi nhánh mới'}</DrawerDescription>
+          </DrawerHeader>
+          <DrawerBody>
+<form id="drawer-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+<div className="space-y-2">
               <Label htmlFor="code">Mã chi nhánh <span className="text-destructive">*</span></Label>
               <Input id="code" {...form.register('code')} disabled={!!editing} />
               {form.formState.errors.code && <p className="text-xs text-destructive">{form.formState.errors.code.message}</p>}
@@ -151,29 +148,32 @@ export function BranchListPage() {
                 {form.formState.errors.email && <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>}
               </div>
             </div>
-            <DialogFooter>
-              <Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
-              <Button type="submit" disabled={createBranch.isPending || updateBranch.isPending}>{editing ? 'Cập nhật' : 'Tạo'}</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+</form>
+</DrawerBody>
+<DrawerFooter>
+<Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
+              <Button type="submit" form="drawer-form" disabled={createBranch.isPending || updateBranch.isPending}>{editing ? 'Cập nhật' : 'Tạo'}</Button>
+            
+</DrawerFooter>
 
-      <Dialog open={!!confirm} onOpenChange={(o) => !o && setConfirm(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Xác nhận</DialogTitle>
-            <DialogDescription>{confirm?.action === 'activate' ? `Kích hoạt chi nhánh "${confirm?.name}"?` : `Vô hiệu hóa chi nhánh "${confirm?.name}"?`}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
+        </DrawerContent>
+      </Drawer>
+
+      <Drawer open={!!confirm} onOpenChange={(o) => !o && setConfirm(null)}>
+        <DrawerContent size="sm">
+          <DrawerHeader>
+            <DrawerTitle>Xác nhận</DrawerTitle>
+            <DrawerDescription>{confirm?.action === 'activate' ? `Kích hoạt chi nhánh "${confirm?.name}"?` : `Vô hiệu hóa chi nhánh "${confirm?.name}"?`}</DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
             <Button variant="ghost" onClick={() => setConfirm(null)}>Hủy</Button>
             <Button variant={confirm?.action === 'deactivate' ? 'destructive' : 'primary'} disabled={toggleStatus.isPending}
               onClick={() => confirm && toggleStatus.mutateAsync(confirm).then(() => { toast.success('Thành công'); setConfirm(null); }).catch((raw) => toast.error(extractErrorMessage(raw)))}>
               Xác nhận
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

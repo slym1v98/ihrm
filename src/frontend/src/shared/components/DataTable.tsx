@@ -33,7 +33,7 @@ export function DataTable<T>({
           <TableHeader>
             <TableRow>
               {columns.map((col, i) => (
-                <TableHead key={i} className={col.headerClassName}>{col.header}</TableHead>
+                <TableHead key={i} className={col.headerClassName}>{col.header || null}</TableHead>
               ))}
             </TableRow>
           </TableHeader>
@@ -51,7 +51,7 @@ export function DataTable<T>({
         <TableHeader>
           <TableRow>
             {columns.map((col, i) => (
-              <TableHead key={i} className={col.headerClassName}>{col.header}</TableHead>
+              <TableHead key={i} className={col.headerClassName}>{col.header || null}</TableHead>
             ))}
           </TableRow>
         </TableHeader>

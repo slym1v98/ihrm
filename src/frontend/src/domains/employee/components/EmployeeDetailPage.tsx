@@ -9,6 +9,7 @@ import { useBranches } from '@/domains/organization/hooks/useBranches';
 import { useDepartments } from '@/domains/organization/hooks/useDepartments';
 import { usePositions } from '@/domains/organization/hooks/usePositions';
 import { extractErrorMessage } from '@/core/errors/messages';
+import { LeaveBalanceSection } from '@/domains/leave/components/LeaveBalanceSection';
 import { ContractSection } from '@/domains/employee/components/ContractSection';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
@@ -16,7 +17,7 @@ import { Label } from '@/shared/components/ui/label';
 import { Badge } from '@/shared/components/ui/badge';
 import { ChevronLeft } from 'lucide-react';
 
-type Tab = 'info' | 'contracts' | 'documents';
+type Tab = 'info' | 'contracts' | 'documents' | 'balance';
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -116,7 +117,7 @@ export function EmployeeDetailPage() {
   const tabs: { key: Tab; label: string }[] = [
     { key: 'info', label: 'Thông tin' },
     { key: 'contracts', label: `Hợp đồng (${contractsData?.data?.length ?? 0})` },
-    { key: 'documents', label: 'Tài liệu' },
+    { key: 'documents', label: 'Tài liệu' },{ key: 'balance', label: 'Ngày phép' },
   ];
 
   return (
@@ -126,13 +127,9 @@ export function EmployeeDetailPage() {
           <ChevronLeft className="h-4 w-4" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-semibold">{employee.last_name} {employee.first_name}</h1>
-          <p className="text-sm text-muted-foreground">
-            {employee.employee_code} ·{' '}
             <Badge variant={employee.status === 'active' ? 'default' : 'secondary'}>
               {employee.status === 'active' ? 'Đang làm' : 'Đã nghỉ'}
             </Badge>
-          </p>
         </div>
         <Button
           variant={employee.status === 'active' ? 'destructive' : 'primary'}
@@ -227,6 +224,8 @@ export function EmployeeDetailPage() {
       )}
 
       {tab === 'contracts' && <ContractSection employeeId={id} />}
+
+      {tab === 'balance' && <LeaveBalanceSection employeeId={id} />}
 
       {tab === 'documents' && (
         <div className="rounded-lg border bg-[hsl(var(--card))] p-4">

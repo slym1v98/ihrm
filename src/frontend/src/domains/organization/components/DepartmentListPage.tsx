@@ -10,7 +10,7 @@ import { useDepartments, useCreateDepartment, useUpdateDepartment, useMoveDepart
 import { useBranches } from '@/domains/organization/hooks/useBranches';
 import type { Department } from '@/domains/organization/models/department';
 import { DataTable, type Column } from '@/shared/components/DataTable';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/shared/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
@@ -125,23 +125,19 @@ export function DepartmentListPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Phòng ban</h1>
-          <p className="text-sm text-muted-foreground">Quản lý cấu trúc phòng ban theo chi nhánh</p>
-        </div>
-        <Button onClick={openCreate}>+ Thêm phòng ban</Button>
       </div>
 
       <DataTable<Department> columns={columns} data={departments} isLoading={isLoading} rowKey="id" emptyMessage="Chưa có phòng ban nào" />
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{isMove ? 'Di chuyển phòng ban' : editing ? 'Sửa phòng ban' : 'Thêm phòng ban'}</DialogTitle>
-            <DialogDescription>{isMove ? 'Chọn cấp cha mới cho phòng ban' : editing ? 'Cập nhật thông tin phòng ban' : 'Nhập thông tin phòng ban mới'}</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {!isMove && <>
+      <Drawer open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DrawerContent size="sm">
+          <DrawerHeader>
+            <DrawerTitle>{isMove ? 'Di chuyển phòng ban' : editing ? 'Sửa phòng ban' : 'Thêm phòng ban'}</DrawerTitle>
+            <DrawerDescription>{isMove ? 'Chọn cấp cha mới cho phòng ban' : editing ? 'Cập nhật thông tin phòng ban' : 'Nhập thông tin phòng ban mới'}</DrawerDescription>
+          </DrawerHeader>
+          <DrawerBody>
+<form id="drawer-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+{!isMove && <>
               <div className="space-y-2">
                 <Label htmlFor="code">Mã phòng ban <span className="text-destructive">*</span></Label>
                 <Input id="code" {...form.register('code')} disabled={!!editing} />
@@ -170,29 +166,32 @@ export function DepartmentListPage() {
                 {availableParents.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
             </div>
-            <DialogFooter>
-              <Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
+</form>
+</DrawerBody>
+<DrawerFooter>
+<Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
               <Button type="submit" disabled={createDept.isPending || updateDept.isPending || moveDept.isPending}>
                 {isMove ? 'Di chuyển' : editing ? 'Cập nhật' : 'Tạo'}
               </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+            
+</DrawerFooter>
 
-      <Dialog open={!!confirm} onOpenChange={(o) => !o && setConfirm(null)}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Xác nhận</DialogTitle>
-          <DialogDescription>{confirm?.action === 'activate' ? `Kích hoạt phòng ban "${confirm?.name}"?` : `Vô hiệu hóa phòng ban "${confirm?.name}"?`}</DialogDescription></DialogHeader>
-          <DialogFooter>
+        </DrawerContent>
+      </Drawer>
+
+      <Drawer open={!!confirm} onOpenChange={(o) => !o && setConfirm(null)}>
+        <DrawerContent size="sm">
+          <DrawerHeader><DrawerTitle>Xác nhận</DrawerTitle>
+          <DrawerDescription>{confirm?.action === 'activate' ? `Kích hoạt phòng ban "${confirm?.name}"?` : `Vô hiệu hóa phòng ban "${confirm?.name}"?`}</DrawerDescription></DrawerHeader>
+          <DrawerFooter>
             <Button variant="ghost" onClick={() => setConfirm(null)}>Hủy</Button>
             <Button variant={confirm?.action === 'deactivate' ? 'destructive' : 'primary'} disabled={toggleStatus.isPending}
               onClick={() => confirm && toggleStatus.mutateAsync(confirm).then(() => { toast.success('Thành công'); setConfirm(null); }).catch((raw) => toast.error(extractErrorMessage(raw)))}>
               Xác nhận
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

@@ -33,7 +33,7 @@ class TrainingApiTest extends TestCase
             'description' => 'Basic onboarding course', 'category' => 'onboarding',
             'default_duration_hours' => 8, 'max_participants' => 30,
         ])->assertCreated();
-        $courseId = $course->json('id');
+        $courseId = $course->json('data.id');
         $this->assertNotNull($courseId);
 
         // Create session
@@ -74,7 +74,7 @@ class TrainingApiTest extends TestCase
             'code' => 'CAPACITY-TEST', 'name' => 'Capacity Test',
             'max_participants' => 1,
         ])->assertCreated();
-        $courseId = $course->json('id');
+        $courseId = $course->json('data.id');
 
         $session = $this->withToken($this->token)->postJson("/api/v1/training/courses/{$courseId}/sessions", [
             'code' => 'CAP-1', 'name' => 'Session 1',
@@ -99,7 +99,7 @@ class TrainingApiTest extends TestCase
         $course = $this->withToken($this->token)->postJson('/api/v1/training/courses', [
             'code' => 'DUP-TEST', 'name' => 'Duplicate Test',
         ])->assertCreated();
-        $courseId = $course->json('id');
+        $courseId = $course->json('data.id');
 
         $session = $this->withToken($this->token)->postJson("/api/v1/training/courses/{$courseId}/sessions", [
             'code' => 'DUP-1', 'name' => 'Session 1',

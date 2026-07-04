@@ -25,8 +25,6 @@ export function OrgTreePage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <div><h1 className="text-2xl font-semibold">Sơ đồ tổ chức</h1>
-        <p className="text-sm text-muted-foreground">Cấu trúc cây công ty, chi nhánh và phòng ban</p></div>
         <div className="flex items-center justify-center rounded-lg border bg-[hsl(var(--card))] py-12">
           <p className="text-muted-foreground">Đang tải sơ đồ tổ chức...</p>
         </div>
@@ -37,8 +35,6 @@ export function OrgTreePage() {
   if (error) {
     return (
       <div className="space-y-4">
-        <div><h1 className="text-2xl font-semibold">Sơ đồ tổ chức</h1>
-        <p className="text-sm text-muted-foreground">Cấu trúc cây công ty, chi nhánh và phòng ban</p></div>
         <div className="flex items-center justify-center rounded-lg border bg-[hsl(var(--card))] py-12">
           <p className="text-destructive">Không thể tải sơ đồ tổ chức.</p>
         </div>
@@ -50,10 +46,6 @@ export function OrgTreePage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Sơ đồ tổ chức</h1>
-        <p className="text-sm text-muted-foreground">Cấu trúc cây công ty, chi nhánh và phòng ban</p>
-      </div>
       <div className="rounded-lg border bg-[hsl(var(--card))] p-4">
         {branches.length === 0 ? (
           <p className="py-8 text-center text-muted-foreground">Chưa có dữ liệu tổ chức</p>

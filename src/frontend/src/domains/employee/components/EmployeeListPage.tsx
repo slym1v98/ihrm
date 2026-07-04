@@ -8,7 +8,7 @@ import { useEmployees, useCreateEmployee } from '@/domains/employee/hooks/useEmp
 import { extractErrorMessage } from '@/core/errors/messages';
 import type { Employee } from '@/domains/employee/models/employee';
 import { DataTable, type Column } from '@/shared/components/DataTable';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/shared/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
@@ -59,23 +59,20 @@ export function EmployeeListPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Nhân viên</h1>
-          <p className="text-sm text-muted-foreground">Quản lý danh sách nhân viên</p>
-        </div>
         <Button onClick={openCreate}>+ Thêm nhân viên</Button>
       </div>
 
       <DataTable<Employee> columns={columns} data={employees} isLoading={isLoading} rowKey="id" emptyMessage="Chưa có nhân viên nào" />
 
-      <Dialog open={dialogOpen} onOpenChange={(o) => { if (!o) setDialogOpen(false); }}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Thêm nhân viên</DialogTitle>
-            <DialogDescription>Nhập họ và tên nhân viên mới</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
+      <Drawer open={dialogOpen} onOpenChange={(o) => { if (!o) setDialogOpen(false); }}>
+        <DrawerContent size="sm">
+          <DrawerHeader>
+            <DrawerTitle>Thêm nhân viên</DrawerTitle>
+            <DrawerDescription>Nhập họ và tên nhân viên mới</DrawerDescription>
+          </DrawerHeader>
+          <DrawerBody>
+<form id="drawer-form" onSubmit={handleSubmit} className="space-y-4">
+<div className="space-y-2">
               <Label htmlFor="last_name">Họ <span className="text-destructive">*</span></Label>
               <Input id="last_name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
             </div>
@@ -83,13 +80,16 @@ export function EmployeeListPage() {
               <Label htmlFor="first_name">Tên <span className="text-destructive">*</span></Label>
               <Input id="first_name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
             </div>
-            <DialogFooter>
-              <Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
-              <Button type="submit" disabled={createEmp.isPending}>Tạo</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+</form>
+</DrawerBody>
+<DrawerFooter>
+<Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
+              <Button type="submit" form="drawer-form" disabled={createEmp.isPending}>Tạo</Button>
+            
+</DrawerFooter>
+
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

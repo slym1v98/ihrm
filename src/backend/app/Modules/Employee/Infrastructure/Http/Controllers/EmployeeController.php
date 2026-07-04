@@ -99,8 +99,13 @@ class EmployeeController
 
     public function changeStatus(Request $request, string $id): JsonResponse
     {
+        $status = $request->input('status');
+        if (!$status && $request->filled('action')) {
+            $status = $request->input('action') === 'activate' ? 'active' : 'inactive';
+        }
+
         $this->changeStatusHandler->handle(
-            new ChangeEmployeeStatusCommand($id, $request->input('status'), $request->input('reason')),
+            new ChangeEmployeeStatusCommand($id, $status, $request->input('reason')),
             (string) $request->user()->id,
         );
 

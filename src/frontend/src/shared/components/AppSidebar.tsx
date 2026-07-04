@@ -2,13 +2,53 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Building2, Users } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, Calendar, Clock, ClipboardCheck, Package, GraduationCap, UserPlus, UserX, BarChart3, FileText, Settings, History, GitBranch, UserCheck, DollarSign } from 'lucide-react';
 import { useSidebar } from '@/shared/hooks/useSidebar';
 import { cn } from '@/core/utils/cn';
 
 const nav = [
   { section: 'Nhân sự', items: [
     { href: '/employees', label: 'Nhân viên', icon: Users },
+  ]},
+  { section: 'Nghỉ phép', items: [
+    { href: '/leave', label: 'Đơn nghỉ phép', icon: Calendar },
+  ]},
+  { section: 'Ca làm việc', items: [
+    { href: '/shift', label: 'Ca làm việc', icon: Clock },
+  ]},
+  { section: 'Chấm công', items: [
+    { href: '/attendance', label: 'Chấm công', icon: ClipboardCheck },
+  ]},
+  { section: 'Tài sản', items: [
+    { href: '/asset', label: 'Tài sản', icon: Package },
+  ]},
+  { section: 'Đào tạo', items: [
+    { href: '/training', label: 'Khoá học', icon: GraduationCap },
+  ]},
+  { section: 'Hội nhập', items: [
+    { href: '/onboarding', label: 'Onboarding', icon: UserPlus },
+  ]},
+  { section: 'Thôi việc', items: [
+    { href: '/offboarding', label: 'Offboarding', icon: UserX },
+  ]},
+  { section: 'Hiệu suất', items: [
+    { href: '/performance', label: 'Đánh giá', icon: BarChart3 },
+  ]},
+  { section: 'Tuyển dụng', items: [
+    { href: '/recruitment', label: 'Tuyển dụng', icon: UserCheck },
+  ]},
+  { section: 'Báo cáo', items: [
+    { href: '/reports', label: 'Báo cáo', icon: FileText },
+  ]},
+  { section: 'Cấu hình', items: [
+    { href: '/settings', label: 'Cài đặt', icon: Settings },
+  ]},
+  { section: 'Lương', items: [
+    { href: '/payroll', label: 'Bảng lương', icon: DollarSign },
+  ]},
+  { section: 'Hệ thống', items: [
+    { href: '/workflow', label: 'Quy trình duyệt', icon: GitBranch },
+    { href: '/audit', label: 'Nhật ký', icon: History },
   ]},
   { section: 'Tổ chức', items: [
     { href: '/organization/branches', label: 'Chi nhánh', icon: Building2 },
@@ -24,10 +64,22 @@ export function AppSidebar() {
 
   return (
     <aside className={cn(
-      'flex flex-col border-r bg-[hsl(var(--card))] transition-all duration-200 pt-4',
+      'flex h-screen flex-col overflow-hidden border-r bg-[hsl(var(--card))] transition-all duration-200',
       collapsed ? 'w-16' : 'w-64',
     )}>
-      <nav className="flex-1 space-y-1 px-2">
+      {/* Logo area — same height as header */}
+      <div className={cn(
+        'flex items-center border-b h-16 shrink-0',
+        collapsed ? 'justify-center px-0' : 'px-4',
+      )}>
+        {collapsed ? (
+          <span className="text-lg font-bold text-primary">i</span>
+        ) : (
+          <span className="text-lg font-bold text-primary">iHRM</span>
+        )}
+      </div>
+
+      <nav className="flex-1 space-y-1 p-2 overflow-y-auto">
         <NavItem href="/dashboard" icon={LayoutDashboard} label="Dashboard" collapsed={collapsed} pathname={pathname} />
         {nav.map(group => (
           <div key={group.section}>

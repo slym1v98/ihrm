@@ -1,28 +1,46 @@
 <?php
 
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\{
+    ActivateOffboardingPlanController,
+    ApproveOffboardingRequestController,
+    CompleteOffboardingPlanController,
+    CompleteOffboardingTaskController,
+    FinalClearanceOffboardingPlanController,
+    ListOffboardingPlanController,
+    ListOffboardingRequestController,
+    ListOffboardingTaskController,
+    RejectOffboardingRequestController,
+    ShowOffboardingPlanController,
+    ShowOffboardingRequestController,
+    StartOffboardingTaskController,
+    StoreOffboardingPlanController,
+    StoreOffboardingRequestController,
+    StoreOffboardingTaskController,
+    SubmitOffboardingRequestController,
+    WaiveOffboardingTaskController,
+};
 use Illuminate\Support\Facades\Route;
-use App\Modules\Offboarding\Infrastructure\Http\Controllers\OffboardingRequestController;
-use App\Modules\Offboarding\Infrastructure\Http\Controllers\OffboardingPlanController;
-use App\Modules\Offboarding\Infrastructure\Http\Controllers\OffboardingTaskController;
+
+
 
 Route::prefix('v1/offboarding')
     ->middleware(['auth:sanctum'])
     ->group(function () {
-        Route::get('requests', [OffboardingRequestController::class, 'index'])->middleware('permission:offboarding.request.view');
-        Route::post('requests', [OffboardingRequestController::class, 'store'])->middleware('permission:offboarding.request.create');
-        Route::get('requests/{id}', [OffboardingRequestController::class, 'show'])->middleware('permission:offboarding.request.view');
-        Route::post('requests/{id}/submit', [OffboardingRequestController::class, 'submit'])->middleware('permission:offboarding.request.submit');
-        Route::post('requests/{id}/approve', [OffboardingRequestController::class, 'approve'])->middleware('permission:offboarding.request.approve');
-        Route::post('requests/{id}/reject', [OffboardingRequestController::class, 'reject'])->middleware('permission:offboarding.request.reject');
-        Route::get('plans', [OffboardingPlanController::class, 'index'])->middleware('permission:offboarding.plan.view');
-        Route::post('plans', [OffboardingPlanController::class, 'store'])->middleware('permission:offboarding.plan.create');
-        Route::get('plans/{id}', [OffboardingPlanController::class, 'show'])->middleware('permission:offboarding.plan.view');
-        Route::post('plans/{id}/activate', [OffboardingPlanController::class, 'activate'])->middleware('permission:offboarding.plan.activate');
-        Route::post('plans/{id}/complete', [OffboardingPlanController::class, 'complete'])->middleware('permission:offboarding.plan.complete');
-        Route::get('plans/{planId}/tasks', [OffboardingTaskController::class, 'index'])->middleware('permission:offboarding.task.view');
-        Route::post('plans/{planId}/tasks', [OffboardingTaskController::class, 'store'])->middleware('permission:offboarding.task.create');
-        Route::post('tasks/{id}/start', [OffboardingTaskController::class, 'start'])->middleware('permission:offboarding.task.start');
-        Route::post('tasks/{id}/complete', [OffboardingTaskController::class, 'complete'])->middleware('permission:offboarding.task.complete');
-        Route::post('tasks/{id}/waive', [OffboardingTaskController::class, 'waive'])->middleware('permission:offboarding.task.waive');
-        Route::post('plans/{id}/final-clearance', [OffboardingPlanController::class, 'finalClearance'])->middleware('permission:offboarding.clearance.complete');
+        Route::get('requests', ListOffboardingRequestController::class)->middleware('permission:offboarding.request.view');
+        Route::post('requests', StoreOffboardingRequestController::class)->middleware('permission:offboarding.request.create');
+        Route::get('requests/{id}', ShowOffboardingRequestController::class)->middleware('permission:offboarding.request.view');
+        Route::post('requests/{id}/submit', SubmitOffboardingRequestController::class)->middleware('permission:offboarding.request.submit');
+        Route::post('requests/{id}/approve', ApproveOffboardingRequestController::class)->middleware('permission:offboarding.request.approve');
+        Route::post('requests/{id}/reject', RejectOffboardingRequestController::class)->middleware('permission:offboarding.request.reject');
+        Route::get('plans', ListOffboardingPlanController::class)->middleware('permission:offboarding.plan.view');
+        Route::post('plans', StoreOffboardingPlanController::class)->middleware('permission:offboarding.plan.create');
+        Route::get('plans/{id}', ShowOffboardingPlanController::class)->middleware('permission:offboarding.plan.view');
+        Route::post('plans/{id}/activate', ActivateOffboardingPlanController::class)->middleware('permission:offboarding.plan.activate');
+        Route::post('plans/{id}/complete', CompleteOffboardingPlanController::class)->middleware('permission:offboarding.plan.complete');
+        Route::get('plans/{planId}/tasks', ListOffboardingTaskController::class)->middleware('permission:offboarding.task.view');
+        Route::post('plans/{planId}/tasks', StoreOffboardingTaskController::class)->middleware('permission:offboarding.task.create');
+        Route::post('tasks/{id}/start', StartOffboardingTaskController::class)->middleware('permission:offboarding.task.start');
+        Route::post('tasks/{id}/complete', CompleteOffboardingTaskController::class)->middleware('permission:offboarding.task.complete');
+        Route::post('tasks/{id}/waive', WaiveOffboardingTaskController::class)->middleware('permission:offboarding.task.waive');
+        Route::post('plans/{id}/final-clearance', FinalClearanceOffboardingPlanController::class)->middleware('permission:offboarding.clearance.complete');
     });

@@ -43,14 +43,14 @@ class PerformanceCycleController extends Controller
             'end_date' => $c->getEndDate()->format('Y-m-d'), 'status' => $c->getStatus()->value,
             'scoring_rules' => $c->getScoringRules(), 'workflow_request_id' => $c->getWorkflowRequestId(),
         ], $items);
-        return response()->json($data);
+        return response()->json(["data" => $data]);
     }
 
     public function store(Request $r): JsonResponse
     {
         $cmd = new CreateCycleCommand($r->input('code'), $r->input('name'), $r->input('description'), $r->input('start_date'), $r->input('end_date'), $r->input('scoring_rules', []));
         $cycle = $this->createHandler->handle($cmd);
-        return response()->json(['id' => $cycle->getId()->value], 201);
+        return response()->json(['data' => ['id' => $cycle->getId()->value]], 201);
     }
 
     public function show(string $id): JsonResponse
@@ -68,15 +68,15 @@ class PerformanceCycleController extends Controller
     {
         $cmd = new UpdateCycleCommand($id, $r->input('code'), $r->input('name'), $r->input('description'), $r->input('start_date'), $r->input('end_date'), $r->input('scoring_rules', []));
         $this->updateHandler->handle($cmd);
-        return response()->json(['message' => 'Updated']);
+        return response()->json(['data' => null]);
     }
 
     public function activate(string $id): JsonResponse
-    { try { $this->activateHandler->handle(new ActivateCycleCommand($id)); return response()->json(['message' => 'Activated']); } catch (\Exception $e) { return response()->json(['error' => $e->getMessage()], 422); } }
+    { try { $this->activateHandler->handle(new ActivateCycleCommand($id)); return response()->json(['data' => null]); } catch (\Exception $e) { return response()->json(['data' => null, 'message' => $e->getMessage()], 422); } }
 
     public function complete(string $id): JsonResponse
-    { try { $this->completeHandler->handle(new CompleteCycleCommand($id)); return response()->json(['message' => 'Completed']); } catch (\Exception $e) { return response()->json(['error' => $e->getMessage()], 422); } }
+    { try { $this->completeHandler->handle(new CompleteCycleCommand($id)); return response()->json(['data' => null]); } catch (\Exception $e) { return response()->json(['data' => null, 'message' => $e->getMessage()], 422); } }
 
     public function cancel(string $id): JsonResponse
-    { try { $this->cancelHandler->handle(new CancelCycleCommand($id)); return response()->json(['message' => 'Cancelled']); } catch (\Exception $e) { return response()->json(['error' => $e->getMessage()], 422); } }
+    { try { $this->cancelHandler->handle(new CancelCycleCommand($id)); return response()->json(['data' => null]); } catch (\Exception $e) { return response()->json(['data' => null, 'message' => $e->getMessage()], 422); } }
 }

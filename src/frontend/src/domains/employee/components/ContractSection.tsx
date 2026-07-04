@@ -8,12 +8,14 @@ import { toast } from 'sonner';
 import { useContracts, useCreateContract, useActivateContract, useRenewContract, useTerminateContract } from '@/domains/employee/hooks/useContracts';
 import { extractErrorMessage } from '@/core/errors/messages';
 import { DataTable, type Column } from '@/shared/components/DataTable';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/shared/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { Badge } from '@/shared/components/ui/badge';
 import type { Contract } from '@/domains/employee/models/contract';
+import { useDateFormatter } from '@/shared/hooks/useDateFormatter';
+import { useMoneyFormatter } from '@/shared/hooks/useMoneyFormatter';
 
 const contractSchema = z.object({
   contract_number: z.string().min(1, 'Số HĐ không được để trống'),
@@ -32,6 +34,8 @@ function isExpiringSoon(endDate: string | null) {
 }
 
 export function ContractSection({ employeeId }: { employeeId: string }) {
+  const { formatDate } = useDateFormatter();
+  const { formatMoney } = useMoneyFormatter();
   const { data, isLoading } = useContracts(employeeId);
   const createContract = useCreateContract(employeeId);
   const activateContract = useActivateContract();
@@ -59,11 +63,11 @@ export function ContractSection({ employeeId }: { employeeId: string }) {
   const columns: Column<Contract>[] = [
     { header: 'Số HĐ', accessor: 'contract_number', className: 'font-mono text-xs' },
     { header: 'Loại', accessor: 'contract_type', cell: (c) => c.contract_type ?? '—' },
-    { header: 'Ngày BĐ', accessor: 'start_date', cell: (c) => c.start_date ?? '—' },
+    { header: 'Ngày BĐ', accessor: undefined as never, cell: (c) => formatDate(c.start_date) || '—' },
     { header: 'Ngày KT', accessor: undefined as never, cell: (c) => (
-      <span className={isExpiringSoon(c.end_date) ? 'font-semibold text-destructive' : ''}>{c.end_date ?? '—'}</span>
+      <span className={isExpiringSoon(c.end_date) ? 'font-semibold text-destructive' : ''}>{formatDate(c.end_date) || '—'}</span>
     )},
-    { header: 'Lương CB', accessor: undefined as never, cell: (c) => c.base_salary != null ? c.base_salary.toLocaleString() : '—' },
+    { header: 'Lương CB', accessor: undefined as never, cell: (c) => c.base_salary != null ? formatMoney(c.base_salary) : '—' },
     { header: 'Trạng thái', accessor: undefined as never, cell: (c) => {
       const st = c.status === 'active' ? 'default' : c.status === 'expired' ? 'secondary' : 'destructive';
       const lb = c.status === 'active' ? 'Hiệu lực' : c.status === 'expired' ? 'Hết hạn' : 'Đã chấm dứt';
@@ -94,11 +98,12 @@ export function ContractSection({ employeeId }: { employeeId: string }) {
 
       <DataTable<Contract> columns={columns} data={contracts} isLoading={isLoading} rowKey="id" emptyMessage="Chưa có hợp đồng" />
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Thêm hợp đồng</DialogTitle><DialogDescription>Nhập thông tin hợp đồng mới</DialogDescription></DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmitCreate)} className="space-y-3">
-            <div className="space-y-1"><Label>Số hợp đồng *</Label><Input {...form.register('contract_number')} /></div>
+      <Drawer open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DrawerContent size="lg">
+          <DrawerHeader><DrawerTitle>Thêm hợp đồng</DrawerTitle><DrawerDescription>Nhập thông tin hợp đồng mới</DrawerDescription></DrawerHeader>
+          <DrawerBody>
+<form id="drawer-form" onSubmit={form.handleSubmit(onSubmitCreate)} className="space-y-3">
+<div className="space-y-1"><Label>Số hợp đồng *</Label><Input {...form.register('contract_number')} /></div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1"><Label>Loại HĐ</Label><Input {...form.register('contract_type')} /></div>
               <div className="space-y-1"><Label>Lương cơ bản</Label><Input type="number" {...form.register('base_salary')} /></div>
@@ -108,30 +113,34 @@ export function ContractSection({ employeeId }: { employeeId: string }) {
               <div className="space-y-1"><Label>Ngày KT</Label><Input type="date" {...form.register('end_date')} /></div>
               <div className="space-y-1"><Label>Ngày ký</Label><Input type="date" {...form.register('sign_date')} /></div>
             </div>
-            <DialogFooter>
-              <Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
-              <Button type="submit" disabled={createContract.isPending}>Tạo</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+</form>
+</DrawerBody>
+<DrawerFooter>
+<Button variant="ghost" type="button" onClick={() => setDialogOpen(false)}>Hủy</Button>
+              <Button type="submit" form="drawer-form" disabled={createContract.isPending}>Tạo</Button>
+            
+</DrawerFooter>
+
+        </DrawerContent>
+      </Drawer>
 
       {/* Confirm action dialog */}
-      <Dialog open={!!confirmAction} onOpenChange={(o) => !o && setConfirmAction(null)}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Xác nhận</DialogTitle>
-          <DialogDescription>
+      <Drawer open={!!confirmAction} onOpenChange={(o) => !o && setConfirmAction(null)}>
+        <DrawerContent size="sm">
+          <DrawerHeader><DrawerTitle>Xác nhận</DrawerTitle>
+          <DrawerDescription>
             {confirmAction?.type === 'activate' ? `Kích hoạt hợp đồng "${confirmAction?.number}"?` :
              confirmAction?.type === 'terminate' ? `Chấm dứt hợp đồng "${confirmAction?.number}"?` :
              `Gia hạn hợp đồng "${confirmAction?.number}"?`}
-          </DialogDescription></DialogHeader>
-          {confirmAction?.type === 'renew' && (
+          </DrawerDescription></DrawerHeader>
+          <DrawerBody>          {confirmAction?.type === 'renew' && (
             <div className="space-y-2">
               <Label>Số ngày gia hạn</Label>
               <Input type="number" value={renewDays} onChange={(e) => setRenewDays(e.target.value)} />
             </div>
           )}
-          <DialogFooter>
+          </DrawerBody>
+          <DrawerFooter>
             <Button variant="ghost" onClick={() => setConfirmAction(null)}>Hủy</Button>
             <Button variant="primary" disabled={activateContract.isPending || renewContract.isPending || terminateContract.isPending}
               onClick={async () => {
@@ -150,9 +159,9 @@ export function ContractSection({ employeeId }: { employeeId: string }) {
               }}>
               Xác nhận
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

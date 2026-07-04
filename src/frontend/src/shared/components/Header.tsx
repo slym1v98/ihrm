@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, User, Settings, LogOut, ChevronDown, Moon, Sun, PanelLeft, PanelLeftClose } from 'lucide-react';
+import { Bell, User, Settings, LogOut, Moon, Sun, PanelLeft, PanelLeftClose } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/domains/auth/hooks/useAuth';
 import { useTheme } from '@/shared/hooks/useTheme';
 import { useSidebar } from '@/shared/hooks/useSidebar';
+import { Breadcrumb } from '@/shared/components/Breadcrumb';
 import { toast } from 'sonner';
 
 function Dropdown({ trigger, children }: { trigger: React.ReactNode; children: React.ReactNode }) {
@@ -53,12 +54,13 @@ export function Header() {
   const { collapsed, toggle } = useSidebar();
 
   return (
-    <header className="flex h-12 items-center justify-between border-b bg-[hsl(var(--card))] px-4">
-      <div className="flex items-center gap-2">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-[hsl(var(--card))] px-4">
+      <div className="flex items-center gap-3">
         <button type="button" onClick={toggle} title={collapsed ? 'Mở rộng' : 'Thu gọn'}
           className="rounded-md p-1.5 hover:bg-muted transition-colors">
           {collapsed ? <PanelLeft className="h-5 w-5 text-muted-foreground" /> : <PanelLeftClose className="h-5 w-5 text-muted-foreground" />}
         </button>
+        <Breadcrumb />
       </div>
 
       <div className="flex items-center gap-2">
@@ -75,9 +77,12 @@ export function Header() {
           <div className="border-b px-3 py-2 text-sm font-medium">Welcome, {user?.name ?? 'Admin'}</div>
           <DropdownItem icon={User} label="Hồ sơ nhân sự" onClick={() => router.push('/employees')} />
           <DropdownItem icon={Settings} label="Cài đặt" onClick={() => toast.info('Chưa có trang cài đặt')} />
-          <div className="my-1 border-t" />
-          <DropdownItem icon={LogOut} label="Đăng xuất" onClick={async () => { await logout(); router.replace('/login'); }} />
         </Dropdown>
+
+        <button type="button" onClick={async () => { await logout(); router.replace('/login'); }}
+          title="Đăng xuất" className="rounded-md p-1.5 hover:bg-muted transition-colors">
+          <LogOut className="h-5 w-5 text-muted-foreground" />
+        </button>
       </div>
     </header>
   );
