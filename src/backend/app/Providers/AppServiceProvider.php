@@ -40,6 +40,7 @@ use App\Modules\Workflow\Domain\Events\WorkflowRejected;
 use App\Modules\Recruitment\Domain\Events\OfferAccepted;
 use App\Modules\Recruitment\Application\Listeners\CreateEmployeeOnOfferAccepted;
 use App\Modules\Employee\Application\Listeners\ActivateEmployeeOnOnboardingComplete;
+use App\Modules\Employee\Application\Listeners\CreateOffboardingOnResign;
 use App\Modules\Onboarding\Domain\Events\OnboardingPlanCompleted;
 use App\Modules\Leave\Application\Workflow\LeaveRequestSubjectProvider;
 use App\Modules\Workflow\Application\Contracts\SubjectDataProvider;
@@ -268,6 +269,7 @@ $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepos
     {
         Event::listen(OfferAccepted::class, CreateEmployeeOnOfferAccepted::class);
         Event::listen(OnboardingPlanCompleted::class, ActivateEmployeeOnOnboardingComplete::class);
+        Event::listen(EmployeeStatusChanged::class, CreateOffboardingOnResign::class);
 
         foreach ([
             UserCreated::class,
