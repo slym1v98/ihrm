@@ -10,9 +10,12 @@ class WorkflowRequestModel extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['id', 'workflow_template_id', 'subject_type', 'subject_id', 'status', 'current_step', 'submitted_by'];
+    protected $fillable = ['id', 'workflow_template_id', 'subject_type', 'subject_id', 'status', 'current_step', 'submitted_by', 'context'];
 
-    protected $casts = ['current_step' => 'integer'];
+    protected $casts = [
+        'current_step' => 'integer',
+        'context' => 'array',
+    ];
 
     public function actions()
     {

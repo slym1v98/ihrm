@@ -40,6 +40,7 @@ class RoleSeeder extends Seeder
                     'leave.request.create', 'leave.request.view', 'leave.request.approve', 'leave.request.reject', 'leave.request.cancel',
                     'leave.balance.view',
                     'workflow.template.create', 'workflow.template.view', 'workflow.request.start', 'workflow.request.view', 'workflow.request.approve', 'workflow.request.reject', 'workflow.request.return', 'workflow.request.cancel',
+                    'workflow.delegation.create', 'workflow.delegation.view', 'workflow.delegation.delete',
                     'payroll.period.view', 'payroll.entry.view', 'payroll.payslip.view', 'payroll.approve',
                 ],
             ],

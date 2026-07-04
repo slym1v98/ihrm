@@ -24,6 +24,23 @@ class WorkflowTemplateTest extends TestCase
         $this->assertTrue($template->isFinalStep(2));
     }
 
+    public function test_step_exposes_resolver_metadata(): void
+    {
+        $step = new WorkflowStep(
+            new WorkflowStepId('00000000-0000-0000-0000-000000000002'),
+            1,
+            'Manager',
+            AssigneeType::ROLE,
+            null,
+            null,
+            'direct_manager',
+            ['fallback_role' => 'hr_manager'],
+        );
+
+        $this->assertSame('direct_manager', $step->resolverType());
+        $this->assertSame(['fallback_role' => 'hr_manager'], $step->resolverConfig());
+    }
+
     public function test_template_with_gaps_throws(): void
     {
         $this->expectException(InvalidWorkflowTransitionException::class);

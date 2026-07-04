@@ -11,6 +11,7 @@ class LeaveType
         private bool $isBalanceTracked,
         private bool $isActive = true,
         private int $sortOrder = 0,
+        private ?string $workflowTemplateCode = null,
     ) {}
 
     public function id(): LeaveTypeId { return $this->id; }
@@ -19,6 +20,7 @@ class LeaveType
     public function isBalanceTracked(): bool { return $this->isBalanceTracked; }
     public function isActive(): bool { return $this->isActive; }
     public function sortOrder(): int { return $this->sortOrder; }
+    public function workflowTemplateCode(): ?string { return $this->workflowTemplateCode; }
     public function activate(): void { $this->isActive = true; }
     public function deactivate(): void { $this->isActive = false; }
 }

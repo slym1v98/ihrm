@@ -17,6 +17,7 @@ class LeaveTypeModel extends Model
         'is_balance_tracked',
         'is_active',
         'sort_order',
+        'workflow_template_code',
     ];
 
     protected $casts = [

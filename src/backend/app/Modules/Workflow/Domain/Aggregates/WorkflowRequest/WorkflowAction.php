@@ -15,6 +15,8 @@ class WorkflowAction
         private string $actorId,
         private ?string $comment,
         private array $metadata = [],
+        private array $resolvedApprovers = [],
+        private array $delegationMap = [],
         private ?CarbonImmutable $createdAt = null,
     ) {
         $this->createdAt ??= CarbonImmutable::now();
@@ -27,5 +29,7 @@ class WorkflowAction
     public function actorId(): string { return $this->actorId; }
     public function comment(): ?string { return $this->comment; }
     public function metadata(): array { return $this->metadata; }
+    public function resolvedApprovers(): array { return $this->resolvedApprovers; }
+    public function delegationMap(): array { return $this->delegationMap; }
     public function createdAt(): CarbonImmutable { return $this->createdAt; }
 }

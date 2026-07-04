@@ -24,7 +24,7 @@ class LeaveRequestController extends Controller
 {
     public function store(SubmitLeaveRequest $req, SubmitLeaveRequestHandler $handler) {
         $uid = $req->user()->employee_id ?? $req->user()->id;
-        $cmd = new SubmitLeaveRequestCommand($uid, $req->leave_type_id, $req->start_at, $req->end_at, $req->duration_unit, $req->reason);
+        $cmd = new SubmitLeaveRequestCommand($uid, $req->leave_type_id, $req->start_at, $req->end_at, $req->duration_unit, $req->reason, $req->user()->id);
         return new LeaveRequestResource($handler->handle($cmd));
     }
 

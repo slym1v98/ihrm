@@ -22,6 +22,8 @@ class WorkflowTemplateResource extends JsonResource
                 'assignee_type' => $s->assigneeType()->value,
                 'assignee_id' => $s->assigneeId(),
                 'condition' => $s->condition(),
+                'resolver_type' => $s->resolverType(),
+                'resolver_config' => $s->resolverConfig(),
             ], $template->steps()),
         ];
     }

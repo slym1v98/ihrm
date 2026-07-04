@@ -33,10 +33,28 @@ use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeavePolic
 use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveRequestRepository;
 use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveTypeRepository;
 use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveWindowRepository;
+use App\Modules\Leave\Application\Workflow\Listeners\SyncLeaveRequestOnWorkflowApproved;
+use App\Modules\Leave\Application\Workflow\Listeners\SyncLeaveRequestOnWorkflowRejected;
+use App\Modules\Workflow\Domain\Events\WorkflowApproved;
+use App\Modules\Workflow\Domain\Events\WorkflowRejected;
+use App\Modules\Leave\Application\Workflow\LeaveRequestSubjectProvider;
+use App\Modules\Workflow\Application\Contracts\SubjectDataProvider;
+use App\Modules\Workflow\Application\Resolvers\DepartmentHeadResolver;
+use App\Modules\Workflow\Application\Resolvers\DirectManagerResolver;
+use App\Modules\Workflow\Application\Resolvers\RoleInDepartmentResolver;
+use App\Modules\Workflow\Application\Resolvers\RoleResolver;
+use App\Modules\Workflow\Application\Resolvers\SpecificUserResolver;
+use App\Modules\Workflow\Application\Services\ConditionEvaluator;
+use App\Modules\Workflow\Application\Services\DelegationResolver;
+use App\Modules\Workflow\Application\Services\ResolverRegistry;
+use App\Modules\Workflow\Application\Services\SubjectDataProviderRegistry;
+use App\Modules\Workflow\Application\Services\WorkflowEngine;
 use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface;
 use App\Modules\Workflow\Domain\Repositories\WorkflowRequestRepositoryInterface;
+use App\Modules\Workflow\Domain\Repositories\WorkflowDelegationRepositoryInterface;
 use App\Modules\Workflow\Infrastructure\Persistence\Repositories\EloquentWorkflowTemplateRepository;
 use App\Modules\Workflow\Infrastructure\Persistence\Repositories\EloquentWorkflowRequestRepository;
+use App\Modules\Workflow\Infrastructure\Persistence\Repositories\EloquentWorkflowDelegationRepository;
 use App\Modules\Attendance\Domain\Repositories\AttendanceRawLogRepositoryInterface;
 use App\Modules\Attendance\Domain\Repositories\AttendanceTimesheetRepositoryInterface;
 use App\Modules\Attendance\Domain\Repositories\AttendanceAdjustmentRequestRepositoryInterface;
@@ -144,6 +162,38 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LeaveWindowInterface::class, EloquentLeaveWindowRepository::class);
         $this->app->bind(WorkflowTemplateRepositoryInterface::class, EloquentWorkflowTemplateRepository::class);
         $this->app->bind(WorkflowRequestRepositoryInterface::class, EloquentWorkflowRequestRepository::class);
+        $this->app->bind(WorkflowDelegationRepositoryInterface::class, EloquentWorkflowDelegationRepository::class);
+        $this->app->singleton(ResolverRegistry::class, function () {
+            $r = new ResolverRegistry();
+            $r->register(new SpecificUserResolver());
+            $r->register(new DirectManagerResolver());
+            $r->register(new DepartmentHeadResolver());
+            $r->register(new RoleResolver(fn (string $roleCode) => \DB::table('users')
+                ->join('user_roles', 'user_roles.user_id', '=', 'users.id')
+                ->join('roles', 'roles.id', '=', 'user_roles.role_id')
+                ->where('roles.code', $roleCode)
+                ->whereNull('user_roles.revoked_at')
+                ->pluck('users.id')->map(fn ($id) => (string) $id)->toArray()));
+            $r->register(new RoleInDepartmentResolver(fn (string $roleCode, string $deptId) => \DB::table('users')
+                ->join('user_roles', 'user_roles.user_id', '=', 'users.id')
+                ->join('roles', 'roles.id', '=', 'user_roles.role_id')
+                ->join('employees', 'employees.user_id', '=', 'users.id')
+                ->where('roles.code', $roleCode)
+                ->where('employees.department_id', $deptId)
+                ->whereNull('user_roles.revoked_at')
+                ->pluck('users.id')->map(fn ($id) => (string) $id)->toArray()));
+            return $r;
+        });
+        $this->app->singleton(SubjectDataProviderRegistry::class, function () {
+            $p = new SubjectDataProviderRegistry();
+            $p->register(new LeaveRequestSubjectProvider(
+                app(\App\Modules\Leave\Domain\Repositories\LeaveRequestRepositoryInterface::class),
+                app(\App\Modules\Leave\Domain\Repositories\LeaveTypeRepositoryInterface::class),
+                app(\App\Modules\Employee\Domain\Repositories\EmployeeRepositoryInterface::class),
+            ));
+            return $p;
+        });
+        $this->app->singleton(WorkflowEngine::class);
         $this->app->bind(AttendanceRawLogRepositoryInterface::class, EloquentAttendanceRawLogRepository::class);
         $this->app->bind(AttendanceTimesheetRepositoryInterface::class, EloquentAttendanceTimesheetRepository::class);
         $this->app->bind(AttendanceAdjustmentRequestRepositoryInterface::class, EloquentAttendanceAdjustmentRequestRepository::class);
@@ -250,5 +300,8 @@ $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepos
         ] as $event) {
             Event::listen($event, AuditEventListener::class);
         }
+
+        Event::listen(WorkflowApproved::class, SyncLeaveRequestOnWorkflowApproved::class);
+        Event::listen(WorkflowRejected::class, SyncLeaveRequestOnWorkflowRejected::class);
     }
 }

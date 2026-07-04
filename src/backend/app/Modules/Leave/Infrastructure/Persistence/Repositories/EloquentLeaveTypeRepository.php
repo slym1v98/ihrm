@@ -38,6 +38,7 @@ class EloquentLeaveTypeRepository implements LeaveTypeRepositoryInterface
                 'is_balance_tracked' => $type->isBalanceTracked(),
                 'is_active' => $type->isActive(),
                 'sort_order' => $type->sortOrder(),
+                'workflow_template_code' => $type->workflowTemplateCode(),
             ],
         );
     }
@@ -51,6 +52,7 @@ class EloquentLeaveTypeRepository implements LeaveTypeRepositoryInterface
             $model->is_balance_tracked,
             $model->is_active,
             $model->sort_order,
+            $model->workflow_template_code,
         );
     }
 }
