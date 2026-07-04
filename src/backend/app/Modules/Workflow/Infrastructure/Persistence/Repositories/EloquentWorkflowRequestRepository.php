@@ -63,6 +63,7 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
                     'resolved_approvers' => $action->resolvedApprovers(),
                     'delegation_map' => $action->delegationMap(),
                     'step_execution_type' => $action->stepExecutionType(),
+                    'form_data' => $action->formData(),
                     'created_at' => $action->createdAt(),
                 ],
             );
@@ -83,6 +84,7 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
             $a->delegation_map ?? [],
             $a->created_at ? CarbonImmutable::parse($a->created_at) : null,
             $a->step_execution_type ?? 'sequential',
+            $a->form_data,
         ))->all();
         return new WorkflowRequest(
             new WorkflowRequestId($model->id),

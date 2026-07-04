@@ -30,6 +30,7 @@ class WorkflowRequestResource extends JsonResource
                 'comment' => $a->comment(),
                 'resolved_approvers' => $a->resolvedApprovers(),
                 'delegation_map' => $a->delegationMap(),
+                'form_data' => $a->formData(),
                 'created_at' => $a->createdAt()->toIso8601String(),
             ], $r->actions()),
         ];

@@ -19,6 +19,7 @@ class WorkflowAction
         private array $delegationMap = [],
         private ?CarbonImmutable $createdAt = null,
         private string $stepExecutionType = 'sequential',
+        private ?array $formData = null,
     ) {
         $this->createdAt ??= CarbonImmutable::now();
     }
@@ -34,4 +35,5 @@ class WorkflowAction
     public function delegationMap(): array { return $this->delegationMap; }
     public function createdAt(): CarbonImmutable { return $this->createdAt; }
     public function stepExecutionType(): string { return $this->stepExecutionType; }
+    public function formData(): ?array { return $this->formData; }
 }

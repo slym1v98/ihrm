@@ -19,6 +19,7 @@ class WorkflowStep
     private ?float $escalationSlaHours = null,
     private ?string $escalationTargetType = null,
     private ?array $escalationTargetConfig = null,
+    private ?array $formSchema = null,
 ) {}
 
     public function id(): WorkflowStepId { return $this->id; }
@@ -33,4 +34,5 @@ class WorkflowStep
     public function escalationSlaHours(): ?float { return $this->escalationSlaHours; }
     public function escalationTargetType(): ?string { return $this->escalationTargetType; }
     public function escalationTargetConfig(): ?array { return $this->escalationTargetConfig; }
+    public function formSchema(): ?array { return $this->formSchema; }
 }

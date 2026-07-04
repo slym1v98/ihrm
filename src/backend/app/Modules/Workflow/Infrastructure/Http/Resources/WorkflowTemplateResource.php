@@ -28,6 +28,7 @@ class WorkflowTemplateResource extends JsonResource
                 'escalation_sla_hours' => $s->escalationSlaHours(),
                 'escalation_target_type' => $s->escalationTargetType(),
                 'escalation_target_config' => $s->escalationTargetConfig(),
+                'form_schema' => $s->formSchema(),
             ], $template->steps()),
         ];
     }

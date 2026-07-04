@@ -66,6 +66,7 @@ class EloquentWorkflowTemplateRepository implements WorkflowTemplateRepositoryIn
             $s->escalation_sla_hours,
             $s->escalation_target_type,
             $s->escalation_target_config,
+            $s->form_schema,
         ))->all();
         return new WorkflowTemplate(
             new WorkflowTemplateId($model->id),

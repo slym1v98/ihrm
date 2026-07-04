@@ -18,6 +18,7 @@ class CreateWorkflowTemplateRequest extends FormRequest
             'steps.*.assignee_type' => 'required|in:role,department,specific_user',
             'steps.*.assignee_id' => 'nullable|uuid',
             'steps.*.condition' => 'nullable|array',
+            'steps.*.form_schema' => 'nullable|array',
         ];
     }
 }
