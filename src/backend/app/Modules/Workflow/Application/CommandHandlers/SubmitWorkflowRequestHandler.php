@@ -37,6 +37,8 @@ class SubmitWorkflowRequestHandler
         $first = $this->engine->firstStep($template, $context);
         if ($first['step'] !== null) {
             $request->start($first['step']->stepOrder(), $first['approvers'], $first['delegation_map']);
+            if (isset($first['sla_deadline_at'])) $request->setSlaDeadlineAt($first['sla_deadline_at']);
+            if (isset($first['parallel_required_count'])) $request->setParallelRequiredCount($first['parallel_required_count']);
         }
         $this->requests->save($request);
         return $request;

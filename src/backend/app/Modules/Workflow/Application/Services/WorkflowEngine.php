@@ -6,6 +6,7 @@ use App\Modules\Workflow\Domain\Aggregates\WorkflowRequest\WorkflowRequest;
 use App\Modules\Workflow\Domain\Aggregates\WorkflowTemplate\WorkflowStep;
 use App\Modules\Workflow\Domain\Aggregates\WorkflowTemplate\WorkflowTemplate;
 use App\Modules\Workflow\Domain\Repositories\WorkflowDelegationRepositoryInterface;
+use App\Modules\Workflow\Application\Services\WorkflowSlaCalculator;
 use Carbon\CarbonImmutable;
 
 final readonly class WorkflowEngine
@@ -19,20 +20,53 @@ final readonly class WorkflowEngine
 
     public function firstStep(WorkflowTemplate $template, array $context): array
     {
-        return $this->resolveFrom($template, 1, $context);
+        return $this->applyStepConfig($this->resolveFrom($template, 1, $context));
+    }
+
+    private function applyStepConfig(array $resolved): array
+    {
+        if ($resolved['step'] === null) return $resolved;
+        $step = $resolved['step'];
+        if ($step->executionType() === 'all_of') {
+            $resolved['parallel_required_count'] = count($resolved['approvers']);
+        }
+        if ($step->escalationSlaHours() !== null) {
+            $calculator = new WorkflowSlaCalculator();
+            $resolved['sla_deadline_at'] = $calculator->calculateDeadline(
+                CarbonImmutable::now(),
+                $step->escalationSlaHours(),
+                config('workflow.working_hours'),
+            );
+        }
+        return $resolved;
     }
 
     public function advanceAfterApproval(WorkflowRequest $request, WorkflowTemplate $template): void
     {
         $nextOrder = ($request->currentStep() ?? 0) + 1;
-        $next = $this->resolveFrom($template, $nextOrder, $request->context() ?? []);
+        $next = $this->applyStepConfig($this->resolveFrom($template, $nextOrder, $request->context() ?? []));
 
         if ($next['step'] === null) {
             $request->markApproved();
+            $request->setSlaDeadlineAt(null);
             return;
         }
 
-        $request->moveToStep($next['step']->stepOrder());
+        $step = $next['step'];
+        $request->moveToStep($step->stepOrder());
+
+        if ($step->executionType() === 'all_of') {
+            $request->setParallelRequiredCount(count($next['approvers']));
+        }
+
+        if ($step->escalationSlaHours() !== null) {
+            $calculator = new WorkflowSlaCalculator();
+            $request->setSlaDeadlineAt($calculator->calculateDeadline(
+                CarbonImmutable::now(),
+                $step->escalationSlaHours(),
+                config('workflow.working_hours'),
+            ));
+        }
     }
 
     private function resolveFrom(WorkflowTemplate $template, int $fromOrder, array $context): array

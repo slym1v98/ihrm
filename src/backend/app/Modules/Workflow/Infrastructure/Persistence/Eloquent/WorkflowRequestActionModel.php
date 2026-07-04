@@ -11,7 +11,7 @@ class WorkflowRequestActionModel extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['id', 'workflow_request_id', 'step_order', 'action', 'actor_id', 'comment', 'metadata', 'resolved_approvers', 'delegation_map', 'created_at'];
+    protected $fillable = ['id', 'workflow_request_id', 'step_order', 'action', 'actor_id', 'comment', 'metadata', 'resolved_approvers', 'delegation_map', 'step_execution_type', 'created_at'];
 
     protected $casts = [
         'step_order' => 'integer',

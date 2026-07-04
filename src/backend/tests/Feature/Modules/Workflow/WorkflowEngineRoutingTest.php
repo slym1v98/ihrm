@@ -64,6 +64,9 @@ class WorkflowEngineRoutingTest extends TestCase
         $approve = $this->withToken($this->token)->postJson("/api/v1/workflow-requests/{$reqId}/approve", [
             'comment' => 'Step 1 approved',
         ]);
+        $status = $approve->status();
+        if ($status !== 204) echo "\nAPPROVE STATUS: {$status} BODY: " . json_encode($approve->json()) . "\n";
+        if ($status === 500) fwrite(STDERR, "500 BODY: " . json_encode($approve->json()) . "\n");
         $approve->assertStatus(204);
         $this->assertDatabaseHas('workflow_requests', ['id' => $reqId, 'current_step' => 3, 'status' => 'in_review']);
 

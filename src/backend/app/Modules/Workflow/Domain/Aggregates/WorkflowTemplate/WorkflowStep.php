@@ -15,6 +15,10 @@ class WorkflowStep
     private ?array $condition = null,
     private ?string $resolverType = null,
     private ?array $resolverConfig = null,
+    private string $executionType = 'sequential',
+    private ?float $escalationSlaHours = null,
+    private ?string $escalationTargetType = null,
+    private ?array $escalationTargetConfig = null,
 ) {}
 
     public function id(): WorkflowStepId { return $this->id; }
@@ -25,4 +29,8 @@ class WorkflowStep
     public function condition(): ?array { return $this->condition; }
     public function resolverType(): ?string { return $this->resolverType; }
     public function resolverConfig(): ?array { return $this->resolverConfig; }
+    public function executionType(): string { return $this->executionType; }
+    public function escalationSlaHours(): ?float { return $this->escalationSlaHours; }
+    public function escalationTargetType(): ?string { return $this->escalationTargetType; }
+    public function escalationTargetConfig(): ?array { return $this->escalationTargetConfig; }
 }

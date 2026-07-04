@@ -44,6 +44,10 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
                 'current_step' => $request->currentStep(),
                 'submitted_by' => $request->submittedBy(),
                 'context' => $request->context(),
+                'sla_deadline_at' => $request->slaDeadlineAt(),
+                'escalated' => $request->escalated(),
+                'parallel_approved_count' => $request->parallelApprovedCount(),
+                'parallel_required_count' => $request->parallelRequiredCount(),
             ],
         );
         foreach ($request->actions() as $action) {
@@ -58,6 +62,7 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
                     'metadata' => $action->metadata(),
                     'resolved_approvers' => $action->resolvedApprovers(),
                     'delegation_map' => $action->delegationMap(),
+                    'step_execution_type' => $action->stepExecutionType(),
                     'created_at' => $action->createdAt(),
                 ],
             );
@@ -77,6 +82,7 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
             $a->resolved_approvers ?? [],
             $a->delegation_map ?? [],
             $a->created_at ? CarbonImmutable::parse($a->created_at) : null,
+            $a->step_execution_type ?? 'sequential',
         ))->all();
         return new WorkflowRequest(
             new WorkflowRequestId($model->id),
@@ -88,6 +94,10 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
             $model->current_step,
             $actions,
             $model->context,
+            $model->sla_deadline_at ? CarbonImmutable::parse($model->sla_deadline_at) : null,
+            $model->escalated ?? false,
+            $model->parallel_approved_count ?? 0,
+            $model->parallel_required_count ?? 0,
         );
     }
 }

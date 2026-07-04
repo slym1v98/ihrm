@@ -29,6 +29,10 @@ class WorkflowRequest
         ?int $currentStep = null,
         array $actions = [],
         private ?array $context = null,
+        private ?CarbonImmutable $slaDeadlineAt = null,
+        private bool $escalated = false,
+        private int $parallelApprovedCount = 0,
+        private int $parallelRequiredCount = 0,
     ) {
         $this->status = $status ?? RequestStatus::PENDING;
         $this->currentStep = $currentStep;
@@ -44,6 +48,13 @@ class WorkflowRequest
     public function currentStep(): ?int { return $this->currentStep; }
     public function actions(): array { return $this->actions; }
     public function context(): ?array { return $this->context; }
+    public function slaDeadlineAt(): ?CarbonImmutable { return $this->slaDeadlineAt; }
+    public function escalated(): bool { return $this->escalated; }
+    public function parallelApprovedCount(): int { return $this->parallelApprovedCount; }
+    public function parallelRequiredCount(): int { return $this->parallelRequiredCount; }
+    public function setParallelRequiredCount(int $count): void { $this->parallelRequiredCount = $count; }
+    public function setSlaDeadlineAt(?CarbonImmutable $at): void { $this->slaDeadlineAt = $at; }
+    public function setEscalated(bool $v): void { $this->escalated = $v; }
 
     public function moveToStep(int $stepOrder): void
     {
@@ -71,16 +82,28 @@ class WorkflowRequest
         return $event;
     }
 
-    public function approveStep(string $actorId, int $stepOrder, bool $isFinal, ?string $comment = null): array
+    public function approveStep(string $actorId, int $stepOrder, bool $isFinal, ?string $comment = null, string $executionType = 'sequential'): array
     {
         $this->assertStatus(RequestStatus::IN_REVIEW);
         $this->assertCurrentStep($stepOrder);
 
         $events = [];
-        $this->actions[] = new WorkflowAction(
-            WorkflowActionId::new(), $this->id,
-            $stepOrder, WorkflowActionType::APPROVE, $actorId, $comment,
-        );
+
+        $sharedAction = function (string $et) use ($actorId, $stepOrder, $comment) {
+            return new WorkflowAction(WorkflowActionId::new(), $this->id, $stepOrder, WorkflowActionType::APPROVE, $actorId, $comment, [], [], [], $et);
+        };
+
+        if ($executionType === 'all_of') {
+            $this->parallelApprovedCount++;
+            $this->actions[] = $sharedAction('all_of');
+            if ($this->parallelApprovedCount < $this->parallelRequiredCount) return [];
+        } elseif ($executionType === 'any_of') {
+            $this->parallelApprovedCount = 1;
+            $this->parallelRequiredCount = 1;
+            $this->actions[] = $sharedAction('any_of');
+        } else {
+            $this->actions[] = new WorkflowAction(WorkflowActionId::new(), $this->id, $stepOrder, WorkflowActionType::APPROVE, $actorId, $comment);
+        }
 
         if ($isFinal) {
             $this->status = RequestStatus::APPROVED;

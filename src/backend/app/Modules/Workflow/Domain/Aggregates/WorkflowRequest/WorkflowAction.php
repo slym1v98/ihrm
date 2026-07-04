@@ -18,6 +18,7 @@ class WorkflowAction
         private array $resolvedApprovers = [],
         private array $delegationMap = [],
         private ?CarbonImmutable $createdAt = null,
+        private string $stepExecutionType = 'sequential',
     ) {
         $this->createdAt ??= CarbonImmutable::now();
     }
@@ -32,4 +33,5 @@ class WorkflowAction
     public function resolvedApprovers(): array { return $this->resolvedApprovers; }
     public function delegationMap(): array { return $this->delegationMap; }
     public function createdAt(): CarbonImmutable { return $this->createdAt; }
+    public function stepExecutionType(): string { return $this->stepExecutionType; }
 }

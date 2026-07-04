@@ -18,6 +18,10 @@ class WorkflowRequestResource extends JsonResource
             'status' => $r->status()->value,
             'current_step' => $r->currentStep(),
             'context' => $r->context(),
+            'parallel_approved_count' => $r->parallelApprovedCount(),
+            'parallel_required_count' => $r->parallelRequiredCount(),
+            'sla_deadline_at' => $r->slaDeadlineAt()?->toIso8601String(),
+            'escalated' => $r->escalated(),
             'actions' => array_map(fn ($a) => [
                 'id' => $a->id()->value(),
                 'step_order' => $a->stepOrder(),

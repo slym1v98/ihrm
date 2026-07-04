@@ -24,6 +24,10 @@ class WorkflowTemplateResource extends JsonResource
                 'condition' => $s->condition(),
                 'resolver_type' => $s->resolverType(),
                 'resolver_config' => $s->resolverConfig(),
+                'execution_type' => $s->executionType(),
+                'escalation_sla_hours' => $s->escalationSlaHours(),
+                'escalation_target_type' => $s->escalationTargetType(),
+                'escalation_target_config' => $s->escalationTargetConfig(),
             ], $template->steps()),
         ];
     }

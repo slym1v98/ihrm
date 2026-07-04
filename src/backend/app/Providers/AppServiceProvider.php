@@ -44,6 +44,8 @@ use App\Modules\Workflow\Application\Resolvers\DirectManagerResolver;
 use App\Modules\Workflow\Application\Resolvers\RoleInDepartmentResolver;
 use App\Modules\Workflow\Application\Resolvers\RoleResolver;
 use App\Modules\Workflow\Application\Resolvers\SpecificUserResolver;
+use App\Modules\Attendance\Application\Workflow\AttendancePeriodSubjectProvider;
+use App\Modules\Payroll\Application\Workflow\PayrollPeriodSubjectProvider;
 use App\Modules\Workflow\Application\Services\ConditionEvaluator;
 use App\Modules\Workflow\Application\Services\DelegationResolver;
 use App\Modules\Workflow\Application\Services\ResolverRegistry;
@@ -191,9 +193,16 @@ class AppServiceProvider extends ServiceProvider
                 app(\App\Modules\Leave\Domain\Repositories\LeaveTypeRepositoryInterface::class),
                 app(\App\Modules\Employee\Domain\Repositories\EmployeeRepositoryInterface::class),
             ));
+            $p->register(new AttendancePeriodSubjectProvider(
+                app(\App\Modules\Attendance\Domain\Repositories\AttendancePeriodRepositoryInterface::class),
+            ));
+            $p->register(new PayrollPeriodSubjectProvider(
+                app(\App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface::class),
+            ));
             return $p;
         });
         $this->app->singleton(WorkflowEngine::class);
+        $this->commands([\App\Modules\Workflow\Infrastructure\Console\ProcessSlaEscalation::class]);
         $this->app->bind(AttendanceRawLogRepositoryInterface::class, EloquentAttendanceRawLogRepository::class);
         $this->app->bind(AttendanceTimesheetRepositoryInterface::class, EloquentAttendanceTimesheetRepository::class);
         $this->app->bind(AttendanceAdjustmentRequestRepositoryInterface::class, EloquentAttendanceAdjustmentRequestRepository::class);

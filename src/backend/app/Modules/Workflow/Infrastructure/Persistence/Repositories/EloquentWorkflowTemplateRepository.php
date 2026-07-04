@@ -62,6 +62,10 @@ class EloquentWorkflowTemplateRepository implements WorkflowTemplateRepositoryIn
             $s->condition,
             $s->resolver_type,
             $s->resolver_config,
+            $s->execution_type ?? 'sequential',
+            $s->escalation_sla_hours,
+            $s->escalation_target_type,
+            $s->escalation_target_config,
         ))->all();
         return new WorkflowTemplate(
             new WorkflowTemplateId($model->id),
