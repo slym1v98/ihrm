@@ -48,6 +48,7 @@ const nav = [
   ]},
   { section: 'Hệ thống', items: [
     { href: '/workflow', label: 'Quy trình duyệt', icon: GitBranch },
+    { href: '/workflow/designer', label: 'Thiết kế quy trình', icon: GitBranch },
     { href: '/audit', label: 'Nhật ký', icon: History },
   ]},
   { section: 'Tổ chức', items: [
@@ -55,6 +56,7 @@ const nav = [
     { href: '/organization/departments', label: 'Phòng ban', icon: Building2 },
     { href: '/organization/positions', label: 'Chức vụ', icon: Building2 },
     { href: '/organization/tree', label: 'Sơ đồ tổ chức', icon: Building2 },
+    { href: '/employees/[id]', label: 'Chi tiết NV', icon: Users, hidden: true },
   ]},
 ];
 
@@ -86,7 +88,7 @@ export function AppSidebar() {
             {!collapsed && (
               <p className="px-2 pb-1 pt-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{group.section}</p>
             )}
-            {group.items.map(item => (
+            {group.items.filter(i => !i.hidden).map(item => (
               <NavItem key={item.href} href={item.href} icon={item.icon} label={item.label} collapsed={collapsed} pathname={pathname} />
             ))}
           </div>
@@ -98,6 +100,7 @@ export function AppSidebar() {
 
 function NavItem({ href, icon: Icon, label, collapsed, pathname }: {
   href: string; icon: React.ComponentType<{ className?: string }>; label: string;
+  hidden?: boolean;
   collapsed: boolean; pathname: string;
 }) {
   const active = pathname === href || pathname.startsWith(href + '/');
