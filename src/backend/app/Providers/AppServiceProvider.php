@@ -37,6 +37,8 @@ use App\Modules\Leave\Application\Workflow\Listeners\SyncLeaveRequestOnWorkflowA
 use App\Modules\Leave\Application\Workflow\Listeners\SyncLeaveRequestOnWorkflowRejected;
 use App\Modules\Workflow\Domain\Events\WorkflowApproved;
 use App\Modules\Workflow\Domain\Events\WorkflowRejected;
+use App\Modules\Recruitment\Domain\Events\OfferAccepted;
+use App\Modules\Recruitment\Application\Listeners\CreateEmployeeOnOfferAccepted;
 use App\Modules\Leave\Application\Workflow\LeaveRequestSubjectProvider;
 use App\Modules\Workflow\Application\Contracts\SubjectDataProvider;
 use App\Modules\Workflow\Application\Resolvers\DepartmentHeadResolver;
@@ -262,6 +264,8 @@ $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepos
 
     public function boot(): void
     {
+        Event::listen(OfferAccepted::class, CreateEmployeeOnOfferAccepted::class);
+
         foreach ([
             UserCreated::class,
             UserLoggedIn::class,

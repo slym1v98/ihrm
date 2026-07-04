@@ -69,8 +69,11 @@ class RecruitmentApiTest extends TestCase
         ])->assertStatus(201);
         $offerId = $offer->json('data.id');
 
-        $this->withToken($this->token)->postJson("/api/v1/recruitment/offers/{$offerId}/accept")->assertStatus(200);
-        $this->withToken($this->token)->postJson("/api/v1/recruitment/offers/{$offerId}/convert")->assertStatus(200);
+        $resp = $this->withToken($this->token)->postJson("/api/v1/recruitment/offers/{$offerId}/accept");
+        if ($resp->status() === 500) fwrite(STDERR, "ACCEPT 500: " . json_encode($resp->json()) . "\n");
+        $resp->assertStatus(200);
+        // Convert is no longer needed—listener creates Employee automatically
+        $this->withToken($this->token)->postJson("/api/v1/recruitment/offers/{$offerId}/convert")->assertStatus(422);
     }
 
     public function test_duplicate_candidate_returns_422(): void
