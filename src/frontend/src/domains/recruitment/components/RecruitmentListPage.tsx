@@ -1,68 +1,79 @@
 'use client';
-import { useState, useCallback } from 'react'; import { useForm } from 'react-hook-form'; import { zodResolver } from '@hookform/resolvers/zod'; import { z } from 'zod'; import { toast } from 'sonner';
-import { useRequisitions, useCandidates, useCreateRequisition, useCreateCandidate, useUpdateCandidateStage } from '@/domains/recruitment/hooks/useRecruitment';
-import type { Candidate, Requisition } from '@/domains/recruitment/models/recruitment';
-import { DataTable, type Column } from '@/shared/components/DataTable'; import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
-import { Button } from '@/shared/components/ui/button'; import { Input } from '@/shared/components/ui/input'; import { Label } from '@/shared/components/ui/label'; import { Badge } from '@/shared/components/ui/badge'; import { extractErrorMessage } from '@/core/errors/messages';
-import { Plus, ArrowRight } from 'lucide-react';
+import { useState, useCallback } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { Plus, UserPlus, Send, Eye } from 'lucide-react';
+import { useRequisitions, useCreateRequisition, useCandidates, useCreateCandidate } from '@/domains/recruitment/hooks/useRecruitment';
+import type { Requisition, Candidate, CreateRequisitionPayload, CreateCandidatePayload } from '@/domains/recruitment/models/recruitment';
+import { DataTable, type Column } from '@/shared/components/DataTable';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter } from '@/shared/components/ui/drawer';
+import { Button } from '@/shared/components/ui/button';
+import { Input } from '@/shared/components/ui/input';
+import { Label } from '@/shared/components/ui/label';
+import { Badge } from '@/shared/components/ui/badge';
+import { extractErrorMessage } from '@/core/errors/messages';
 
-const statusL: Record<string,string>={draft:'Nháp',open:'Đang tuyển',closed:'Đã đóng',cancelled:'Đã huỷ'};
-const stageL: Record<string,string>={applied:'Ứng tuyển',screening:'Sàng lọc',interview:'Phỏng vấn',offer:'Offer',hired:'Đã nhận việc',rejected:'Từ chối'};
-const stageColors: Record<string,'default'|'secondary'|'destructive'|'outline'>={applied:'secondary',screening:'outline',interview:'default',offer:'outline',hired:'default',rejected:'destructive'};
+const reqSchema = z.object({ code: z.string().min(2), title: z.string().min(1), department_id: z.string().min(1), position_id: z.string().min(1), headcount: z.coerce.number().min(1) });
+const candSchema = z.object({ requisition_id: z.string().min(1), name: z.string().min(1), email: z.string().email(), phone: z.string().optional() });
+type ReqF = z.infer<typeof reqSchema>; type CandF = z.infer<typeof candSchema>;
 
-const reqSchema=z.object({code:z.string().min(2),title:z.string().min(1),department_id:z.string().min(1),position_id:z.string().min(1),headcount:z.coerce.number().min(1)});type RF=z.infer<typeof reqSchema>;
-const canSchema=z.object({requisition_id:z.string().min(1),name:z.string().min(1),email:z.string().email(),phone:z.string().optional()});type CF=z.infer<typeof canSchema>;
+const statusL: Record<string, string> = { draft: 'Nháp', pending_approval: 'Chờ duyệt', open: 'Đang tuyển', filled: 'Đã đủ', cancelled: 'Đã huỷ', closed: 'Đóng' };
+const statusV: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = { draft: 'secondary', pending_approval: 'default', open: 'default', filled: 'outline', cancelled: 'destructive', closed: 'secondary' };
+const cStatusL: Record<string, string> = { new: 'Mới', screened: 'Đã sàng lọc', interviewed: 'Đã PV', offered: 'Đã offer', hired: 'Đã nhận', rejected: 'Loại' };
+const cStatusV: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = { new: 'secondary', screened: 'secondary', interviewed: 'default', offered: 'default', hired: 'outline', rejected: 'destructive' };
 
 export function RecruitmentListPage() {
-  const {data:reqs}=useRequisitions(); const {data:candidates}=useCandidates();
-  const createReq=useCreateRequisition(); const createCan=useCreateCandidate(); const updStage=useUpdateCandidateStage();
-  const [reqOpen,setReqOpen]=useState(false); const[canOpen,setCanOpen]=useState(false);
-  const reqForm=useForm<RF>({resolver:zodResolver(reqSchema),defaultValues:{code:'',title:'',department_id:'',position_id:'',headcount:1}});
-  const canForm=useForm<CF>({resolver:zodResolver(canSchema),defaultValues:{requisition_id:'',name:'',email:'',phone:''}});
-  const onReq=useCallback(async(v:RF)=>{try{await createReq.mutateAsync(v);toast.success('Tạo yêu cầu tuyển dụng');setReqOpen(false);reqForm.reset();}catch(raw){toast.error(extractErrorMessage(raw));}},[createReq,reqForm]);
-  const onCan=useCallback(async(v:CF)=>{try{await createCan.mutateAsync(v);toast.success('Thêm ứng viên');setCanOpen(false);canForm.reset();}catch(raw){toast.error(extractErrorMessage(raw));}},[createCan,canForm]);
-  const nextStage=useCallback(async(id:string,stage:string)=>{const m={applied:'screening',screening:'interview',interview:'offer',offer:'hired'};try{await updStage.mutateAsync({id,stage:(m as Record<string,string>)[stage]??'rejected'});toast.success('Đã chuyển giai đoạn');}catch(raw){toast.error(extractErrorMessage(raw));}},[updStage]);
+  const { data: reqs, isLoading: l1 } = useRequisitions();
+  const { data: candidates, isLoading: l2 } = useCandidates();
+  const createReq = useCreateRequisition();
+  const createCand = useCreateCandidate();
+  const [reqOpen, setReqOpen] = useState(false); const [candOpen, setCandOpen] = useState(false);
+  const reqForm = useForm<ReqF>({ resolver: zodResolver(reqSchema), defaultValues: { code: '', title: '', department_id: '', position_id: '', headcount: 1 } });
+  const candForm = useForm<CandF>({ resolver: zodResolver(candSchema), defaultValues: { requisition_id: '', name: '', email: '', phone: '' } });
 
-  const rCols:Column<Requisition>[]=[
-    {header:'Mã',accessor:'code',className:'font-mono text-xs w-24'},{header:'Tiêu đề',accessor:'title'},
-    {header:'Số lượng',accessor:'headcount',className:'text-right w-20'},
-    {header:'Trạng thái',accessor:undefined,className:'w-20',cell:(r)=><Badge variant={statusL[r.status]?statusL[r.status]==='Đang tuyển'?'default':'secondary':'secondary'}>{statusL[r.status]??r.status}</Badge>},
+  const openCreateReq = useCallback(() => { reqForm.reset({ code: '', title: '', department_id: '', position_id: '', headcount: 1 }); setReqOpen(true); }, [reqForm]);
+  const openCreateCand = useCallback(() => { candForm.reset({ requisition_id: '', name: '', email: '', phone: '' }); setCandOpen(true); }, [candForm]);
+  const onSubmitReq = useCallback(async (v: ReqF) => { try { await createReq.mutateAsync(v as CreateRequisitionPayload); toast.success('Tạo yêu cầu thành công'); setReqOpen(false); } catch (raw) { toast.error(extractErrorMessage(raw)); } }, [createReq]);
+  const onSubmitCand = useCallback(async (v: CandF) => { try { await createCand.mutateAsync(v as CreateCandidatePayload); toast.success('Thêm ứng viên thành công'); setCandOpen(false); } catch (raw) { toast.error(extractErrorMessage(raw)); } }, [createCand]);
+
+  const rCols: Column<Requisition>[] = [
+    { header: 'Mã', accessor: 'code', className: 'font-mono text-xs w-20' }, { header: 'Vị trí', accessor: 'title' },
+    { header: 'Số lượng', accessor: 'headcount', className: 'w-16 text-center' },
+    { header: 'Trạng thái', accessor: undefined, className: 'w-20', cell: (r) => <Badge variant={statusV[r.status]}>{statusL[r.status]}</Badge> },
   ];
-  const cCols:Column<Candidate>[]=[
-    {header:'Tên',accessor:'name'},{header:'Email',accessor:'email',className:'text-muted-foreground'},
-    {header:'Giai đoạn',accessor:undefined,className:'w-24',cell:(c)=><Badge variant={stageColors[c.stage]??'secondary'}>{stageL[c.stage]??c.stage}</Badge>},
-    {header:'',accessor:undefined,className:'text-right w-12',cell:(c)=><Button variant="ghost" size="sm" title="Chuyển giai đoạn" onClick={()=>nextStage(c.id,c.stage)}><ArrowRight className="h-4 w-4"/></Button>},
+  const cCols: Column<Candidate>[] = [
+    { header: 'Họ tên', accessor: 'name' }, { header: 'Email', accessor: 'email', className: 'text-xs' },
+    { header: 'Giai đoạn', accessor: undefined, className: 'w-20', cell: (c) => <Badge variant={cStatusV[c.stage]}>{cStatusL[c.stage]}</Badge> },
+    { header: 'Trạng thái', accessor: undefined, className: 'w-16', cell: (c) => <Badge variant={c.status === 'active' ? 'default' : 'secondary'}>{c.status}</Badge> },
   ];
 
   return (<div className="space-y-6">
-    <div className="space-y-4"><div className="flex items-center justify-between"><span className="text-sm font-medium text-muted-foreground">Yêu cầu tuyển dụng</span>
-      <Button size="sm" onClick={()=>{reqForm.reset();setReqOpen(true);}}><Plus className="h-4 w-4 mr-1"/>Tạo yêu cầu</Button></div>
-    <DataTable columns={rCols} data={reqs??[]} rowKey="id" emptyMessage="Chưa có yêu cầu"/></div>
-    <div className="space-y-4"><div className="flex items-center justify-between"><span className="text-sm font-medium text-muted-foreground">Ứng viên</span>
-      <Button size="sm" onClick={()=>{canForm.reset();setCanOpen(true);}}><Plus className="h-4 w-4 mr-1"/>Thêm ứng viên</Button></div>
-    <DataTable columns={cCols} data={candidates??[]} rowKey="id" emptyMessage="Chưa có ứng viên"/></div>
+    <div><div className="flex gap-2 mb-2"><Button onClick={openCreateReq}><Plus className="h-4 w-4 mr-1" />Tạo yêu cầu</Button><Button onClick={openCreateCand} variant="ghost"><UserPlus className="h-4 w-4 mr-1" />Thêm ứng viên</Button></div>
+      <h2 className="text-sm font-semibold mb-2">Yêu cầu tuyển dụng</h2>
+      <DataTable columns={rCols} data={reqs ?? []} isLoading={l1} rowKey="id" emptyMessage="Chưa có yêu cầu nào" /></div>
+    <div><h2 className="text-sm font-semibold mb-2">Ứng viên</h2>
+      <DataTable columns={cCols} data={candidates ?? []} isLoading={l2} rowKey="id" emptyMessage="Chưa có ứng viên" /></div>
 
-    <Drawer open={reqOpen} onOpenChange={setReqOpen}><DrawerContent size="sm"><DrawerHeader><DrawerTitle>Yêu cầu tuyển dụng</DrawerTitle><DrawerDescription>Thông tin yêu cầu tuyển dụng mới</DrawerDescription></DrawerHeader>
-      <DrawerBody><form id="req-form" onSubmit={reqForm.handleSubmit(onReq)} className="space-y-4">
-        <div className="space-y-2"><Label>Mã <span className="text-destructive">*</span></Label><Input autoComplete="off"{...reqForm.register('code')}/></div>
-        <div className="space-y-2"><Label>Tiêu đề <span className="text-destructive">*</span></Label><Input autoComplete="off"{...reqForm.register('title')}/></div>
-        <div className="grid grid-cols-2 gap-3"><div className="space-y-2"><Label>Phòng ban <span className="text-destructive">*</span></Label><Input autoComplete="off"{...reqForm.register('department_id')}/></div>
-        <div className="space-y-2"><Label>Chức vụ <span className="text-destructive">*</span></Label><Input autoComplete="off"{...reqForm.register('position_id')}/></div></div>
-        <div className="space-y-2"><Label>Số lượng <span className="text-destructive">*</span></Label><Input type="number" autoComplete="off"{...reqForm.register('headcount')}/></div>
+    <Drawer open={reqOpen} onOpenChange={setReqOpen}><DrawerContent size="sm"><DrawerHeader><DrawerTitle>Tạo yêu cầu tuyển dụng</DrawerTitle><DrawerDescription>Nhập thông tin yêu cầu mới</DrawerDescription></DrawerHeader>
+      <DrawerBody><form id="req-form" onSubmit={reqForm.handleSubmit(onSubmitReq)} className="space-y-4">
+        <div className="space-y-2"><Label htmlFor="rc">Mã yêu cầu <span className="text-destructive">*</span></Label><Input id="rc" autoComplete="off" {...reqForm.register('code')} /></div>
+        <div className="space-y-2"><Label htmlFor="rt">Chức danh <span className="text-destructive">*</span></Label><Input id="rt" autoComplete="off" {...reqForm.register('title')} /></div>
+        <div className="grid grid-cols-2 gap-3"><div className="space-y-2"><Label htmlFor="rd">Phòng ban <span className="text-destructive">*</span></Label><Input id="rd" autoComplete="off" {...reqForm.register('department_id')} /></div>
+        <div className="space-y-2"><Label htmlFor="rp">Vị trí <span className="text-destructive">*</span></Label><Input id="rp" autoComplete="off" {...reqForm.register('position_id')} /></div></div>
+        <div className="space-y-2"><Label htmlFor="rh">Số lượng <span className="text-destructive">*</span></Label><Input id="rh" type="number" autoComplete="off" {...reqForm.register('headcount')} /></div>
       </form></DrawerBody>
-      <DrawerFooter><Button variant="ghost" onClick={()=>setReqOpen(false)}>Hủy</Button><Button type="submit" form="req-form" disabled={createReq.isPending}>Tạo</Button></DrawerFooter>
-    </DrawerContent></Drawer>
+      <DrawerFooter><Button variant="ghost" onClick={() => setReqOpen(false)}>Hủy</Button><Button type="submit" form="req-form" disabled={createReq.isPending}>Tạo</Button></DrawerFooter></DrawerContent></Drawer>
 
-    <Drawer open={canOpen} onOpenChange={setCanOpen}><DrawerContent size="sm"><DrawerHeader><DrawerTitle>Thêm ứng viên</DrawerTitle><DrawerDescription>Nhập thông tin ứng viên mới</DrawerDescription></DrawerHeader>
-      <DrawerBody><form id="can-form" onSubmit={canForm.handleSubmit(onCan)} className="space-y-4">
-        <div className="space-y-2"><Label>Yêu cầu <span className="text-destructive">*</span></Label>
-          <select className="h-8 w-full rounded-md border bg-[hsl(var(--card))] px-2 py-1 text-[13px] outline-none focus:ring-2 focus:ring-primary"{...canForm.register('requisition_id')}>
-            <option value="">Chọn yêu cầu</option>{reqs?.map(r=><option key={r.id} value={r.id}>{r.code} - {r.title}</option>)}
-          </select></div>
-        <div className="space-y-2"><Label>Tên <span className="text-destructive">*</span></Label><Input autoComplete="off"{...canForm.register('name')}/></div>
-        <div className="space-y-2"><Label>Email <span className="text-destructive">*</span></Label><Input type="email" autoComplete="off"{...canForm.register('email')}/></div>
-        <div className="space-y-2"><Label>Điện thoại</Label><Input autoComplete="off"{...canForm.register('phone')}/></div>
+    <Drawer open={candOpen} onOpenChange={setCandOpen}><DrawerContent size="sm"><DrawerHeader><DrawerTitle>Thêm ứng viên</DrawerTitle><DrawerDescription>Nhập thông tin ứng viên mới</DrawerDescription></DrawerHeader>
+      <DrawerBody><form id="cand-form" onSubmit={candForm.handleSubmit(onSubmitCand)} className="space-y-4">
+        <div className="space-y-2"><Label htmlFor="cr">Yêu cầu <span className="text-destructive">*</span></Label>
+          <select id="cr" className="w-full rounded-md border bg-[hsl(var(--card))] px-2 py-1 text-[13px]" {...candForm.register('requisition_id')}>
+            <option value="">Chọn yêu cầu</option>{reqs?.map(r => <option key={r.id} value={r.id}>{r.code}</option>)}</select></div>
+        <div className="space-y-2"><Label htmlFor="cn">Họ tên <span className="text-destructive">*</span></Label><Input id="cn" autoComplete="off" {...candForm.register('name')} /></div>
+        <div className="space-y-2"><Label htmlFor="ce">Email <span className="text-destructive">*</span></Label><Input id="ce" type="email" autoComplete="off" {...candForm.register('email')} /></div>
+        <div className="space-y-2"><Label htmlFor="cp">Điện thoại</Label><Input id="cp" autoComplete="off" {...candForm.register('phone')} /></div>
       </form></DrawerBody>
-      <DrawerFooter><Button variant="ghost" onClick={()=>setCanOpen(false)}>Hủy</Button><Button type="submit" form="can-form" disabled={createCan.isPending}>Thêm</Button></DrawerFooter>
-    </DrawerContent></Drawer></div>);
+      <DrawerFooter><Button variant="ghost" onClick={() => setCandOpen(false)}>Hủy</Button><Button type="submit" form="cand-form" disabled={createCand.isPending}>Thêm</Button></DrawerFooter></DrawerContent></Drawer></div>);
 }
