@@ -17,12 +17,15 @@ class WorkflowRequestResource extends JsonResource
             'submitted_by' => $r->submittedBy(),
             'status' => $r->status()->value,
             'current_step' => $r->currentStep(),
+            'context' => $r->context(),
             'actions' => array_map(fn ($a) => [
                 'id' => $a->id()->value(),
                 'step_order' => $a->stepOrder(),
                 'action' => $a->action()->value,
                 'actor_id' => $a->actorId(),
                 'comment' => $a->comment(),
+                'resolved_approvers' => $a->resolvedApprovers(),
+                'delegation_map' => $a->delegationMap(),
                 'created_at' => $a->createdAt()->toIso8601String(),
             ], $r->actions()),
         ];

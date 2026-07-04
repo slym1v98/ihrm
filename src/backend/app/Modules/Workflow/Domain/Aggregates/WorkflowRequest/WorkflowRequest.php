@@ -28,6 +28,7 @@ class WorkflowRequest
         ?RequestStatus $status = null,
         ?int $currentStep = null,
         array $actions = [],
+        private ?array $context = null,
     ) {
         $this->status = $status ?? RequestStatus::PENDING;
         $this->currentStep = $currentStep;
@@ -42,8 +43,22 @@ class WorkflowRequest
     public function status(): RequestStatus { return $this->status; }
     public function currentStep(): ?int { return $this->currentStep; }
     public function actions(): array { return $this->actions; }
+    public function context(): ?array { return $this->context; }
 
-    public function start(int $firstStepOrder): WorkflowStepCompleted
+    public function moveToStep(int $stepOrder): void
+    {
+        $this->assertStatus(RequestStatus::IN_REVIEW);
+        $this->currentStep = $stepOrder;
+    }
+
+    public function markApproved(): void
+    {
+        $this->assertStatus(RequestStatus::IN_REVIEW);
+        $this->status = RequestStatus::APPROVED;
+        $this->currentStep = null;
+    }
+
+    public function start(int $firstStepOrder, array $resolvedApprovers = [], array $delegationMap = []): WorkflowStepCompleted
     {
         $this->assertStatus(RequestStatus::PENDING);
         $this->status = RequestStatus::IN_REVIEW;
@@ -51,7 +66,7 @@ class WorkflowRequest
         $event = new WorkflowStepCompleted(['request_id' => $this->id->value(), 'step_order' => $firstStepOrder]);
         $this->actions[] = new WorkflowAction(
             WorkflowActionId::new(), $this->id,
-            $firstStepOrder, WorkflowActionType::APPROVE, $this->submittedBy, 'Request submitted',
+            $firstStepOrder, WorkflowActionType::APPROVE, $this->submittedBy, 'Request submitted', [], $resolvedApprovers, $delegationMap,
         );
         return $event;
     }

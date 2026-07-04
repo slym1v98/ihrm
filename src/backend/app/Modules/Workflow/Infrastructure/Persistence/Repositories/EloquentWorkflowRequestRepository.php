@@ -43,6 +43,7 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
                 'status' => $request->status()->value,
                 'current_step' => $request->currentStep(),
                 'submitted_by' => $request->submittedBy(),
+                'context' => $request->context(),
             ],
         );
         foreach ($request->actions() as $action) {
@@ -55,6 +56,8 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
                     'actor_id' => $action->actorId(),
                     'comment' => $action->comment(),
                     'metadata' => $action->metadata(),
+                    'resolved_approvers' => $action->resolvedApprovers(),
+                    'delegation_map' => $action->delegationMap(),
                     'created_at' => $action->createdAt(),
                 ],
             );
@@ -71,6 +74,8 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
             $a->actor_id,
             $a->comment,
             $a->metadata ?? [],
+            $a->resolved_approvers ?? [],
+            $a->delegation_map ?? [],
             $a->created_at ? CarbonImmutable::parse($a->created_at) : null,
         ))->all();
         return new WorkflowRequest(
@@ -82,6 +87,7 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
             RequestStatus::tryFrom($model->status),
             $model->current_step,
             $actions,
+            $model->context,
         );
     }
 }

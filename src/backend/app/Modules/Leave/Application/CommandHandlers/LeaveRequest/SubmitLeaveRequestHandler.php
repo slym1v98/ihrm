@@ -16,12 +16,15 @@ use App\Modules\Leave\Domain\Repositories\LeaveRequestRepositoryInterface;
 use App\Modules\Leave\Domain\Repositories\LeaveTypeRepositoryInterface;
 use App\Modules\Leave\Domain\ValueObjects\DurationUnit;
 use App\Modules\Leave\Domain\ValueObjects\LeavePeriod;
+use App\Modules\Workflow\Application\CommandHandlers\SubmitWorkflowRequestHandler;
+use App\Modules\Workflow\Application\Commands\SubmitWorkflowRequestCommand;
+use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Event;
 
 class SubmitLeaveRequestHandler
 {
-    public function __construct(private LeaveTypeRepositoryInterface $types, private LeavePolicyRepositoryInterface $policies, private LeaveRequestRepositoryInterface $requests, private LeaveBalanceRepositoryInterface $balances) {}
+    public function __construct(private LeaveTypeRepositoryInterface $types, private LeavePolicyRepositoryInterface $policies, private LeaveRequestRepositoryInterface $requests, private LeaveBalanceRepositoryInterface $balances, private WorkflowTemplateRepositoryInterface $templates, private SubmitWorkflowRequestHandler $workflowHandler) {}
 
     public function handle(SubmitLeaveRequestCommand $command): LeaveRequest
     {
@@ -43,6 +46,13 @@ class SubmitLeaveRequestHandler
         }
         $request = new LeaveRequest(LeaveRequestId::new(), $command->employeeId, $typeId, $period, $unit, $command->reason);
         $this->requests->save($request);
+        $wfCode = $type->workflowTemplateCode();
+        if ($wfCode !== null) {
+            $template = $this->templates->findByCode($wfCode);
+            if ($template !== null && $template->isActive()) {
+                $this->workflowHandler->handle(new SubmitWorkflowRequestCommand($template->id()->value(), 'leave_request', $request->id()->value(), $command->submittedBy ?? $command->employeeId));
+            }
+        }
         Event::dispatch($request->submittedEvent());
         return $request;
     }

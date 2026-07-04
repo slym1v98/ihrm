@@ -10,9 +10,6 @@ use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface
 use App\Modules\Workflow\Domain\ValueObjects\AssigneeType;
 use App\Modules\Workflow\Infrastructure\Persistence\Eloquent\WorkflowTemplateModel;
 use App\Modules\Workflow\Infrastructure\Persistence\Eloquent\WorkflowTemplateStepModel;
-use Carbon\CarbonImmutable;
-use Ramsey\Uuid\Uuid;
-
 class EloquentWorkflowTemplateRepository implements WorkflowTemplateRepositoryInterface
 {
     public function findById(WorkflowTemplateId $id): ?WorkflowTemplate
@@ -41,7 +38,15 @@ class EloquentWorkflowTemplateRepository implements WorkflowTemplateRepositoryIn
         foreach ($template->steps() as $step) {
             WorkflowTemplateStepModel::updateOrCreate(
                 ['workflow_template_id' => $tModel->id, 'step_order' => $step->stepOrder()],
-                ['id' => $step->id()->value(), 'name' => $step->name(), 'assignee_type' => $step->assigneeType()->value, 'assignee_id' => $step->assigneeId(), 'condition' => $step->condition()],
+                [
+                    'id' => $step->id()->value(),
+                    'name' => $step->name(),
+                    'assignee_type' => $step->assigneeType()->value,
+                    'assignee_id' => $step->assigneeId(),
+                    'condition' => $step->condition(),
+                    'resolver_type' => $step->resolverType(),
+                    'resolver_config' => $step->resolverConfig() ?? [],
+                ],
             );
         }
     }
@@ -55,6 +60,8 @@ class EloquentWorkflowTemplateRepository implements WorkflowTemplateRepositoryIn
             AssigneeType::from($s->assignee_type),
             $s->assignee_id,
             $s->condition,
+            $s->resolver_type,
+            $s->resolver_config,
         ))->all();
         return new WorkflowTemplate(
             new WorkflowTemplateId($model->id),

@@ -33,6 +33,20 @@ class WorkflowRequestStateMachineTest extends TestCase
         $this->assertNull($r->currentStep());
     }
 
+    public function test_exposes_context_snapshot(): void
+    {
+        $r = new WorkflowRequest(
+            new WorkflowRequestId('00000000-0000-0000-0000-000000000010'),
+            new WorkflowTemplateId('00000000-0000-0000-0000-000000000011'),
+            'leave_request',
+            '00000000-0000-0000-0000-000000000012',
+            '00000000-0000-0000-0000-000000000013',
+            context: ['days' => 3],
+        );
+
+        $this->assertSame(['days' => 3], $r->context());
+    }
+
     public function test_start_transitions_to_in_review(): void
     {
         $r = $this->makeRequest();
@@ -129,6 +143,17 @@ class WorkflowRequestStateMachineTest extends TestCase
         $this->assertCount(1, $r->actions());
         $r->approveStep('actor-1', 1, true);
         $this->assertCount(2, $r->actions());
+    }
+
+    public function test_action_exposes_resolution_metadata(): void
+    {
+        $r = $this->makeRequest();
+        $r->start(1, ['manager-1'], ['manager-1' => 'delegate-1']);
+
+        $action = $r->actions()[0];
+
+        $this->assertSame(['manager-1'], $action->resolvedApprovers());
+        $this->assertSame(['manager-1' => 'delegate-1'], $action->delegationMap());
     }
 
     public function test_resubmit_from_returned(): void

@@ -3,12 +3,15 @@
 use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\{
     ApproveWorkflowRequestController,
     CancelWorkflowRequestController,
+    DeleteWorkflowDelegationController,
     ListWorkflowRequestController,
+    ListWorkflowDelegationController,
     ListWorkflowTemplateController,
     RejectWorkflowRequestController,
     ReturnForEditWorkflowRequestController,
     ShowWorkflowRequestController,
     ShowWorkflowTemplateController,
+    StoreWorkflowDelegationController,
     StoreWorkflowRequestController,
     StoreWorkflowTemplateController,
 };
@@ -28,4 +31,8 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('workflow-requests/{id}/reject', RejectWorkflowRequestController::class)->middleware('permission:workflow.request.reject');
     Route::post('workflow-requests/{id}/return-for-edit', ReturnForEditWorkflowRequestController::class)->middleware('permission:workflow.request.return');
     Route::post('workflow-requests/{id}/cancel', CancelWorkflowRequestController::class)->middleware('permission:workflow.request.cancel');
+
+    Route::post('workflow-delegations', StoreWorkflowDelegationController::class)->middleware('permission:workflow.delegation.create');
+    Route::get('workflow-delegations', ListWorkflowDelegationController::class)->middleware('permission:workflow.delegation.view');
+    Route::delete('workflow-delegations/{id}', DeleteWorkflowDelegationController::class)->middleware('permission:workflow.delegation.delete');
 });
