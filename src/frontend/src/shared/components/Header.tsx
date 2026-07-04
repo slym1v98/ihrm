@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/domains/auth/hooks/useAuth';
 import { useTheme } from '@/shared/hooks/useTheme';
 import { useSidebar } from '@/shared/hooks/useSidebar';
+import { useNotifications } from '@/domains/notification/hooks/useNotification';
 import { Breadcrumb } from '@/shared/components/Breadcrumb';
 import { toast } from 'sonner';
 
@@ -49,9 +50,10 @@ function DropdownItem({ icon: Icon, label, onClick }: {
 
 export function Header() {
   const router = useRouter();
-  const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
-  const { collapsed, toggle } = useSidebar();
+    const { user, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
+    const { collapsed, toggle } = useSidebar();
+    const { notifications, unreadCount, markRead, markAllRead } = useNotifications();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-[hsl(var(--card))] px-4">
@@ -69,8 +71,24 @@ export function Header() {
           {theme === 'dark' ? <Sun className="h-5 w-5 text-muted-foreground" /> : <Moon className="h-5 w-5 text-muted-foreground" />}
         </button>
 
-        <Dropdown trigger={<Bell className="h-5 w-5 text-muted-foreground" />}>
-          <div className="px-3 py-2 text-sm text-muted-foreground">Chưa có thông báo</div>
+            <Dropdown trigger={<div className="relative"><Bell className="h-5 w-5 text-muted-foreground" />{unreadCount > 0 && <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground">{unreadCount > 9 ? '9+' : unreadCount}</span>}</div>}>
+              <div className="max-h-80 overflow-y-auto">
+                {notifications.length === 0 ? (
+                  <div className="px-3 py-2 text-sm text-muted-foreground">Chưa có thông báo</div>
+                ) : (
+                  <>
+                    {notifications.slice(0, 5).map(n => (
+                      <button key={n.id} type="button" onClick={() => n.read_at ? null : markRead(n.id)}
+                        className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-muted ${!n.read_at ? 'bg-muted/40 font-medium' : ''}`}>
+                        <div className="text-xs text-muted-foreground truncate">{n.subject_rendered}</div>
+                        <div className="text-[11px] text-muted-foreground/60 truncate">{n.body_rendered}</div>
+                      </button>
+                    ))}
+                    {notifications.length > 5 && <div className="px-3 py-1 text-xs text-center text-muted-foreground">+{notifications.length - 5} thông báo khác</div>}
+                  </>
+                )}
+              </div>
+              {unreadCount > 0 && <button type="button" onClick={markAllRead} className="w-full border-t px-3 py-1.5 text-xs text-center text-muted-foreground hover:bg-muted transition-colors">Đánh dấu đã đọc</button>}
         </Dropdown>
 
         <Dropdown trigger={<User className="h-5 w-5 text-muted-foreground" />}>
