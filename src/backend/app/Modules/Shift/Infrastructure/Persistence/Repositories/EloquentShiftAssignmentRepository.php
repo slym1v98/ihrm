@@ -49,8 +49,7 @@ class EloquentShiftAssignmentRepository implements ShiftAssignmentRepositoryInte
 
     public function findAllPaginated(int $page, int $perPage = 15): array
     {
-        return $this->model->query()->orderBy('created_at', 'desc')
-            ->paginate($perPage, ['*'], 'page', $page)->items();
+        return array_map(fn ($m) => $this->toDomain($m), $this->model->query()->orderBy('created_at', 'desc')->paginate($perPage, ['*'], 'page', $page)->items());
     }
 
     public function saveAndDispatch(ShiftAssignment $assignment): void

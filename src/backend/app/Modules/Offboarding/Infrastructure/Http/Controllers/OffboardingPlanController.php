@@ -40,7 +40,7 @@ class OffboardingPlanController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate(['offboarding_request_id' => 'required|uuid', 'start_date' => 'nullable|date']);
-        $cmd = new CreateOffboardingPlanCommand($request->input('offboarding_request_id'), $request->input('employee_id', ''), $request->input('start_date', date('Y-m-d')));
+        $cmd = new CreateOffboardingPlanCommand(employeeId: $request->input('offboarding_request_id', ''), startDate: $request->input('start_date', date('Y-m-d')));
         $plan = $this->createHandler->handle($cmd);
 
         return response()->json(['data' => ['id' => $plan->getId()->value, 'status' => $plan->getStatus()->value]], 201);

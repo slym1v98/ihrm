@@ -11,6 +11,6 @@ class ListPayrollAdjustmentsController
 
     public function __invoke(Request $request, string $entryId)
     {
-        return $this->controller->index($request, $entryId);
+        return $this->controller->index($entryId);
     }
 }

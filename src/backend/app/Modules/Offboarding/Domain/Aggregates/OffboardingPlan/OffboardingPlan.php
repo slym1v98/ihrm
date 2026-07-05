@@ -23,7 +23,6 @@ class OffboardingPlan
     private function __construct(
         private readonly OffboardingPlanId $id,
         private readonly string $requestId,
-        private readonly string $employeeId,
         private readonly \DateTimeImmutable $startDate,
         private OffboardingPlanStatus $status,
         private ?string $workflowRequestId,
@@ -33,11 +32,9 @@ class OffboardingPlan
     public static function create(
         OffboardingPlanId $id,
         string $requestId,
-        ?string $dummy,
-        ?string $dummy2,
         \DateTimeImmutable $startDate,
     ): self {
-        $plan = new self($id, $requestId, $dummy, $dummy2, $startDate, OffboardingPlanStatus::Draft, null, null);
+        $plan = new self($id, $requestId, $startDate, OffboardingPlanStatus::Draft, null, null);
         $plan->recordEvent(new OffboardingPlanCreated($id, $requestId, $startDate));
 
         return $plan;
@@ -46,14 +43,12 @@ class OffboardingPlan
     public static function reconstitute(
         OffboardingPlanId $id,
         string $requestId,
-        ?string $dummy,
-        ?string $dummy2,
         \DateTimeImmutable $startDate,
         OffboardingPlanStatus $status,
         ?string $workflowRequestId,
         ?\DateTimeImmutable $completedAt,
     ): self {
-        return new self($id, $requestId, $dummy, $dummy2, $startDate, $status, $workflowRequestId, $completedAt);
+        return new self($id, $requestId, $startDate, $status, $workflowRequestId, $completedAt);
     }
 
     public function activate(): void
@@ -164,6 +159,11 @@ class OffboardingPlan
         $this->recordedEvents = [];
 
         return $events;
+    }
+
+    public function getRequestId(): string
+    {
+        return $this->requestId;
     }
 
     public function getId(): OffboardingPlanId
