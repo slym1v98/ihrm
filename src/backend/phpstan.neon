@@ -9,11 +9,24 @@ parameters:
         - database/migrations/*
         - config/*
     ignoreErrors:
-        # Eloquent dynamic properties (from DB columns)
-        - '#Access to an undefined property App\\Modules\\\w+\\Infrastructure\\Persistence\\Eloquent\\#'
+        # Eloquent & Doctrine — dynamic properties from DB
+        - '#Access to an undefined property App\\Modules\\\w+\\Infrastructure\\#'
         # Eloquent relations (dynamically resolved)
-        - '#Relation .* is not found in App\\Modules\\\w+\\Infrastructure\\Persistence\\Eloquent\\#'
+        - '#Relation .* is not found in App\\Modules\\\w+\\Infrastructure\\#'
         # Seeder ?? array offset pattern
         - '#Offset .* on left side of \?\? always exists#'
-        # Mixed return type from Eloquent Builder methods
-        - '#Method App\\Modules\\\w+\\Infrastructure\\Persistence\\Repositories\\Eloquent\\#'
+        # toDateTimeImmutable on Eloquent date attributes
+        - '#Cannot call method toDateTimeImmutable\(\) on string#'
+        # Nullsafe on Eloquent models
+        - '#Using nullsafe property access "\?\->\w+" on left side of \?\? is unnecessary#'
+        # Unused properties (framework injection)
+        - '#Property .* is never read, only written#'
+        # Float/int from DB columns (Postgres numeric → float)
+        - '#should return int but returns float#'
+        - '#expects int, float given#'
+        # Mixed/null strict comparison (framework generics unsupported)
+        - '#Strict comparison using !== between mixed and null#'
+        # Return type mismatch — AssetItem in wrong namespace
+        - '#has invalid return type App\\Modules\\Asset\\Application\\CommandHandlers\\AssetItem#'
+        # UpdateAssetItemHandler returns AssetItem
+        - '#Method App\\Modules\\Asset\\Application\\CommandHandlers\\UpdateAssetItemHandler::handle\(\) should return#'

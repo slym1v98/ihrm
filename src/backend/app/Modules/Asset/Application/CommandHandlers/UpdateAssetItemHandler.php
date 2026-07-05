@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Modules\Asset\Application\CommandHandlers;
+use App\Modules\Asset\Domain\Aggregates\AssetItem\AssetItem;
 
 use App\Modules\Asset\Application\Commands\UpdateAssetItemCommand;
 use App\Modules\Asset\Domain\Exceptions\AssetItemNotFoundException;
