@@ -351,7 +351,7 @@ return new class extends Migration
 
 - [ ] **Step 6: Run migrations**
 
-Run: `docker compose exec -T app php artisan migrate:fresh --seed`
+Run: `docker compose exec -T app php artisan migrate`
 Expected: all migrations run, seed successful
 
 - [ ] **Step 7: Commit**

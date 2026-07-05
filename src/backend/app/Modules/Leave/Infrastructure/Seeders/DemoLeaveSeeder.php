@@ -31,7 +31,6 @@ class DemoLeaveSeeder extends Seeder
             LeavePolicyModel::updateOrCreate(
                 ['leave_type_id' => $tid, 'valid_from' => $from],
                 [
-                    'id'                       => (string) Uuid::uuid4(),
                     'valid_until'              => $until,
                     'max_consecutive_days'     => $maxConsec,
                     'requires_attachment'      => $attach,
@@ -51,7 +50,6 @@ class DemoLeaveSeeder extends Seeder
                 LeaveBalanceModel::updateOrCreate(
                     ['employee_id' => $empId, 'leave_type_id' => $tid, 'year' => $year],
                     [
-                        'id'           => (string) Uuid::uuid4(),
                         'opening'      => 0,
                         'accrued'      => $days,
                         'used'         => 0,

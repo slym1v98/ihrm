@@ -2,10 +2,13 @@
 
 namespace App\Modules\Leave\Infrastructure\Persistence\Eloquent;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+
 
 class LeaveTypeModel extends Model
 {
+    use HasUuids;
     protected $table = 'leave_types';
     protected $keyType = 'string';
     public $incrementing = false;

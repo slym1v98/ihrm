@@ -2,10 +2,13 @@
 
 namespace App\Modules\Payroll\Infrastructure\Persistence\Eloquent;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+
 
 class PayrollRunModel extends Model
 {
+    use HasUuids;
     protected $table = 'payroll_runs';
     protected $keyType = 'string';
     public $incrementing = false;

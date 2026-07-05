@@ -20,7 +20,6 @@ class AdminUserSeeder extends Seeder
         $user = UserModel::updateOrCreate(
             ['email' => $email],
             [
-                'id' => (string) Uuid::uuid4(),
                 'name' => 'Admin',
                 'password' => Hash::make($password),
                 'status' => 'active',

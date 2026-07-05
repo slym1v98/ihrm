@@ -34,7 +34,7 @@
 
 UUID `id`, unique `code`, `name`, nullable `description`, `query_class`, JSONB `filters_schema` default `[]`, JSONB `columns_schema` default `[]`, boolean `is_active` default true, timestamps.
 
-`docker compose run --rm app php artisan migrate:fresh --seed` — PASS.
+`docker compose run --rm app php artisan migrate` — PASS.
 
 - [ ] **Step 2: runs migration**
 

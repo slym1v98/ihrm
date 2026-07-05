@@ -49,7 +49,7 @@
 
 - [ ] **Step 3: Run migrations**
   ```bash
-  docker compose run --rm app php artisan migrate:fresh --seed
+  docker compose run --rm app php artisan migrate
   ```
   Expected: PASS; `workflow_*` tables exist.
 

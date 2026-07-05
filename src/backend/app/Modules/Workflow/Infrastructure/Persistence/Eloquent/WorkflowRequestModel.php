@@ -3,9 +3,11 @@
 namespace App\Modules\Workflow\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class WorkflowRequestModel extends Model
 {
+    use HasUuids;
     protected $table = 'workflow_requests';
     protected $keyType = 'string';
     public $incrementing = false;

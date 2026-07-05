@@ -2,10 +2,13 @@
 
 namespace App\Modules\Payroll\Infrastructure\Persistence\Eloquent;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+
 
 class PayslipModel extends Model
 {
+    use HasUuids;
     protected $table = 'payslips';
     protected $keyType = 'string';
     public $incrementing = false;

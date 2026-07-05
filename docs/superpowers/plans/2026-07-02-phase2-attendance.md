@@ -39,28 +39,28 @@
 
 Create `attendance_periods`: UUID `id`, unique `period_code`, `start_date`, `end_date`, `status` default `open`, timestamps, index on `status`.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: PASS; `attendance_periods` exists.
 
 - [ ] **Step 2: Create raw logs migration**
 
 Create `attendance_raw_logs`: UUID `id`, UUID `employee_id`, `source`, `event_type`, `event_time` timestamptz, nullable JSONB `geo_point`, JSONB `payload` default `{}`, `created_at`; indexes `(employee_id,event_time)` and `(source,event_time)`.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: PASS; raw log indexes exist.
 
 - [ ] **Step 3: Create timesheets migration**
 
 Create `attendance_timesheets`: UUID `id`, FK `attendance_period_id`, UUID `employee_id`, `work_date`, nullable UUID `shift_assignment_id`, minute int columns default `0`, `result_status`, nullable `calculation_run_id`, timestamps; unique `(employee_id,work_date,attendance_period_id)`; indexes on period and employee/date.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: PASS; unique constraint exists.
 
 - [ ] **Step 4: Create adjustments migration**
 
 Create `attendance_adjustment_requests`: UUID `id`, FK `attendance_timesheet_id`, UUID `employee_id`, UUID `requested_by`, `reason` text, nullable `evidence_file`, JSONB `corrections`, `status` default `pending`, nullable `approved_by`, nullable timestamptz `approved_at`, timestamps; indexes on timesheet/status; partial unique index on `attendance_timesheet_id` where `status = 'pending'`.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: PASS; duplicate pending DB guard exists.
 
 - [ ] **Step 5: Commit schema**

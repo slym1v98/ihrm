@@ -227,7 +227,7 @@ return new class extends Migration
 - [ ] **Step 4: Run migrations**
 
 ```bash
-docker compose run --rm app php artisan migrate:fresh --seed
+docker compose run --rm app php artisan migrate
 ```
 Expected: All tables created, no errors.
 
@@ -3175,7 +3175,7 @@ Ensure existing modules (Recruitment, Attendance, etc.) already have this.
 - [ ] **Step 2: Run migrations**
 
 ```bash
-docker compose run --rm app php artisan migrate:fresh --seed
+docker compose run --rm app php artisan migrate
 ```
 
 - [ ] **Step 3: Run full test suite**

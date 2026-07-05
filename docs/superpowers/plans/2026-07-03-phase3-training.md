@@ -160,7 +160,7 @@ Expected: FAIL because Training classes do not exist.
 
 Run:
 ```bash
-docker compose run --rm app php artisan migrate:fresh --seed 2>&1 | tail -40
+docker compose run --rm app php artisan migrate 2>&1 | tail -40
 ```
 Expected: migrations complete; Training seeder not added yet is fine.
 

@@ -3,9 +3,11 @@
 namespace App\Modules\Reporting\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class ReportDefinitionModel extends Model
 {
+    use HasUuids;
     protected $table = 'report_definitions';
     protected $keyType = 'string';
     public $incrementing = false;

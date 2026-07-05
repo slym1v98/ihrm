@@ -4,27 +4,22 @@ namespace App\Modules\Leave\Infrastructure\Seeders;
 
 use App\Modules\Leave\Infrastructure\Persistence\Eloquent\LeaveTypeModel;
 use Illuminate\Database\Seeder;
-use Ramsey\Uuid\Uuid;
 
 class LeaveTypeSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach ([
-            ['annual', 'Annual Leave', true, 10],
-            ['sick', 'Sick Leave', false, 20],
-            ['unpaid', 'Unpaid Leave', false, 30],
-            ['maternity', 'Maternity Leave', true, 40],
-        ] as [$code, $name, $tracked, $sortOrder]) {
+        $types = [
+            ['code' => 'annual', 'name' => 'Annual Leave', 'is_balance_tracked' => true, 'sort_order' => 10],
+            ['code' => 'sick', 'name' => 'Sick Leave', 'is_balance_tracked' => false, 'sort_order' => 20],
+            ['code' => 'unpaid', 'name' => 'Unpaid Leave', 'is_balance_tracked' => false, 'sort_order' => 30],
+            ['code' => 'maternity', 'name' => 'Maternity Leave', 'is_balance_tracked' => true, 'sort_order' => 40],
+        ];
+
+        foreach ($types as $t) {
             LeaveTypeModel::updateOrCreate(
-                ['code' => $code],
-                [
-                    'id' => (string) Uuid::uuid4(),
-                    'name' => $name,
-                    'is_balance_tracked' => $tracked,
-                    'is_active' => true,
-                    'sort_order' => $sortOrder,
-                ],
+                ['code' => $t['code']],
+                ['name' => $t['name'], 'is_balance_tracked' => $t['is_balance_tracked'], 'is_active' => true, 'sort_order' => $t['sort_order']],
             );
         }
     }

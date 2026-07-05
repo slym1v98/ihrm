@@ -2,10 +2,13 @@
 
 namespace App\Modules\Workflow\Infrastructure\Persistence\Eloquent;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+
 
 class WorkflowTemplateStepModel extends Model
 {
+    use HasUuids;
     protected $table = 'workflow_template_steps';
     protected $keyType = 'string';
     public $incrementing = false;

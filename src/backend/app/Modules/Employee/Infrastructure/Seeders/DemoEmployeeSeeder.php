@@ -43,8 +43,7 @@ class DemoEmployeeSeeder extends Seeder
             $emp = EmployeeModel::updateOrCreate(
                 ['employee_code' => $code],
                 [
-                    'id'             => (string) Uuid::uuid4(),
-                    'first_name'     => $first,
+                                        'first_name'     => $first,
                     'last_name'      => $last,
                     'dob'            => $dob,
                     'gender'         => $gender,
@@ -62,8 +61,7 @@ class DemoEmployeeSeeder extends Seeder
             ContractModel::updateOrCreate(
                 ['contract_number' => 'HD-' . $code],
                 [
-                    'id'          => (string) Uuid::uuid4(),
-                    'employee_id' => $emp->id,
+                                        'employee_id' => $emp->id,
                     'contract_type' => 'permanent',
                     'start_date'  => '2024-01-01',
                     'end_date'    => null,
