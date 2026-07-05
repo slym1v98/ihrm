@@ -12,6 +12,11 @@ class EmployeeApiTest extends TestCase
 
     private string $token;
 
+    public function test_unauthenticated(): void
+    {
+        $this->getJson('/api/v1/employees')->assertStatus(401);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
