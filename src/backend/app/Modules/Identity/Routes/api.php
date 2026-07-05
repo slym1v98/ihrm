@@ -24,7 +24,7 @@ use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\UpdateUserContr
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
-    Route::post('/auth/login', LoginAuthController::class);
+    Route::post('/auth/login', LoginAuthController::class)->middleware('throttle:auth');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/auth/logout', LogoutAuthController::class);
