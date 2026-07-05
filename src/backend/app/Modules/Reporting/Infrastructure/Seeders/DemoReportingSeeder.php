@@ -22,7 +22,7 @@ class DemoReportingSeeder extends Seeder
                 'requested_by' => $admin->id,
                 'filters' => ['branch' => 'all'],
                 'status' => 'completed',
-                'result' => 'reports/headcount-2026-06.csv',
+                'result' => ['file' => 'reports/headcount-2026-06.csv'],
                 'started_at' => now()->subDay(),
                 'completed_at' => now()->subDay()->addMinutes(5),
             ],
