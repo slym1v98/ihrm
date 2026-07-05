@@ -47,9 +47,9 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/payroll/entries/{entryId}/adjustments', StorePayrollAdjustmentController::class)->middleware('permission:payroll.adjustment.manage');
     Route::post('/payroll/adjustments/{id}/approve', ApprovePayrollAdjustmentController::class)->middleware('permission:payroll.adjustment.manage');
     Route::post('/payroll/adjustments/{id}/reject', RejectPayrollAdjustmentController::class)->middleware('permission:payroll.adjustment.manage');
-    Route::get('/payroll/payslips', ListPayslipsController::class);
-    Route::get('/payroll/payslips/{id}', ShowPayslipController::class);
-    Route::get('/payroll/payslips/{id}/download', DownloadPayslipController::class);
+    Route::get('/payroll/payslips', ListPayslipsController::class)->middleware('permission:payroll.payslip.view');
+    Route::get('/payroll/payslips/{id}', ShowPayslipController::class)->middleware('permission:payroll.payslip.view');
+    Route::get('/payroll/payslips/{id}/download', DownloadPayslipController::class)->middleware('permission:payroll.payslip.view');
     Route::post('/payroll/periods/{periodId}/publish', PublishPayslipsController::class)->middleware('permission:payroll.publish');
     Route::get('/payroll/components', ListPayrollComponentsController::class)->middleware('permission:payroll.period.view');
     Route::post('/payroll/components', StorePayrollComponentController::class)->middleware('permission:payroll.component.manage');
