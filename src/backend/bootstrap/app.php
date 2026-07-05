@@ -5,8 +5,8 @@ use App\Modules\Shared\Exceptions\AppException;
 use App\Modules\Shared\Exceptions\ValidationException as SharedValidationException;
 use App\Modules\Shared\Http\Middleware\ForceJsonMiddleware;
 use App\Modules\Shared\Http\Resources\ErrorResource;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
@@ -64,7 +64,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
             $appException = new class('UNAUTHENTICATED', 'Bạn cần đăng nhập để tiếp tục') extends AppException
             {
-                public function getHttpStatus(): int { return 401; }
+                public function getHttpStatus(): int
+                {
+                    return 401;
+                }
             };
 
             return response()->json(
@@ -77,7 +80,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (AuthorizationException $exception, $request) {
             $appException = new class('FORBIDDEN', 'Bạn không có quyền thực hiện hành động này') extends AppException
             {
-                public function getHttpStatus(): int { return 403; }
+                public function getHttpStatus(): int
+                {
+                    return 403;
+                }
             };
 
             return response()->json(
@@ -93,7 +99,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
             $appException = new class('MODEL_NOT_FOUND', $message) extends AppException
             {
-                public function getHttpStatus(): int { return 404; }
+                public function getHttpStatus(): int
+                {
+                    return 404;
+                }
             };
 
             return response()->json(
@@ -106,7 +115,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (NotFoundHttpException $exception, $request) {
             $appException = new class('NOT_FOUND', 'Đường dẫn không tồn tại') extends AppException
             {
-                public function getHttpStatus(): int { return 404; }
+                public function getHttpStatus(): int
+                {
+                    return 404;
+                }
             };
 
             return response()->json(
@@ -119,7 +131,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (TooManyRequestsHttpException $exception, $request) {
             $appException = new class('TOO_MANY_REQUESTS', 'Bạn đã gửi quá nhiều yêu cầu, vui lòng thử lại sau') extends AppException
             {
-                public function getHttpStatus(): int { return 429; }
+                public function getHttpStatus(): int
+                {
+                    return 429;
+                }
             };
 
             return response()->json(
@@ -134,7 +149,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
             $appException = new class('DATABASE_ERROR', 'Có lỗi hệ thống xảy ra, vui lòng thử lại sau') extends AppException
             {
-                public function getHttpStatus(): int { return 500; }
+                public function getHttpStatus(): int
+                {
+                    return 500;
+                }
             };
 
             return response()->json(
@@ -144,12 +162,15 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // 9. Fallback — 500
-        $exceptions->render(function (\Throwable $exception, $request) {
+        $exceptions->render(function (Throwable $exception, $request) {
             logger()->error($exception->getMessage(), ['exception' => $exception]);
 
             $appException = new class('INTERNAL_ERROR', 'Có lỗi hệ thống xảy ra') extends AppException
             {
-                public function getHttpStatus(): int { return 500; }
+                public function getHttpStatus(): int
+                {
+                    return 500;
+                }
             };
 
             return response()->json(

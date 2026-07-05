@@ -6,7 +6,11 @@ use App\Http\Requests\BaseFormRequest;
 
 class StoreMessageTemplateRequest extends BaseFormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
@@ -19,6 +23,7 @@ class StoreMessageTemplateRequest extends BaseFormRequest
             'body' => 'required|string',
         ];
     }
+
     public function messages(): array
     {
         return [

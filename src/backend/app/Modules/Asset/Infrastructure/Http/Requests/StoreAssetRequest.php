@@ -6,7 +6,11 @@ use App\Http\Requests\BaseFormRequest;
 
 class StoreAssetRequest extends BaseFormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
@@ -17,6 +21,7 @@ class StoreAssetRequest extends BaseFormRequest
             'description' => 'sometimes|string|max:1000',
         ];
     }
+
     public function messages(): array
     {
         return [

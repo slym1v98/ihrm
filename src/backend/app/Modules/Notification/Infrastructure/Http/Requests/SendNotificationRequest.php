@@ -6,7 +6,11 @@ use App\Http\Requests\BaseFormRequest;
 
 class SendNotificationRequest extends BaseFormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
@@ -19,6 +23,7 @@ class SendNotificationRequest extends BaseFormRequest
             'channels.*' => 'in:email,sms,in_app',
         ];
     }
+
     public function messages(): array
     {
         return [

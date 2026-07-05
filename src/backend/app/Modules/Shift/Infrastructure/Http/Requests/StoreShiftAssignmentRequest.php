@@ -6,7 +6,11 @@ use App\Http\Requests\BaseFormRequest;
 
 class StoreShiftAssignmentRequest extends BaseFormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
@@ -16,6 +20,7 @@ class StoreShiftAssignmentRequest extends BaseFormRequest
             'end_date' => 'sometimes|date_format:Y-m-d|after_or_equal:effective_date',
         ];
     }
+
     public function messages(): array
     {
         return [

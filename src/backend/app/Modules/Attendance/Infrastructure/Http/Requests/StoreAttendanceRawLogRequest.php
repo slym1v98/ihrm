@@ -6,7 +6,11 @@ use App\Http\Requests\BaseFormRequest;
 
 class StoreAttendanceRawLogRequest extends BaseFormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
@@ -16,6 +20,7 @@ class StoreAttendanceRawLogRequest extends BaseFormRequest
             'mode' => 'sometimes|in:in,out',
         ];
     }
+
     public function messages(): array
     {
         return [

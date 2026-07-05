@@ -6,7 +6,11 @@ use App\Http\Requests\BaseFormRequest;
 
 class StoreShiftTemplateRequest extends BaseFormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
@@ -19,6 +23,7 @@ class StoreShiftTemplateRequest extends BaseFormRequest
             'description' => 'sometimes|string|max:500',
         ];
     }
+
     public function messages(): array
     {
         return [

@@ -6,7 +6,10 @@ use App\Http\Requests\BaseFormRequest;
 
 class StoreAttendanceAdjustmentRequest extends BaseFormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
 
     public function rules(): array
     {

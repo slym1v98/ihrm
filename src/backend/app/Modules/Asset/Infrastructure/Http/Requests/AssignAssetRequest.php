@@ -6,7 +6,11 @@ use App\Http\Requests\BaseFormRequest;
 
 class AssignAssetRequest extends BaseFormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
@@ -16,6 +20,7 @@ class AssignAssetRequest extends BaseFormRequest
             'note' => 'sometimes|string|max:500',
         ];
     }
+
     public function messages(): array
     {
         return [
