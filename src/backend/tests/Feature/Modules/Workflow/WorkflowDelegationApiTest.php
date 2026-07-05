@@ -3,6 +3,7 @@
 namespace Tests\Feature\Modules\Workflow;
 
 use Carbon\CarbonImmutable;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -16,7 +17,7 @@ class WorkflowDelegationApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $response = $this->postJson('/api/v1/auth/login', [
             'email' => 'admin@ihrm.local',

@@ -2,16 +2,21 @@
 
 namespace App\Modules\Attendance\Infrastructure\Persistence\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class AttendanceRawLogModel extends Model
 {
     use HasUuids;
+
     protected $table = 'attendance_raw_logs';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
+
     public $timestamps = false;
+
     const CREATED_AT = 'created_at';
 
     protected $fillable = [

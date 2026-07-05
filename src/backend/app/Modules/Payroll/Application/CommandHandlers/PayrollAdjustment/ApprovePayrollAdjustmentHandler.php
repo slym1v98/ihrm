@@ -4,8 +4,9 @@ namespace App\Modules\Payroll\Application\CommandHandlers\PayrollAdjustment;
 
 use App\Modules\Payroll\Application\Commands\PayrollAdjustment\ApprovePayrollAdjustmentCommand;
 use App\Modules\Payroll\Domain\Aggregates\PayrollAdjustment\PayrollAdjustmentId;
-use App\Modules\Payroll\Domain\Repositories\{PayrollAdjustmentRepositoryInterface, PayrollEntryRepositoryInterface};
 use App\Modules\Payroll\Domain\Exceptions\PayrollAdjustmentNotFoundException;
+use App\Modules\Payroll\Domain\Repositories\PayrollAdjustmentRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollEntryRepositoryInterface;
 
 readonly class ApprovePayrollAdjustmentHandler
 {
@@ -18,7 +19,9 @@ readonly class ApprovePayrollAdjustmentHandler
     {
         $id = PayrollAdjustmentId::fromString($command->adjustmentId);
         $adjustment = $this->adjustmentRepo->findById($id);
-        if ($adjustment === null) throw PayrollAdjustmentNotFoundException::default();
+        if ($adjustment === null) {
+            throw PayrollAdjustmentNotFoundException::default();
+        }
 
         $event = $adjustment->approve($command->approvedBy);
         $this->adjustmentRepo->save($adjustment);

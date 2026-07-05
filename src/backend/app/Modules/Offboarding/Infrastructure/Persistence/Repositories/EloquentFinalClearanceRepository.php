@@ -12,12 +12,14 @@ class EloquentFinalClearanceRepository implements FinalClearanceRepositoryInterf
     public function findById(FinalClearanceId $id): ?FinalClearance
     {
         $model = FinalClearanceModel::find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 
     public function findByPlanId(string $planId): ?FinalClearance
     {
         $model = FinalClearanceModel::where('offboarding_plan_id', $planId)->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 

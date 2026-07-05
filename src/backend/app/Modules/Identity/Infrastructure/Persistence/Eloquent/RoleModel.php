@@ -11,9 +11,13 @@ class RoleModel extends Model
     use HasUuids;
 
     protected $table = 'roles';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $casts = ['active' => 'boolean'];
 
     public function rolePermissions(): HasMany

@@ -49,6 +49,7 @@ class ShiftAssignmentController
     public function end(Request $request, string $id): JsonResponse
     {
         $this->endHandler->handle(new EndShiftAssignmentCommand($id, $request->input('effective_to')), (string) $request->user()->id);
+
         return response()->json(['data' => new ShiftAssignmentResource(ShiftAssignmentModel::find($id))]);
     }
 

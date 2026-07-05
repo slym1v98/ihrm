@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Infrastructure\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -17,6 +18,7 @@ class AssetObligationController extends Controller
         $obligations = $this->handler->handle(
             new GetEmployeeObligationsQuery(employeeId: $employeeId)
         );
-        return response()->json(['data' => array_map(fn($a) => $a->toArray(), $obligations)]);
+
+        return response()->json(['data' => array_map(fn ($a) => $a->toArray(), $obligations)]);
     }
 }

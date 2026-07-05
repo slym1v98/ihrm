@@ -26,6 +26,7 @@ class AssetReturn
     {
         $return = new self($id, $assetAssignmentId, $returnedAt, $conditionOnReturn, $notes, $settlementAmount, null, null);
         $return->recordedEvents[] = new AssetReturned($id, $assetAssignmentId);
+
         return $return;
     }
 
@@ -34,15 +35,45 @@ class AssetReturn
         return new self($id, $assetAssignmentId, $returnedAt, $conditionOnReturn, $notes, $settlementAmount, $createdAt, $updatedAt);
     }
 
-    public function getId(): AssetReturnId { return $this->id; }
-    public function getAssetAssignmentId(): AssetAssignmentId { return $this->assetAssignmentId; }
-    public function getReturnedAt(): \DateTimeImmutable { return $this->returnedAt; }
-    public function getConditionOnReturn(): AssetCondition { return $this->conditionOnReturn; }
-    public function getNotes(): ?string { return $this->notes; }
-    public function getSettlementAmount(): float { return $this->settlementAmount; }
-    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): AssetReturnId
+    {
+        return $this->id;
+    }
 
+    public function getAssetAssignmentId(): AssetAssignmentId
+    {
+        return $this->assetAssignmentId;
+    }
+
+    public function getReturnedAt(): \DateTimeImmutable
+    {
+        return $this->returnedAt;
+    }
+
+    public function getConditionOnReturn(): AssetCondition
+    {
+        return $this->conditionOnReturn;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function getSettlementAmount(): float
+    {
+        return $this->settlementAmount;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function toArray(): array
     {
@@ -56,6 +87,16 @@ class AssetReturn
         ];
     }
 
-    public function recordEvent(object $event): void { $this->recordedEvents[] = $event; }
-    public function popRecordedEvents(): array { $events = $this->recordedEvents; $this->recordedEvents = []; return $events; }
+    public function recordEvent(object $event): void
+    {
+        $this->recordedEvents[] = $event;
+    }
+
+    public function popRecordedEvents(): array
+    {
+        $events = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $events;
+    }
 }

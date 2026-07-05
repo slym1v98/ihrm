@@ -2,7 +2,6 @@
 
 namespace App\Modules\Onboarding\Domain\Events;
 
-use App\Modules\Onboarding\Domain\Aggregates\OnboardingPlan\OnboardingPlanId;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingTask\OnboardingTaskId;
 
 class OnboardingTaskWaived

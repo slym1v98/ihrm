@@ -2,15 +2,19 @@
 
 namespace App\Modules\Workflow\Infrastructure\Persistence\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class WorkflowRequestActionModel extends Model
 {
     use HasUuids;
+
     public $timestamps = false;
+
     protected $table = 'workflow_request_actions';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = ['id', 'workflow_request_id', 'step_order', 'action', 'actor_id', 'comment', 'metadata', 'resolved_approvers', 'delegation_map', 'step_execution_type', 'form_data', 'created_at'];

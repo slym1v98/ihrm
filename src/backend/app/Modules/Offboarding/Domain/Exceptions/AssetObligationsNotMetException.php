@@ -6,6 +6,6 @@ class AssetObligationsNotMetException extends \RuntimeException
 {
     public function __construct(array $pending = [])
     {
-        parent::__construct('Asset obligations not met: ' . implode(', ', $pending));
+        parent::__construct('Asset obligations not met: '.implode(', ', $pending));
     }
 }

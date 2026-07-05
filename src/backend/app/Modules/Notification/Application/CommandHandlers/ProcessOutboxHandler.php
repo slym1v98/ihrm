@@ -3,12 +3,13 @@
 namespace App\Modules\Notification\Application\CommandHandlers;
 
 use App\Modules\Notification\Application\Commands\ProcessOutboxCommand;
+use App\Modules\Notification\Application\Services\ChannelDispatcher;
+use App\Modules\Notification\Domain\Aggregates\NotificationMessage\NotificationMessageId;
 use App\Modules\Notification\Domain\Events\NotificationFailed;
 use App\Modules\Notification\Domain\Events\NotificationSent;
 use App\Modules\Notification\Domain\Repositories\MessageTemplateRepositoryInterface;
 use App\Modules\Notification\Domain\Repositories\NotificationMessageRepositoryInterface;
 use App\Modules\Notification\Domain\Repositories\NotificationOutboxRepositoryInterface;
-use App\Modules\Notification\Application\Services\ChannelDispatcher;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Event;
 use Throwable;
@@ -24,9 +25,11 @@ class ProcessOutboxHandler
 
     public function handle(ProcessOutboxCommand $command): array
     {
-        $due = $this->outboxes->findDueBatch($command->limit, $command->workerId, new \DateTimeImmutable());
+        $due = $this->outboxes->findDueBatch($command->limit, $command->workerId, new \DateTimeImmutable);
 
-        $processed = 0; $sent = 0; $failed = 0;
+        $processed = 0;
+        $sent = 0;
+        $failed = 0;
 
         foreach ($due as $outbox) {
             $processed++;
@@ -35,7 +38,7 @@ class ProcessOutboxHandler
             $this->outboxes->save($outbox);
 
             try {
-                $message = $this->messages->findById(new \App\Modules\Notification\Domain\Aggregates\NotificationMessage\NotificationMessageId($outbox->getNotificationMessageId()));
+                $message = $this->messages->findById(new NotificationMessageId($outbox->getNotificationMessageId()));
                 if ($message === null) {
                     throw new \RuntimeException('Notification message not found for outbox row');
                 }
@@ -58,7 +61,8 @@ class ProcessOutboxHandler
                         'message_id' => (string) $message->getId(),
                         'channel' => $message->getChannel()->value,
                     ]));
-                } catch (\RuntimeException) {}
+                } catch (\RuntimeException) {
+                }
                 $sent++;
             } catch (Throwable $e) {
                 $outbox->fail($e->getMessage());
@@ -74,7 +78,8 @@ class ProcessOutboxHandler
                         'outbox_id' => (string) $outbox->getId(),
                         'error' => $e->getMessage(),
                     ]));
-                } catch (\RuntimeException) {}
+                } catch (\RuntimeException) {
+                }
                 $failed++;
             }
         }

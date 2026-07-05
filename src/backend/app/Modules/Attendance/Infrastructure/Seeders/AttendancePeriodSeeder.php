@@ -13,14 +13,14 @@ class AttendancePeriodSeeder extends Seeder
         $periods = [
             [
                 'id' => Str::uuid()->toString(),
-                'period_code' => 'P' . date('Ym'),
+                'period_code' => 'P'.date('Ym'),
                 'start_date' => date('Y-m-01'),
                 'end_date' => date('Y-m-t'),
                 'status' => 'open',
             ],
             [
                 'id' => Str::uuid()->toString(),
-                'period_code' => 'P' . date('Ym', strtotime('-1 month')),
+                'period_code' => 'P'.date('Ym', strtotime('-1 month')),
                 'start_date' => date('Y-m-01', strtotime('-1 month')),
                 'end_date' => date('Y-m-t', strtotime('-1 month')),
                 'status' => 'closed',

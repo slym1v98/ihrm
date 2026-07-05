@@ -11,9 +11,13 @@ class LookupGroupModel extends Model
     use HasUuids;
 
     protected $table = 'lookup_groups';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $casts = ['active' => 'boolean'];
 
     public function values(): HasMany

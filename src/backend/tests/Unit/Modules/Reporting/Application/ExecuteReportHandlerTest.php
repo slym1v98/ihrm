@@ -6,9 +6,9 @@ use App\Modules\Reporting\Application\CommandHandlers\ExecuteReportHandler;
 use App\Modules\Reporting\Application\Commands\ExecuteReportCommand;
 use App\Modules\Reporting\Domain\Aggregates\ReportDefinition\ReportDefinition;
 use App\Modules\Reporting\Domain\Aggregates\ReportDefinition\ReportDefinitionId;
+use App\Modules\Reporting\Domain\Exceptions\ReportDefinitionNotFoundException;
 use App\Modules\Reporting\Domain\Repositories\ReportDefinitionRepositoryInterface;
 use App\Modules\Reporting\Domain\Repositories\ReportRunRepositoryInterface;
-use App\Modules\Reporting\Domain\Exceptions\ReportDefinitionNotFoundException;
 use PHPUnit\Framework\TestCase;
 
 class ExecuteReportHandlerTest extends TestCase

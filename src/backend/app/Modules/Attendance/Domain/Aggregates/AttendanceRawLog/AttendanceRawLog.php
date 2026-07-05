@@ -49,14 +49,42 @@ class AttendanceRawLog
     {
         $events = $this->events;
         $this->events = [];
+
         return $events;
     }
 
-    public function employeeId(): string { return $this->employeeId; }
-    public function id(): AttendanceRawLogId { return $this->id; }
-    public function eventTime(): CarbonImmutable { return $this->eventTime; }
-    public function eventType(): EventType { return $this->eventType; }
-    public function source(): Source { return $this->source; }
-    public function geoPoint(): ?GeoPoint { return $this->geoPoint; }
-    public function payload(): array { return $this->payload; }
+    public function employeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    public function id(): AttendanceRawLogId
+    {
+        return $this->id;
+    }
+
+    public function eventTime(): CarbonImmutable
+    {
+        return $this->eventTime;
+    }
+
+    public function eventType(): EventType
+    {
+        return $this->eventType;
+    }
+
+    public function source(): Source
+    {
+        return $this->source;
+    }
+
+    public function geoPoint(): ?GeoPoint
+    {
+        return $this->geoPoint;
+    }
+
+    public function payload(): array
+    {
+        return $this->payload;
+    }
 }

@@ -35,7 +35,7 @@ class LookupController
     {
         $group = $lookups->findGroup($id) ?? throw new NotFoundHttpException('Lookup group not found.');
         $value = $lookups->saveValue($group, $request->validated());
-        Event::dispatch(new LookupValueChanged((string) $group->id, (string) $value->id, 'upsert', new DateTimeImmutable()));
+        Event::dispatch(new LookupValueChanged((string) $group->id, (string) $value->id, 'upsert', new DateTimeImmutable));
 
         return new LookupValueResource($value);
     }

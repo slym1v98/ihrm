@@ -2,6 +2,7 @@
 
 namespace App\Modules\Leave\Application\Workflow;
 
+use App\Modules\Employee\Domain\Aggregates\Employee\EmployeeId;
 use App\Modules\Employee\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Modules\Leave\Domain\Aggregates\LeaveRequest\LeaveRequestId;
 use App\Modules\Leave\Domain\Repositories\LeaveRequestRepositoryInterface;
@@ -29,7 +30,7 @@ final readonly class LeaveRequestSubjectProvider implements SubjectDataProvider
         }
 
         $type = $this->leaveTypes->findById($request->leaveTypeId());
-        $employee = $this->employees->findById(\App\Modules\Employee\Domain\Aggregates\Employee\EmployeeId::fromString($request->employeeId()));
+        $employee = $this->employees->findById(EmployeeId::fromString($request->employeeId()));
         $manager = $employee?->managerId() ? $this->employees->findById($employee->managerId()) : null;
 
         return [

@@ -2,18 +2,16 @@
 
 namespace App\Modules\Payroll\Domain\Aggregates\PayrollPeriod;
 
-use App\Modules\Payroll\Domain\ValueObjects\PeriodStatus;
-use App\Modules\Payroll\Domain\Exceptions\PayrollPeriodLockedException;
-use App\Modules\Payroll\Domain\Exceptions\PayrollPeriodClosedException;
-use App\Modules\Payroll\Domain\Exceptions\PayrollNotApprovedException;
-use App\Modules\Payroll\Domain\Exceptions\PayrollAlreadyPublishedException;
-use App\Modules\Payroll\Domain\Events\PayrollPeriodOpened;
-use App\Modules\Payroll\Domain\Events\PayrollPeriodClosed;
-use App\Modules\Payroll\Domain\Events\PayrollPeriodReopened;
-use App\Modules\Payroll\Domain\Events\PayrollRunStarted;
 use App\Modules\Payroll\Domain\Events\PayrollApproved;
 use App\Modules\Payroll\Domain\Events\PayrollLocked;
+use App\Modules\Payroll\Domain\Events\PayrollPeriodOpened;
+use App\Modules\Payroll\Domain\Events\PayrollPeriodReopened;
 use App\Modules\Payroll\Domain\Events\PayrollPublished;
+use App\Modules\Payroll\Domain\Events\PayrollRunStarted;
+use App\Modules\Payroll\Domain\Exceptions\PayrollAlreadyPublishedException;
+use App\Modules\Payroll\Domain\Exceptions\PayrollNotApprovedException;
+use App\Modules\Payroll\Domain\Exceptions\PayrollPeriodLockedException;
+use App\Modules\Payroll\Domain\ValueObjects\PeriodStatus;
 use DateTimeImmutable;
 
 class PayrollPeriod
@@ -57,9 +55,10 @@ class PayrollPeriod
             attendancePeriodId: $attendancePeriodId,
             workflowRequestId: null,
             openedBy: $openedBy,
-            openedAt: new DateTimeImmutable(),
+            openedAt: new DateTimeImmutable,
         );
         $period->recordedEvents[] = new PayrollPeriodOpened($id->value, $openedBy);
+
         return $period;
     }
 
@@ -67,6 +66,7 @@ class PayrollPeriod
     {
         $this->guardTransition(PeriodStatus::Calculating);
         $this->status = PeriodStatus::Calculating;
+
         return new PayrollRunStarted($this->id->value, $this->id->value, $triggeredBy);
     }
 
@@ -88,7 +88,8 @@ class PayrollPeriod
         $this->guardTransition(PeriodStatus::Approved);
         $this->status = PeriodStatus::Approved;
         $this->approvedBy = $approvedBy;
-        $this->approvedAt = new DateTimeImmutable();
+        $this->approvedAt = new DateTimeImmutable;
+
         return new PayrollApproved($this->id->value, $approvedBy);
     }
 
@@ -106,7 +107,8 @@ class PayrollPeriod
         $this->guardTransition(PeriodStatus::Locked);
         $this->status = PeriodStatus::Locked;
         $this->lockedBy = $lockedBy;
-        $this->lockedAt = new DateTimeImmutable();
+        $this->lockedAt = new DateTimeImmutable;
+
         return new PayrollLocked($this->id->value, $lockedBy);
     }
 
@@ -117,7 +119,8 @@ class PayrollPeriod
         }
         $this->guardTransition(PeriodStatus::Published);
         $this->status = PeriodStatus::Published;
-        $this->publishedAt = new DateTimeImmutable();
+        $this->publishedAt = new DateTimeImmutable;
+
         return new PayrollPublished($this->id->value, $publishedBy);
     }
 
@@ -131,12 +134,13 @@ class PayrollPeriod
             throw PayrollAlreadyPublishedException::default();
         }
         $this->status = PeriodStatus::Reviewing;
+
         return new PayrollPeriodReopened($this->id->value, $reopenedBy);
     }
 
     private function guardTransition(PeriodStatus $target): void
     {
-        if (!$this->status->canTransitionTo($target)) {
+        if (! $this->status->canTransitionTo($target)) {
             throw new \RuntimeException(
                 "Cannot transition from {$this->status->value} to {$target->value}."
             );
@@ -150,25 +154,92 @@ class PayrollPeriod
 
     public function isModifiable(): bool
     {
-        return !in_array($this->status, [PeriodStatus::Locked, PeriodStatus::Published], true);
+        return ! in_array($this->status, [PeriodStatus::Locked, PeriodStatus::Published], true);
     }
 
     // Getters for persistence
-    public function getId(): PayrollPeriodId { return $this->id; }
-    public function getPeriodCode(): string { return $this->periodCode; }
-    public function getStartDate(): DateTimeImmutable { return $this->startDate; }
-    public function getEndDate(): DateTimeImmutable { return $this->endDate; }
-    public function getCutoffDate(): DateTimeImmutable { return $this->cutoffDate; }
-    public function getStatus(): PeriodStatus { return $this->status; }
-    public function getAttendancePeriodId(): ?string { return $this->attendancePeriodId; }
-    public function getWorkflowRequestId(): ?string { return $this->workflowRequestId; }
-    public function getOpenedBy(): string { return $this->openedBy; }
-    public function getOpenedAt(): DateTimeImmutable { return $this->openedAt; }
-    public function getApprovedBy(): ?string { return $this->approvedBy; }
-    public function getApprovedAt(): ?DateTimeImmutable { return $this->approvedAt; }
-    public function getLockedBy(): ?string { return $this->lockedBy; }
-    public function getLockedAt(): ?DateTimeImmutable { return $this->lockedAt; }
-    public function getPublishedAt(): ?DateTimeImmutable { return $this->publishedAt; }
-    public function getRecordedEvents(): array { return $this->recordedEvents; }
-    public function clearRecordedEvents(): void { $this->recordedEvents = []; }
+    public function getId(): PayrollPeriodId
+    {
+        return $this->id;
+    }
+
+    public function getPeriodCode(): string
+    {
+        return $this->periodCode;
+    }
+
+    public function getStartDate(): DateTimeImmutable
+    {
+        return $this->startDate;
+    }
+
+    public function getEndDate(): DateTimeImmutable
+    {
+        return $this->endDate;
+    }
+
+    public function getCutoffDate(): DateTimeImmutable
+    {
+        return $this->cutoffDate;
+    }
+
+    public function getStatus(): PeriodStatus
+    {
+        return $this->status;
+    }
+
+    public function getAttendancePeriodId(): ?string
+    {
+        return $this->attendancePeriodId;
+    }
+
+    public function getWorkflowRequestId(): ?string
+    {
+        return $this->workflowRequestId;
+    }
+
+    public function getOpenedBy(): string
+    {
+        return $this->openedBy;
+    }
+
+    public function getOpenedAt(): DateTimeImmutable
+    {
+        return $this->openedAt;
+    }
+
+    public function getApprovedBy(): ?string
+    {
+        return $this->approvedBy;
+    }
+
+    public function getApprovedAt(): ?DateTimeImmutable
+    {
+        return $this->approvedAt;
+    }
+
+    public function getLockedBy(): ?string
+    {
+        return $this->lockedBy;
+    }
+
+    public function getLockedAt(): ?DateTimeImmutable
+    {
+        return $this->lockedAt;
+    }
+
+    public function getPublishedAt(): ?DateTimeImmutable
+    {
+        return $this->publishedAt;
+    }
+
+    public function getRecordedEvents(): array
+    {
+        return $this->recordedEvents;
+    }
+
+    public function clearRecordedEvents(): void
+    {
+        $this->recordedEvents = [];
+    }
 }

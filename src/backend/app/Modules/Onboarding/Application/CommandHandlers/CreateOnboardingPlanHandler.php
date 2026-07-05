@@ -6,9 +6,9 @@ use App\Modules\Onboarding\Application\Commands\CreateOnboardingPlanCommand;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingPlan\OnboardingPlan;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingPlan\OnboardingPlanId;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingTemplate\OnboardingTemplateId;
+use App\Modules\Onboarding\Domain\Exceptions\OnboardingTemplateNotFoundException;
 use App\Modules\Onboarding\Domain\Repositories\OnboardingPlanRepositoryInterface;
 use App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface;
-use App\Modules\Onboarding\Domain\Exceptions\OnboardingTemplateNotFoundException;
 
 class CreateOnboardingPlanHandler
 {
@@ -24,7 +24,7 @@ class CreateOnboardingPlanHandler
         if ($command->templateId) {
             $templateId = OnboardingTemplateId::fromString($command->templateId);
             $template = $this->templateRepo->findById($templateId);
-            if (!$template) {
+            if (! $template) {
                 throw new OnboardingTemplateNotFoundException($command->templateId);
             }
             $plan = $template->generatePlan(
@@ -39,6 +39,7 @@ class CreateOnboardingPlanHandler
         }
 
         $this->planRepo->save($plan);
+
         return $plan;
     }
 }

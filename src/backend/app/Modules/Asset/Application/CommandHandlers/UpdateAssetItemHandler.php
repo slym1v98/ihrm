@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Modules\Asset\Application\CommandHandlers;
 
 use App\Modules\Asset\Application\Commands\UpdateAssetItemCommand;
+use App\Modules\Asset\Domain\Aggregates\AssetItem\AssetItem;
 use App\Modules\Asset\Domain\Exceptions\AssetItemNotFoundException;
 use App\Modules\Asset\Domain\Repositories\AssetItemRepositoryInterface;
 use App\Modules\Asset\Domain\ValueObjects\AssetCondition;
@@ -17,7 +19,7 @@ class UpdateAssetItemHandler
     {
         $id = AssetItemId::fromString($command->id);
         $item = $this->repo->findById($id);
-        if (!$item) {
+        if (! $item) {
             throw new AssetItemNotFoundException($command->id);
         }
         $item->updateDetails(
@@ -29,6 +31,7 @@ class UpdateAssetItemHandler
             $command->notes,
         );
         $this->repo->save($item);
+
         return $item;
     }
 }

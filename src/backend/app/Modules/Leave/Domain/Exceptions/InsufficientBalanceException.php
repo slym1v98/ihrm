@@ -1,1 +1,18 @@
-<?php namespace App\Modules\Leave\Domain\Exceptions; use App\Modules\Shared\Exceptions\AppException; class InsufficientBalanceException extends AppException { public function __construct(string $detail = '') { parent::__construct('INSUFFICIENT_LEAVE_BALANCE', trim('Insufficient balance: '.$detail)); } public function getHttpStatus(): int { return 422; } }
+<?php
+
+namespace App\Modules\Leave\Domain\Exceptions;
+
+use App\Modules\Shared\Exceptions\AppException;
+
+class InsufficientBalanceException extends AppException
+{
+    public function __construct(string $detail = '')
+    {
+        parent::__construct('INSUFFICIENT_LEAVE_BALANCE', trim('Insufficient balance: '.$detail));
+    }
+
+    public function getHttpStatus(): int
+    {
+        return 422;
+    }
+}

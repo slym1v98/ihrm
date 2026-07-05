@@ -3,7 +3,6 @@
 namespace App\Modules\Attendance\Infrastructure\Persistence\Repositories;
 
 use App\Modules\Attendance\Domain\Aggregates\AttendanceRawLog\AttendanceRawLog;
-use App\Modules\Attendance\Domain\Aggregates\AttendanceRawLog\AttendanceRawLogId;
 use App\Modules\Attendance\Domain\Repositories\AttendanceRawLogRepositoryInterface;
 use App\Modules\Attendance\Infrastructure\Persistence\Eloquent\AttendanceRawLogModel;
 
@@ -11,7 +10,7 @@ class EloquentAttendanceRawLogRepository implements AttendanceRawLogRepositoryIn
 {
     public function saveAndDispatch(AttendanceRawLog $rawLog): void
     {
-        $model = new AttendanceRawLogModel();
+        $model = new AttendanceRawLogModel;
         $model->id = $rawLog->id()->toString();
         $model->employee_id = $rawLog->employeeId();
         $model->source = $rawLog->source()->value;

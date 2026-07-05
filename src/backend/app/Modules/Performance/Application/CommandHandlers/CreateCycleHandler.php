@@ -10,11 +10,13 @@ use App\Modules\Performance\Domain\Repositories\PerformanceCycleRepositoryInterf
 class CreateCycleHandler
 {
     public function __construct(private readonly PerformanceCycleRepositoryInterface $repo) {}
+
     public function handle(CreateCycleCommand $cmd): PerformanceCycle
     {
         $id = PerformanceCycleId::generate();
         $cycle = PerformanceCycle::create($id, $cmd->code, $cmd->name, $cmd->description, new \DateTimeImmutable($cmd->startDate), new \DateTimeImmutable($cmd->endDate), $cmd->scoringRules);
         $this->repo->save($cycle);
+
         return $cycle;
     }
 }

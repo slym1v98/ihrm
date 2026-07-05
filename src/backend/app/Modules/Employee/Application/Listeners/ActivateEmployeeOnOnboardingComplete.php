@@ -18,7 +18,9 @@ class ActivateEmployeeOnOnboardingComplete
     public function handle(OnboardingPlanCompleted $event): void
     {
         $employee = $this->employees->findById(EmployeeId::fromString($event->employeeId));
-        if ($employee === null) return;
+        if ($employee === null) {
+            return;
+        }
 
         try {
             $employee->changeStatus(EmployeeStatus::Onboarding, $this->policy);

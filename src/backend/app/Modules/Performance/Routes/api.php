@@ -1,34 +1,30 @@
 <?php
 
-use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\{
-    ActivatePerformanceCycleController,
-    CancelPerformanceCycleController,
-    CompleteGoalController,
-    CompletePerformanceCycleController,
-    DeleteCompetencyTemplateController,
-    FinalizePerformanceReviewController,
-    ListCompetencyTemplateController,
-    ListGoalController,
-    ListPerformanceCycleController,
-    ListPerformanceReviewController,
-    ShowCompetencyTemplateController,
-    ShowGoalController,
-    ShowPerformanceCycleController,
-    ShowPerformanceReviewController,
-    StoreCompetencyTemplateController,
-    StoreGoalController,
-    StorePerformanceCycleController,
-    StorePerformanceReviewController,
-    SubmitHrPerformanceReviewController,
-    SubmitManagerPerformanceReviewController,
-    SubmitSelfPerformanceReviewController,
-    UpdateCompetencyTemplateController,
-    UpdateGoalController,
-    UpdatePerformanceCycleController,
-};
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\ActivatePerformanceCycleController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\CancelPerformanceCycleController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\CompleteGoalController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\CompletePerformanceCycleController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\DeleteCompetencyTemplateController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\FinalizePerformanceReviewController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\ListCompetencyTemplateController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\ListGoalController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\ListPerformanceCycleController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\ListPerformanceReviewController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\ShowCompetencyTemplateController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\ShowGoalController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\ShowPerformanceCycleController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\ShowPerformanceReviewController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\StoreCompetencyTemplateController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\StoreGoalController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\StorePerformanceCycleController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\StorePerformanceReviewController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\SubmitHrPerformanceReviewController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\SubmitManagerPerformanceReviewController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\SubmitSelfPerformanceReviewController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\UpdateCompetencyTemplateController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\UpdateGoalController;
+use App\Modules\Performance\Infrastructure\Http\Controllers\Actions\UpdatePerformanceCycleController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1/performance')
     ->middleware(['auth:sanctum'])

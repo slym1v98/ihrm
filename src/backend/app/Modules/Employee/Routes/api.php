@@ -1,28 +1,24 @@
 <?php
 
-use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\{
-    ActivateContractController,
-    ArchiveEmployeeDocumentController,
-    ChangeManagerEmployeeController,
-    ChangeStatusEmployeeController,
-    DownloadEmployeeDocumentController,
-    LinkUserEmployeeController,
-    ListContractController,
-    ListEmployeeController,
-    ListEmployeeDocumentController,
-    RenewContractController,
-    ReplaceEmployeeDocumentController,
-    ShowEmployeeController,
-    StoreContractController,
-    StoreEmployeeController,
-    StoreEmployeeDocumentController,
-    TerminateContractController,
-    TransferEmployeeController,
-    UpdatePersonalInfoEmployeeController,
-};
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\ActivateContractController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\ArchiveEmployeeDocumentController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\ChangeManagerEmployeeController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\ChangeStatusEmployeeController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\DownloadEmployeeDocumentController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\LinkUserEmployeeController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\ListContractController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\ListEmployeeController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\ListEmployeeDocumentController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\RenewContractController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\ReplaceEmployeeDocumentController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\ShowEmployeeController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\StoreContractController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\StoreEmployeeController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\StoreEmployeeDocumentController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\TerminateContractController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\TransferEmployeeController;
+use App\Modules\Employee\Infrastructure\Http\Controllers\Actions\UpdatePersonalInfoEmployeeController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/employees', ListEmployeeController::class)->middleware('permission:employee.view');

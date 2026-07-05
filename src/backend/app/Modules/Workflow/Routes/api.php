@@ -1,23 +1,19 @@
 <?php
 
-use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\{
-    ApproveWorkflowRequestController,
-    CancelWorkflowRequestController,
-    DeleteWorkflowDelegationController,
-    ListWorkflowRequestController,
-    ListWorkflowDelegationController,
-    ListWorkflowTemplateController,
-    RejectWorkflowRequestController,
-    ReturnForEditWorkflowRequestController,
-    ShowWorkflowRequestController,
-    ShowWorkflowTemplateController,
-    StoreWorkflowDelegationController,
-    StoreWorkflowRequestController,
-    StoreWorkflowTemplateController,
-};
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\ApproveWorkflowRequestController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\CancelWorkflowRequestController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\DeleteWorkflowDelegationController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\ListWorkflowDelegationController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\ListWorkflowRequestController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\ListWorkflowTemplateController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\RejectWorkflowRequestController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\ReturnForEditWorkflowRequestController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\ShowWorkflowRequestController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\ShowWorkflowTemplateController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\StoreWorkflowDelegationController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\StoreWorkflowRequestController;
+use App\Modules\Workflow\Infrastructure\Http\Controllers\Actions\StoreWorkflowTemplateController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('workflow-templates', StoreWorkflowTemplateController::class)->middleware('permission:workflow.template.create');

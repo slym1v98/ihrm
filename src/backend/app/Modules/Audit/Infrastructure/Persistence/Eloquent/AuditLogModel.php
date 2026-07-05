@@ -10,9 +10,13 @@ class AuditLogModel extends Model
     use HasUuids;
 
     protected $table = 'audit_logs';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $casts = [
         'before_payload' => 'array',
         'after_payload' => 'array',

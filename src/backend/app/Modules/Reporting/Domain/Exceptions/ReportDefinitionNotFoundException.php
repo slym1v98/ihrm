@@ -10,5 +10,9 @@ class ReportDefinitionNotFoundException extends AppException
     {
         parent::__construct('REPORT_DEFINITION_NOT_FOUND', trim('Report definition not found: '.$detail));
     }
-    public function getHttpStatus(): int { return 404; }
+
+    public function getHttpStatus(): int
+    {
+        return 404;
+    }
 }

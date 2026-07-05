@@ -91,11 +91,11 @@ final class AttendanceCalculator
         $lateMinutes = 0;
         $earlyLeaveMinutes = 0;
 
-        if (!$isFlexible && $firstCheckIn !== null && $firstCheckIn->greaterThan($shiftStart)) {
+        if (! $isFlexible && $firstCheckIn !== null && $firstCheckIn->greaterThan($shiftStart)) {
             $lateMinutes = $shiftStart->diffInMinutes($firstCheckIn);
         }
 
-        if (!$isFlexible && $lastCheckOut !== null && $shiftEnd->greaterThan($lastCheckOut)) {
+        if (! $isFlexible && $lastCheckOut !== null && $shiftEnd->greaterThan($lastCheckOut)) {
             $earlyLeaveMinutes = $lastCheckOut->diffInMinutes($shiftEnd);
         }
 
@@ -115,7 +115,7 @@ final class AttendanceCalculator
 
         if ($workedMinutes === 0) {
             $status = $leaveCoveredMinutes > 0 ? AttendanceStatus::OnLeave : AttendanceStatus::Absent;
-        } elseif (!$isFlexible && $lateMinutes > 0) {
+        } elseif (! $isFlexible && $lateMinutes > 0) {
             $status = AttendanceStatus::Late;
         }
 
@@ -133,6 +133,7 @@ final class AttendanceCalculator
     private static function timeOnDate(string $time, CarbonImmutable $date): CarbonImmutable
     {
         [$hour, $minute] = array_pad(explode(':', $time), 2, 0);
+
         return $date->setTime((int) $hour, (int) $minute, 0);
     }
 }

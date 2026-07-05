@@ -9,7 +9,9 @@ use App\Modules\Identity\Domain\Aggregates\Role\RoleId;
 interface RoleRepositoryInterface
 {
     public function findById(RoleId $id): ?Role;
+
     public function findByCode(RoleCode $code): ?Role;
+
     public function save(Role $role): void;
 
     /** @return array{items: Role[], total: int, page: int, per_page: int} */

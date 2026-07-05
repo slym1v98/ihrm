@@ -16,7 +16,9 @@ use Carbon\CarbonImmutable;
 class WorkflowRequest
 {
     private RequestStatus $status;
+
     private ?int $currentStep;
+
     private array $actions;
 
     public function __construct(
@@ -39,22 +41,85 @@ class WorkflowRequest
         $this->actions = $actions;
     }
 
-    public function id(): WorkflowRequestId { return $this->id; }
-    public function workflowTemplateId(): WorkflowTemplateId { return $this->workflowTemplateId; }
-    public function subjectType(): string { return $this->subjectType; }
-    public function subjectId(): string { return $this->subjectId; }
-    public function submittedBy(): string { return $this->submittedBy; }
-    public function status(): RequestStatus { return $this->status; }
-    public function currentStep(): ?int { return $this->currentStep; }
-    public function actions(): array { return $this->actions; }
-    public function context(): ?array { return $this->context; }
-    public function slaDeadlineAt(): ?CarbonImmutable { return $this->slaDeadlineAt; }
-    public function escalated(): bool { return $this->escalated; }
-    public function parallelApprovedCount(): int { return $this->parallelApprovedCount; }
-    public function parallelRequiredCount(): int { return $this->parallelRequiredCount; }
-    public function setParallelRequiredCount(int $count): void { $this->parallelRequiredCount = $count; }
-    public function setSlaDeadlineAt(?CarbonImmutable $at): void { $this->slaDeadlineAt = $at; }
-    public function setEscalated(bool $v): void { $this->escalated = $v; }
+    public function id(): WorkflowRequestId
+    {
+        return $this->id;
+    }
+
+    public function workflowTemplateId(): WorkflowTemplateId
+    {
+        return $this->workflowTemplateId;
+    }
+
+    public function subjectType(): string
+    {
+        return $this->subjectType;
+    }
+
+    public function subjectId(): string
+    {
+        return $this->subjectId;
+    }
+
+    public function submittedBy(): string
+    {
+        return $this->submittedBy;
+    }
+
+    public function status(): RequestStatus
+    {
+        return $this->status;
+    }
+
+    public function currentStep(): ?int
+    {
+        return $this->currentStep;
+    }
+
+    public function actions(): array
+    {
+        return $this->actions;
+    }
+
+    public function context(): ?array
+    {
+        return $this->context;
+    }
+
+    public function slaDeadlineAt(): ?CarbonImmutable
+    {
+        return $this->slaDeadlineAt;
+    }
+
+    public function escalated(): bool
+    {
+        return $this->escalated;
+    }
+
+    public function parallelApprovedCount(): int
+    {
+        return $this->parallelApprovedCount;
+    }
+
+    public function parallelRequiredCount(): int
+    {
+        return $this->parallelRequiredCount;
+    }
+
+    public function setParallelRequiredCount(int $count): void
+    {
+        $this->parallelRequiredCount = $count;
+    }
+
+    public function setSlaDeadlineAt(?CarbonImmutable $at): void
+    {
+        $this->slaDeadlineAt = $at;
+    }
+
+    public function setEscalated(bool $v): void
+    {
+        $this->escalated = $v;
+    }
 
     public function moveToStep(int $stepOrder): void
     {
@@ -79,6 +144,7 @@ class WorkflowRequest
             WorkflowActionId::new(), $this->id,
             $firstStepOrder, WorkflowActionType::APPROVE, $this->submittedBy, 'Request submitted', [], $resolvedApprovers, $delegationMap,
         );
+
         return $event;
     }
 
@@ -96,7 +162,9 @@ class WorkflowRequest
         if ($executionType === 'all_of') {
             $this->parallelApprovedCount++;
             $this->actions[] = $sharedAction('all_of');
-            if ($this->parallelApprovedCount < $this->parallelRequiredCount) return [];
+            if ($this->parallelApprovedCount < $this->parallelRequiredCount) {
+                return [];
+            }
         } elseif ($executionType === 'any_of') {
             $this->parallelApprovedCount = 1;
             $this->parallelRequiredCount = 1;
@@ -113,6 +181,7 @@ class WorkflowRequest
             $this->currentStep = $stepOrder + 1;
             $events[] = new WorkflowStepCompleted(['request_id' => $this->id->value(), 'step_order' => $stepOrder + 1]);
         }
+
         return $events;
     }
 
@@ -126,6 +195,7 @@ class WorkflowRequest
             WorkflowActionId::new(), $this->id,
             $stepOrder, WorkflowActionType::REJECT, $actorId, $comment,
         );
+
         return new WorkflowRejected(['request_id' => $this->id->value(), 'step_order' => $stepOrder]);
     }
 
@@ -139,6 +209,7 @@ class WorkflowRequest
             WorkflowActionId::new(), $this->id,
             $stepOrder, WorkflowActionType::RETURN_FOR_EDIT, $actorId, $comment,
         );
+
         return new WorkflowReturnedForEdit(['request_id' => $this->id->value(), 'step_order' => $stepOrder]);
     }
 
@@ -153,6 +224,7 @@ class WorkflowRequest
             WorkflowActionId::new(), $this->id,
             -1, WorkflowActionType::CANCEL, $actorId, $comment,
         );
+
         return new WorkflowCancelled(['request_id' => $this->id->value()]);
     }
 
@@ -161,6 +233,7 @@ class WorkflowRequest
         $this->assertStatus(RequestStatus::RETURNED);
         $this->status = RequestStatus::IN_REVIEW;
         $this->currentStep = $firstStepOrder;
+
         return new WorkflowStepCompleted(['request_id' => $this->id->value(), 'step_order' => $firstStepOrder]);
     }
 

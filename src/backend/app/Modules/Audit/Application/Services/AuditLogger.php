@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Event;
 class AuditLogger
 {
     private const REDACTED = '[REDACTED]';
+
     private const SENSITIVE_KEYS = ['password', 'password_hash', 'token', 'access_token', 'refresh_token', 'secret', 'api_key'];
 
     public function log(

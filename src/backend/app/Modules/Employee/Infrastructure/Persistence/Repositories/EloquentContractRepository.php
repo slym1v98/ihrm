@@ -19,6 +19,7 @@ class EloquentContractRepository implements ContractRepositoryInterface
     public function findById(ContractId $id): ?Contract
     {
         $record = $this->model->find($id->value);
+
         return $record ? $this->toDomain($record) : null;
     }
 
@@ -27,7 +28,7 @@ class EloquentContractRepository implements ContractRepositoryInterface
     {
         return $this->model->where('employee_id', $employeeId->value)
             ->get()
-            ->map(fn($r) => $this->toDomain($r))
+            ->map(fn ($r) => $this->toDomain($r))
             ->all();
     }
 
@@ -37,7 +38,7 @@ class EloquentContractRepository implements ContractRepositoryInterface
         return $this->model->where('employee_id', $employeeId->value)
             ->where('status', 'active')
             ->get()
-            ->map(fn($r) => $this->toDomain($r))
+            ->map(fn ($r) => $this->toDomain($r))
             ->all();
     }
 
@@ -47,6 +48,7 @@ class EloquentContractRepository implements ContractRepositoryInterface
         if ($employeeId) {
             $q->where('employee_id', $employeeId->value);
         }
+
         return $q->paginate($perPage, ['*'], 'page', $page)->items();
     }
 

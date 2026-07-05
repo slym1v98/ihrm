@@ -18,11 +18,13 @@ class RenewContractHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.contract.renew');
         $contract = $this->contracts->findById(ContractId::fromString($command->contractId));
-        if (! $contract) throw new ContractNotFoundException($command->contractId);
+        if (! $contract) {
+            throw new ContractNotFoundException($command->contractId);
+        }
 
         $renewed = $contract->renew(
             ContractId::generate(),
-            'CT' . now()->format('YmdHis'),
+            'CT'.now()->format('YmdHis'),
             new ContractTerm(
                 $contract->contractType(),
                 new DateRange(

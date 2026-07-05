@@ -13,7 +13,7 @@ class ChannelDispatcher
 
     public function dispatch(MessageTemplate $template, NotificationMessage $message): void
     {
-        $adapter = $this->container->make(NotificationChannelInterface::class . ':' . $template->getChannel()->value);
+        $adapter = $this->container->make(NotificationChannelInterface::class.':'.$template->getChannel()->value);
         $adapter->send($template, $message);
     }
 }

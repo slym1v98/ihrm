@@ -9,7 +9,6 @@ use App\Modules\Onboarding\Domain\Aggregates\OnboardingTask\OnboardingTaskId;
 use App\Modules\Onboarding\Domain\Exceptions\InvalidStatusTransitionException;
 use App\Modules\Onboarding\Domain\Exceptions\MandatoryTaskIncompleteException;
 use App\Modules\Onboarding\Domain\ValueObjects\OnboardingPlanStatus;
-use App\Modules\Onboarding\Domain\ValueObjects\OnboardingTaskStatus;
 use App\Modules\Onboarding\Domain\ValueObjects\OwnerType;
 use App\Modules\Onboarding\Domain\ValueObjects\TaskType;
 use PHPUnit\Framework\Attributes\Test;
@@ -35,6 +34,7 @@ class OnboardingPlanTest extends TestCase
         );
         $task->start();
         $task->complete();
+
         return $task;
     }
 

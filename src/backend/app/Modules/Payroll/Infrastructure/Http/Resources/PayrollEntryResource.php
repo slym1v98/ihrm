@@ -23,7 +23,7 @@ class PayrollEntryResource extends JsonResource
             'error_message' => $this->error_message,
             'reviewed_by' => $this->reviewed_by,
             'reviewed_at' => $this->reviewed_at,
-            'lines' => $this->whenLoaded('lines', fn () => $this->lines->map(fn($l) => [
+            'lines' => $this->whenLoaded('lines', fn () => $this->lines->map(fn ($l) => [
                 'component_id' => $l->component_id,
                 'category' => $l->category,
                 'amount' => $l->amount,

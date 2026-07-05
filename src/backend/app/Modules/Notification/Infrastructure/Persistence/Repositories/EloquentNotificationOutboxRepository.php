@@ -24,12 +24,13 @@ class EloquentNotificationOutboxRepository implements NotificationOutboxReposito
             ->limit($limit)
             ->get();
 
-        return $records->map(fn($r) => self::toDomain($r))->all();
+        return $records->map(fn ($r) => self::toDomain($r))->all();
     }
 
     public function findById(string $id): ?NotificationOutbox
     {
         $record = $this->model->find($id);
+
         return $record ? self::toDomain($record) : null;
     }
 

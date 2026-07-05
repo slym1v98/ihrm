@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Modules\Leave\Infrastructure\Http\Controllers;
+
 use App\Modules\Leave\Application\CommandHandlers\LeaveRequest\ApproveLeaveRequestHandler;
 use App\Modules\Leave\Application\CommandHandlers\LeaveRequest\CancelLeaveRequestHandler;
 use App\Modules\Leave\Application\CommandHandlers\LeaveRequest\RejectLeaveRequestHandler;
@@ -22,32 +24,40 @@ use Illuminate\Routing\Controller;
 
 class LeaveRequestController extends Controller
 {
-    public function store(SubmitLeaveRequest $req, SubmitLeaveRequestHandler $handler) {
+    public function store(SubmitLeaveRequest $req, SubmitLeaveRequestHandler $handler)
+    {
         $uid = $req->user()->employee_id ?? $req->user()->id;
         $cmd = new SubmitLeaveRequestCommand($uid, $req->leave_type_id, $req->start_at, $req->end_at, $req->duration_unit, $req->reason, $req->user()->id);
+
         return new LeaveRequestResource($handler->handle($cmd));
     }
 
-    public function index(Request $req, ListLeaveRequestsHandler $handler) {
+    public function index(Request $req, ListLeaveRequestsHandler $handler)
+    {
         $uid = $req->user()->employee_id ?? $req->user()->id;
         $filters = $req->only(['status', 'leave_type_id', 'from', 'to']);
         $result = $handler->handle(new ListLeaveRequestsQuery($uid, $filters));
+
         return LeaveRequestResource::collection($result);
     }
 
-    public function show(string $id, GetLeaveRequestHandler $handler) {
+    public function show(string $id, GetLeaveRequestHandler $handler)
+    {
         return new LeaveRequestResource($handler->handle(new GetLeaveRequestQuery($id)));
     }
 
-    public function approve(string $id, ApproveLeaveRequest $req, ApproveLeaveRequestHandler $handler) {
+    public function approve(string $id, ApproveLeaveRequest $req, ApproveLeaveRequestHandler $handler)
+    {
         return new LeaveRequestResource($handler->handle(new ApproveLeaveRequestCommand($id, $req->user()->id)));
     }
 
-    public function reject(string $id, RejectLeaveRequest $req, RejectLeaveRequestHandler $handler) {
+    public function reject(string $id, RejectLeaveRequest $req, RejectLeaveRequestHandler $handler)
+    {
         return new LeaveRequestResource($handler->handle(new RejectLeaveRequestCommand($id, $req->user()->id, $req->reason)));
     }
 
-    public function cancel(string $id, CancelLeaveRequest $req, CancelLeaveRequestHandler $handler) {
+    public function cancel(string $id, CancelLeaveRequest $req, CancelLeaveRequestHandler $handler)
+    {
         return new LeaveRequestResource($handler->handle(new CancelLeaveRequestCommand($id, $req->user()->id)));
     }
 }

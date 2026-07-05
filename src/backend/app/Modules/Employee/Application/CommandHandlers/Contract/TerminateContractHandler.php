@@ -16,7 +16,9 @@ class TerminateContractHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.contract.terminate');
         $contract = $this->contracts->findById(ContractId::fromString($command->contractId));
-        if (! $contract) throw new ContractNotFoundException($command->contractId);
+        if (! $contract) {
+            throw new ContractNotFoundException($command->contractId);
+        }
         $contract->terminate();
         $this->contracts->saveAndDispatch($contract);
     }

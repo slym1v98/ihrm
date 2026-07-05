@@ -2,8 +2,8 @@
 
 namespace App\Modules\Onboarding\Infrastructure\Listeners;
 
-use App\Modules\Onboarding\Application\Commands\CreateOnboardingPlanCommand;
 use App\Modules\Onboarding\Application\CommandHandlers\CreateOnboardingPlanHandler;
+use App\Modules\Onboarding\Application\Commands\CreateOnboardingPlanCommand;
 use App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface;
 
 class CandidateHiredListener
@@ -22,7 +22,7 @@ class CandidateHiredListener
             $event->employmentType ?? null,
         );
 
-        $templateId = !empty($templates) ? $templates[0]->getId()->value : null;
+        $templateId = ! empty($templates) ? $templates[0]->getId()->value : null;
 
         $command = new CreateOnboardingPlanCommand(
             employeeId: $event->employeeId,

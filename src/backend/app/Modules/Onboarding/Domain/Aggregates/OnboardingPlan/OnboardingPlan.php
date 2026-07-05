@@ -40,6 +40,7 @@ class OnboardingPlan
     ): self {
         $plan = new self($id, $employeeId, $candidateId, $templateId, $startDate, OnboardingPlanStatus::Draft, null, null);
         $plan->recordEvent(new OnboardingPlanCreated($id, $employeeId, $startDate));
+
         return $plan;
     }
 
@@ -58,7 +59,7 @@ class OnboardingPlan
 
     public function activate(): void
     {
-        if (!$this->status->canTransitionTo(OnboardingPlanStatus::Active)) {
+        if (! $this->status->canTransitionTo(OnboardingPlanStatus::Active)) {
             throw new InvalidStatusTransitionException($this->status->value, OnboardingPlanStatus::Active->value);
         }
         if (count($this->tasks) === 0) {
@@ -70,7 +71,7 @@ class OnboardingPlan
 
     public function cancel(): void
     {
-        if (!$this->status->canTransitionTo(OnboardingPlanStatus::Cancelled)) {
+        if (! $this->status->canTransitionTo(OnboardingPlanStatus::Cancelled)) {
             throw new InvalidStatusTransitionException($this->status->value, OnboardingPlanStatus::Cancelled->value);
         }
         $this->status = OnboardingPlanStatus::Cancelled;
@@ -78,17 +79,17 @@ class OnboardingPlan
 
     public function complete(): void
     {
-        if (!$this->status->canTransitionTo(OnboardingPlanStatus::Completed)) {
+        if (! $this->status->canTransitionTo(OnboardingPlanStatus::Completed)) {
             throw new InvalidStatusTransitionException($this->status->value, OnboardingPlanStatus::Completed->value);
         }
 
         $pendingTasks = array_filter(
             $this->tasks,
-            fn(OnboardingTask $t) => !$t->getStatus()->isTerminal()
+            fn (OnboardingTask $t) => ! $t->getStatus()->isTerminal()
         );
 
-        if (!empty($pendingTasks)) {
-            throw new MandatoryTaskIncompleteException();
+        if (! empty($pendingTasks)) {
+            throw new MandatoryTaskIncompleteException;
         }
 
         if ($this->workflowRequestId !== null) {
@@ -96,7 +97,7 @@ class OnboardingPlan
         }
 
         $this->status = OnboardingPlanStatus::Completed;
-        $this->completedAt = new \DateTimeImmutable();
+        $this->completedAt = new \DateTimeImmutable;
         $this->recordEvent(new OnboardingPlanCompleted($this->id, $this->employeeId));
     }
 
@@ -106,13 +107,13 @@ class OnboardingPlan
             throw new InvalidStatusTransitionException($this->status->value, OnboardingPlanStatus::Completed->value);
         }
         $this->status = OnboardingPlanStatus::Completed;
-        $this->completedAt = new \DateTimeImmutable();
+        $this->completedAt = new \DateTimeImmutable;
         $this->recordEvent(new OnboardingPlanCompleted($this->id, $this->employeeId));
     }
 
     public function addTask(OnboardingTask $task): void
     {
-        if (!in_array($this->status, [OnboardingPlanStatus::Draft, OnboardingPlanStatus::Active], true)) {
+        if (! in_array($this->status, [OnboardingPlanStatus::Draft, OnboardingPlanStatus::Active], true)) {
             throw new \RuntimeException('Can only add tasks to draft or active plans');
         }
         if ($task->getTaskType() !== TaskType::Custom) {
@@ -141,6 +142,7 @@ class OnboardingPlan
                 }
                 unset($this->tasks[$i]);
                 $this->tasks = array_values($this->tasks);
+
                 return;
             }
         }
@@ -161,16 +163,52 @@ class OnboardingPlan
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 
-    public function getId(): OnboardingPlanId { return $this->id; }
-    public function getEmployeeId(): string { return $this->employeeId; }
-    public function getCandidateId(): ?string { return $this->candidateId; }
-    public function getTemplateId(): ?string { return $this->templateId; }
-    public function getStartDate(): \DateTimeImmutable { return $this->startDate; }
-    public function getStatus(): OnboardingPlanStatus { return $this->status; }
-    public function getWorkflowRequestId(): ?string { return $this->workflowRequestId; }
-    public function getCompletedAt(): ?\DateTimeImmutable { return $this->completedAt; }
-    public function getTasks(): array { return $this->tasks; }
+    public function getId(): OnboardingPlanId
+    {
+        return $this->id;
+    }
+
+    public function getEmployeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    public function getCandidateId(): ?string
+    {
+        return $this->candidateId;
+    }
+
+    public function getTemplateId(): ?string
+    {
+        return $this->templateId;
+    }
+
+    public function getStartDate(): \DateTimeImmutable
+    {
+        return $this->startDate;
+    }
+
+    public function getStatus(): OnboardingPlanStatus
+    {
+        return $this->status;
+    }
+
+    public function getWorkflowRequestId(): ?string
+    {
+        return $this->workflowRequestId;
+    }
+
+    public function getCompletedAt(): ?\DateTimeImmutable
+    {
+        return $this->completedAt;
+    }
+
+    public function getTasks(): array
+    {
+        return $this->tasks;
+    }
 }

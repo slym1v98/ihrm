@@ -10,9 +10,25 @@ use App\Modules\Performance\Infrastructure\Persistence\Eloquent\PerformanceRevie
 
 class EloquentPerformanceReviewRepository implements PerformanceReviewRepositoryInterface
 {
-    public function findById(PerformanceReviewId $id): ?PerformanceReview { $m = PerformanceReviewModel::find($id->value); return $m ? $this->toDomain($m) : null; }
-    public function findByCycleAndEmployee(string $cycleId, string $employeeId): ?PerformanceReview { $m = PerformanceReviewModel::where('cycle_id', $cycleId)->where('employee_id', $employeeId)->first(); return $m ? $this->toDomain($m) : null; }
-    public function findByCycleId(string $cycleId): array { return PerformanceReviewModel::where('cycle_id', $cycleId)->get()->map(fn($m) => $this->toDomain($m))->toArray(); }
+    public function findById(PerformanceReviewId $id): ?PerformanceReview
+    {
+        $m = PerformanceReviewModel::find($id->value);
+
+        return $m ? $this->toDomain($m) : null;
+    }
+
+    public function findByCycleAndEmployee(string $cycleId, string $employeeId): ?PerformanceReview
+    {
+        $m = PerformanceReviewModel::where('cycle_id', $cycleId)->where('employee_id', $employeeId)->first();
+
+        return $m ? $this->toDomain($m) : null;
+    }
+
+    public function findByCycleId(string $cycleId): array
+    {
+        return PerformanceReviewModel::where('cycle_id', $cycleId)->get()->map(fn ($m) => $this->toDomain($m))->toArray();
+    }
+
     public function save(PerformanceReview $review): void
     {
         PerformanceReviewModel::updateOrCreate(['id' => $review->getId()->value], [
@@ -21,6 +37,7 @@ class EloquentPerformanceReviewRepository implements PerformanceReviewRepository
             'status' => $review->getStatus()->value, 'finalized_at' => $review->getFinalizedAt()?->format('Y-m-d H:i:s'),
         ]);
     }
+
     private function toDomain(PerformanceReviewModel $m): PerformanceReview
     {
         return PerformanceReview::reconstitute(PerformanceReviewId::fromString($m->id), $m->cycle_id, $m->employee_id, $m->self_assessment, $m->manager_assessment, $m->hr_assessment, $m->final_score === null ? null : (float) $m->final_score, ReviewStatus::from($m->status), $m->finalized_at ? new \DateTimeImmutable($m->finalized_at) : null);

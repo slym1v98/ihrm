@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories;
 
 use App\Modules\Asset\Domain\Aggregates\AssetAssignment\AssetAssignment;
@@ -14,6 +15,7 @@ class EloquentAssetAssignmentRepository implements AssetAssignmentRepositoryInte
     public function findById(AssetAssignmentId $id): ?AssetAssignment
     {
         $model = AssetAssignmentModel::find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -22,6 +24,7 @@ class EloquentAssetAssignmentRepository implements AssetAssignmentRepositoryInte
         $model = AssetAssignmentModel::where('asset_item_id', $assetItemId->value)
             ->where('status', AssetAssignmentStatus::Active->value)
             ->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -30,7 +33,7 @@ class EloquentAssetAssignmentRepository implements AssetAssignmentRepositoryInte
         return AssetAssignmentModel::where('employee_id', $employeeId)
             ->where('status', AssetAssignmentStatus::Active->value)
             ->get()
-            ->map(fn(AssetAssignmentModel $m) => $this->toDomain($m))
+            ->map(fn (AssetAssignmentModel $m) => $this->toDomain($m))
             ->toArray();
     }
 
@@ -52,16 +55,17 @@ class EloquentAssetAssignmentRepository implements AssetAssignmentRepositoryInte
     public function all(array $filters = []): array
     {
         $query = AssetAssignmentModel::query();
-        if (!empty($filters['employee_id'])) {
+        if (! empty($filters['employee_id'])) {
             $query->where('employee_id', $filters['employee_id']);
         }
-        if (!empty($filters['asset_item_id'])) {
+        if (! empty($filters['asset_item_id'])) {
             $query->where('asset_item_id', $filters['asset_item_id']);
         }
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
-        return $query->get()->map(fn(AssetAssignmentModel $m) => $this->toDomain($m))->toArray();
+
+        return $query->get()->map(fn (AssetAssignmentModel $m) => $this->toDomain($m))->toArray();
     }
 
     private function toDomain(AssetAssignmentModel $model): AssetAssignment

@@ -11,5 +11,8 @@ class MessageTemplateNotFoundException extends AppException
         parent::__construct('NOTIFICATION_TEMPLATE_NOT_FOUND', trim('Message template not found: '.$detail));
     }
 
-    public function getHttpStatus(): int { return 404; }
+    public function getHttpStatus(): int
+    {
+        return 404;
+    }
 }

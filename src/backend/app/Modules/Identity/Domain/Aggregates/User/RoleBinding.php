@@ -12,8 +12,7 @@ final class RoleBinding
         public readonly ?UserId $assignedBy,
         public readonly DateTimeImmutable $assignedAt,
         private ?DateTimeImmutable $revokedAt = null,
-    ) {
-    }
+    ) {}
 
     public function revoke(DateTimeImmutable $at): void
     {

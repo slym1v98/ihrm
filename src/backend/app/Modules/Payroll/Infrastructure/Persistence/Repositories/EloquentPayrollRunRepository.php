@@ -3,7 +3,8 @@
 namespace App\Modules\Payroll\Infrastructure\Persistence\Repositories;
 
 use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriodId;
-use App\Modules\Payroll\Domain\Aggregates\PayrollRun\{PayrollRun, PayrollRunId};
+use App\Modules\Payroll\Domain\Aggregates\PayrollRun\PayrollRun;
+use App\Modules\Payroll\Domain\Aggregates\PayrollRun\PayrollRunId;
 use App\Modules\Payroll\Domain\Repositories\PayrollRunRepositoryInterface;
 use App\Modules\Payroll\Domain\ValueObjects\RunStatus;
 use App\Modules\Payroll\Infrastructure\Persistence\Eloquent\PayrollRunModel;
@@ -32,13 +33,14 @@ class EloquentPayrollRunRepository implements PayrollRunRepositoryInterface
     public function findById(PayrollRunId $id): ?PayrollRun
     {
         $m = PayrollRunModel::find($id->value);
+
         return $m ? $this->toAggregate($m) : null;
     }
 
     public function findByPeriod(PayrollPeriodId $periodId): array
     {
         return PayrollRunModel::where('period_id', $periodId->value)->get()
-            ->map(fn($m) => $this->toAggregate($m))->all();
+            ->map(fn ($m) => $this->toAggregate($m))->all();
     }
 
     public function hasRunningRun(PayrollPeriodId $periodId): bool
@@ -62,7 +64,10 @@ class EloquentPayrollRunRepository implements PayrollRunRepositoryInterface
             'completedAt' => $m->completed_at ? new DateTimeImmutable($m->completed_at->format('Y-m-d H:i:s')) : null,
             'errorSummary' => $m->error_summary,
         ];
-        foreach ($props as $n => $v) $ref->getProperty($n)->setValue($r, $v);
+        foreach ($props as $n => $v) {
+            $ref->getProperty($n)->setValue($r, $v);
+        }
+
         return $r;
     }
 }

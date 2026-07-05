@@ -18,7 +18,9 @@ class ChangeShiftAssignmentHandler
     {
         $this->authorizationService->requirePermission($userId, 'shift.template.update');
         $assignment = $this->assignments->findById(ShiftAssignmentId::fromString($command->id));
-        if (!$assignment) throw new ShiftAssignmentNotFoundException($command->id);
+        if (! $assignment) {
+            throw new ShiftAssignmentNotFoundException($command->id);
+        }
         $assignment->changeTemplate(ShiftTemplateId::fromString($command->newTemplateId), new DateTimeImmutable($command->effectiveFrom));
         $this->assignments->saveAndDispatch($assignment);
     }

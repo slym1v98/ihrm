@@ -14,10 +14,16 @@ use Illuminate\Support\Facades\Event;
 
 class SystemSettingController
 {
-    public function index(Request $request, SystemSettingRepositoryInterface $settings): PaginatedCollection { return new PaginatedCollection($settings->list((int) $request->integer('per_page', 50)), SystemSettingResource::class); }
-    public function store(StoreSystemSettingRequest $request, SystemSettingRepositoryInterface $settings): JsonResponse {
+    public function index(Request $request, SystemSettingRepositoryInterface $settings): PaginatedCollection
+    {
+        return new PaginatedCollection($settings->list((int) $request->integer('per_page', 50)), SystemSettingResource::class);
+    }
+
+    public function store(StoreSystemSettingRequest $request, SystemSettingRepositoryInterface $settings): JsonResponse
+    {
         $setting = $settings->save($request->validated());
-        Event::dispatch(new SystemSettingChanged((string) $setting->id, (string) $setting->key, 'upsert', new DateTimeImmutable()));
+        Event::dispatch(new SystemSettingChanged((string) $setting->id, (string) $setting->key, 'upsert', new DateTimeImmutable));
+
         return response()->json(['data' => new SystemSettingResource($setting)], 201);
     }
 }

@@ -14,6 +14,7 @@ class OrgTreeController
     public function __invoke(Request $request): JsonResponse
     {
         $tree = $this->handler->handle(new GetOrgTreeQuery($request->input('branch_id')));
+
         return response()->json(['data' => $tree]);
     }
 }

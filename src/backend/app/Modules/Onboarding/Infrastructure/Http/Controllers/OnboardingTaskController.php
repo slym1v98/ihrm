@@ -3,21 +3,20 @@
 namespace App\Modules\Onboarding\Infrastructure\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Onboarding\Application\Commands\AddOnboardingTaskCommand;
-use App\Modules\Onboarding\Application\Commands\RemoveOnboardingTaskCommand;
-use App\Modules\Onboarding\Application\Commands\StartTaskCommand;
-use App\Modules\Onboarding\Application\Commands\CompleteTaskCommand;
-use App\Modules\Onboarding\Application\Commands\WaiveTaskCommand;
 use App\Modules\Onboarding\Application\CommandHandlers\AddOnboardingTaskHandler;
+use App\Modules\Onboarding\Application\CommandHandlers\CompleteTaskHandler;
 use App\Modules\Onboarding\Application\CommandHandlers\RemoveOnboardingTaskHandler;
 use App\Modules\Onboarding\Application\CommandHandlers\StartTaskHandler;
-use App\Modules\Onboarding\Application\CommandHandlers\CompleteTaskHandler;
 use App\Modules\Onboarding\Application\CommandHandlers\WaiveTaskHandler;
+use App\Modules\Onboarding\Application\Commands\AddOnboardingTaskCommand;
+use App\Modules\Onboarding\Application\Commands\CompleteTaskCommand;
+use App\Modules\Onboarding\Application\Commands\StartTaskCommand;
+use App\Modules\Onboarding\Application\Commands\WaiveTaskCommand;
 use App\Modules\Onboarding\Application\Queries\ListTasksQuery;
 use App\Modules\Onboarding\Application\QueryHandlers\ListTasksHandler;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingTask\OnboardingTaskId;
-use App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepositoryInterface;
 use App\Modules\Onboarding\Domain\Exceptions\OnboardingTaskNotFoundException;
+use App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -37,7 +36,8 @@ class OnboardingTaskController extends Controller
     {
         $query = new ListTasksQuery($planId);
         $tasks = $this->listHandler->handle($query);
-        return response()->json(['data' => array_map(fn($t) => [
+
+        return response()->json(['data' => array_map(fn ($t) => [
             'id' => $t->getId()->value,
             'title' => $t->getTitle(),
             'status' => $t->getStatus()->value,
@@ -80,6 +80,7 @@ class OnboardingTaskController extends Controller
         } catch (\Throwable $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }
+
         return response()->json(['data' => [
             'id' => $task->getId()->value,
             'title' => $task->getTitle(),
@@ -90,7 +91,10 @@ class OnboardingTaskController extends Controller
     public function show(string $id): JsonResponse
     {
         $task = $this->taskRepo->findById(OnboardingTaskId::fromString($id));
-        if (!$task) { throw new OnboardingTaskNotFoundException($id); }
+        if (! $task) {
+            throw new OnboardingTaskNotFoundException($id);
+        }
+
         return response()->json(['data' => [
             'id' => $task->getId()->value,
             'title' => $task->getTitle(),
@@ -104,9 +108,12 @@ class OnboardingTaskController extends Controller
     {
         $request->validate(['title' => 'required|string|max:255']);
         $task = $this->taskRepo->findById(OnboardingTaskId::fromString($id));
-        if (!$task) { throw new OnboardingTaskNotFoundException($id); }
+        if (! $task) {
+            throw new OnboardingTaskNotFoundException($id);
+        }
         $task->update($request->input('title'), $request->input('description'));
         $this->taskRepo->save($task);
+
         return response()->json(['message' => 'Updated']);
     }
 
@@ -117,6 +124,7 @@ class OnboardingTaskController extends Controller
         } catch (\Throwable $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }
+
         return response()->json(['message' => 'Task started']);
     }
 
@@ -132,6 +140,7 @@ class OnboardingTaskController extends Controller
         } catch (\Throwable $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }
+
         return response()->json(['message' => 'Task completed']);
     }
 
@@ -146,6 +155,7 @@ class OnboardingTaskController extends Controller
         } catch (\Throwable $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }
+
         return response()->json(['message' => 'Task waived']);
     }
 }

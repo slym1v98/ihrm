@@ -10,6 +10,5 @@ final readonly class DataScopeAssignment
         public string $id,
         public DataScope $scope,
         public DateTimeImmutable $createdAt,
-    ) {
-    }
+    ) {}
 }

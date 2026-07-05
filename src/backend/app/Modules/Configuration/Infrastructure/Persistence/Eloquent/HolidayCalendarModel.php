@@ -11,9 +11,13 @@ class HolidayCalendarModel extends Model
     use HasUuids;
 
     protected $table = 'holiday_calendars';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $casts = ['active' => 'boolean', 'year' => 'integer'];
 
     public function holidays(): HasMany

@@ -9,6 +9,7 @@ class WorkflowDelegationResource extends JsonResource
     public function toArray($request): array
     {
         $d = $this->resource;
+
         return [
             'id' => method_exists($d, 'id') ? $d->id()->value() : $d->id,
             'delegator_id' => method_exists($d, 'delegatorId') ? $d->delegatorId() : $d->delegator_id,

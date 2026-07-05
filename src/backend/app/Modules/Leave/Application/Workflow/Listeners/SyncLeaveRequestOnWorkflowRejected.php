@@ -2,8 +2,8 @@
 
 namespace App\Modules\Leave\Application\Workflow\Listeners;
 
-use App\Modules\Leave\Application\Commands\LeaveRequest\RejectLeaveRequestCommand;
 use App\Modules\Leave\Application\CommandHandlers\LeaveRequest\RejectLeaveRequestHandler;
+use App\Modules\Leave\Application\Commands\LeaveRequest\RejectLeaveRequestCommand;
 
 class SyncLeaveRequestOnWorkflowRejected
 {

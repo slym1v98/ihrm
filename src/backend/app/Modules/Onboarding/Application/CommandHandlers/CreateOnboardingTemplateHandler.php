@@ -22,6 +22,7 @@ class CreateOnboardingTemplateHandler
             $command->code, $command->name, $rules,
         );
         $this->templateRepo->save($template);
+
         return $template;
     }
 }

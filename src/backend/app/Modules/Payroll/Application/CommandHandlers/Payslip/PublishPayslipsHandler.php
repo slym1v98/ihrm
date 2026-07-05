@@ -4,9 +4,13 @@ namespace App\Modules\Payroll\Application\CommandHandlers\Payslip;
 
 use App\Modules\Payroll\Application\Commands\Payslip\PublishPayslipsCommand;
 use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriodId;
-use App\Modules\Payroll\Domain\Aggregates\Payslip\{Payslip, PayslipId};
-use App\Modules\Payroll\Domain\Repositories\{PayrollPeriodRepositoryInterface, PayrollEntryRepositoryInterface, PayslipRepositoryInterface};
-use App\Modules\Payroll\Domain\Exceptions\{PayrollPeriodNotFoundException, PayrollAlreadyPublishedException};
+use App\Modules\Payroll\Domain\Aggregates\Payslip\Payslip;
+use App\Modules\Payroll\Domain\Aggregates\Payslip\PayslipId;
+use App\Modules\Payroll\Domain\Exceptions\PayrollAlreadyPublishedException;
+use App\Modules\Payroll\Domain\Exceptions\PayrollPeriodNotFoundException;
+use App\Modules\Payroll\Domain\Repositories\PayrollEntryRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayslipRepositoryInterface;
 
 readonly class PublishPayslipsHandler
 {
@@ -20,18 +24,22 @@ readonly class PublishPayslipsHandler
     {
         $periodId = PayrollPeriodId::fromString($command->periodId);
         $period = $this->periodRepo->findById($periodId);
-        if ($period === null) throw PayrollPeriodNotFoundException::default();
+        if ($period === null) {
+            throw PayrollPeriodNotFoundException::default();
+        }
 
         // Check not already published
         $existingPayslips = $this->payslipRepo->findByPeriod($periodId);
-        if (!empty($existingPayslips)) {
+        if (! empty($existingPayslips)) {
             throw PayrollAlreadyPublishedException::default();
         }
 
         // Publish
         $entries = $this->entryRepo->findByPeriod($periodId);
         foreach ($entries as $entry) {
-            if ($entry->getStatus() === 'error') continue;
+            if ($entry->getStatus() === 'error') {
+                continue;
+            }
             $payslip = Payslip::publishFromEntry(PayslipId::generate(), $entry);
             $this->payslipRepo->save($payslip);
         }

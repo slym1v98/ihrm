@@ -14,18 +14,20 @@ class EloquentReportDefinitionRepository implements ReportDefinitionRepositoryIn
     public function findById(ReportDefinitionId $id): ?ReportDefinition
     {
         $record = $this->model->find($id->value());
+
         return $record ? self::toDomain($record) : null;
     }
 
     public function findByCode(string $code): ?ReportDefinition
     {
         $record = $this->model->where('code', $code)->first();
+
         return $record ? self::toDomain($record) : null;
     }
 
     public function list(): array
     {
-        return $this->model->orderBy('name')->get()->map(fn($r) => self::toDomain($r))->all();
+        return $this->model->orderBy('name')->get()->map(fn ($r) => self::toDomain($r))->all();
     }
 
     public function save(ReportDefinition $definition): void

@@ -12,6 +12,7 @@ use App\Modules\Employee\Application\Commands\Contract\RenewContractCommand;
 use App\Modules\Employee\Application\Commands\Contract\TerminateContractCommand;
 use App\Modules\Employee\Infrastructure\Http\Resources\ContractResource;
 use App\Modules\Employee\Infrastructure\Persistence\Eloquent\ContractModel;
+use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -30,7 +31,7 @@ class ContractController
             ->orderBy('created_at', 'desc')
             ->paginate((int) $request->input('per_page', 20), ['*'], 'page', (int) $request->input('page', 1));
 
-        return response()->json(new \App\Modules\Shared\Http\Resources\PaginatedCollection(
+        return response()->json(new PaginatedCollection(
             $paginator->through(fn ($m) => new ContractResource($m))
         ));
     }
@@ -43,6 +44,7 @@ class ContractController
         );
 
         $model = ContractModel::find($contract->id()->value);
+
         return response()->json(['data' => new ContractResource($model)], 201);
     }
 

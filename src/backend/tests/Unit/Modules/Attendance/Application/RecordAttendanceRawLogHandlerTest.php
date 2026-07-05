@@ -18,21 +18,49 @@ class RecordAttendanceRawLogHandlerTest extends TestCase
 {
     public function test_blocks_when_period_closed(): void
     {
-        $rawLogRepo = new class implements AttendanceRawLogRepositoryInterface {
+        $rawLogRepo = new class implements AttendanceRawLogRepositoryInterface
+        {
             public array $saved = [];
-            public function saveAndDispatch(AttendanceRawLog $rawLog): void { $this->saved[] = $rawLog; }
-            public function findPaginated(int $perPage = 15, int $page = 1): array { return []; }
-            public function findByEmployeeAndRange(string $employeeId, string $from, string $to): array { return []; }
+
+            public function saveAndDispatch(AttendanceRawLog $rawLog): void
+            {
+                $this->saved[] = $rawLog;
+            }
+
+            public function findPaginated(int $perPage = 15, int $page = 1): array
+            {
+                return [];
+            }
+
+            public function findByEmployeeAndRange(string $employeeId, string $from, string $to): array
+            {
+                return [];
+            }
         };
 
-        $periodRepo = new class implements AttendancePeriodRepositoryInterface {
-            public function findById(string $id): ?AttendancePeriod { return null; }
-            public function findByCode(string $code): ?AttendancePeriod { return null; }
-            public function findClosedByDate(string $date): ?AttendancePeriod {
+        $periodRepo = new class implements AttendancePeriodRepositoryInterface
+        {
+            public function findById(string $id): ?AttendancePeriod
+            {
+                return null;
+            }
+
+            public function findByCode(string $code): ?AttendancePeriod
+            {
+                return null;
+            }
+
+            public function findClosedByDate(string $date): ?AttendancePeriod
+            {
                 return AttendancePeriod::open('2026-07', CarbonImmutable::parse('2026-07-01'), CarbonImmutable::parse('2026-07-31'));
             }
+
             public function saveAndDispatch(AttendancePeriod $period): void {}
-            public function findPaginated(int $perPage = 15, int $page = 1): array { return []; }
+
+            public function findPaginated(int $perPage = 15, int $page = 1): array
+            {
+                return [];
+            }
         };
 
         $handler = new RecordAttendanceRawLogHandler($rawLogRepo, $periodRepo);
@@ -52,19 +80,49 @@ class RecordAttendanceRawLogHandlerTest extends TestCase
 
     public function test_saves_when_period_open(): void
     {
-        $rawLogRepo = new class implements AttendanceRawLogRepositoryInterface {
+        $rawLogRepo = new class implements AttendanceRawLogRepositoryInterface
+        {
             public array $saved = [];
-            public function saveAndDispatch(AttendanceRawLog $rawLog): void { $this->saved[] = $rawLog; }
-            public function findPaginated(int $perPage = 15, int $page = 1): array { return []; }
-            public function findByEmployeeAndRange(string $employeeId, string $from, string $to): array { return []; }
+
+            public function saveAndDispatch(AttendanceRawLog $rawLog): void
+            {
+                $this->saved[] = $rawLog;
+            }
+
+            public function findPaginated(int $perPage = 15, int $page = 1): array
+            {
+                return [];
+            }
+
+            public function findByEmployeeAndRange(string $employeeId, string $from, string $to): array
+            {
+                return [];
+            }
         };
 
-        $periodRepo = new class implements AttendancePeriodRepositoryInterface {
-            public function findById(string $id): ?AttendancePeriod { return null; }
-            public function findByCode(string $code): ?AttendancePeriod { return null; }
-            public function findClosedByDate(string $date): ?AttendancePeriod { return null; }
+        $periodRepo = new class implements AttendancePeriodRepositoryInterface
+        {
+            public function findById(string $id): ?AttendancePeriod
+            {
+                return null;
+            }
+
+            public function findByCode(string $code): ?AttendancePeriod
+            {
+                return null;
+            }
+
+            public function findClosedByDate(string $date): ?AttendancePeriod
+            {
+                return null;
+            }
+
             public function saveAndDispatch(AttendancePeriod $period): void {}
-            public function findPaginated(int $perPage = 15, int $page = 1): array { return []; }
+
+            public function findPaginated(int $perPage = 15, int $page = 1): array
+            {
+                return [];
+            }
         };
 
         $handler = new RecordAttendanceRawLogHandler($rawLogRepo, $periodRepo);

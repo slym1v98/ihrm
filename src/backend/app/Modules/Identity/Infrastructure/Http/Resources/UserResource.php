@@ -2,10 +2,11 @@
 
 namespace App\Modules\Identity\Infrastructure\Http\Resources;
 
+use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property-read \App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel $resource
+ * @property-read UserModel $resource
  */
 class UserResource extends JsonResource
 {

@@ -2,7 +2,8 @@
 
 namespace App\Modules\Payroll\Infrastructure\Persistence\Repositories;
 
-use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\{PayrollPeriod, PayrollPeriodId};
+use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriod;
+use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriodId;
 use App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface;
 use App\Modules\Payroll\Domain\ValueObjects\PeriodStatus;
 use App\Modules\Payroll\Infrastructure\Persistence\Eloquent\PayrollPeriodModel;
@@ -41,22 +42,31 @@ class EloquentPayrollPeriodRepository implements PayrollPeriodRepositoryInterfac
     public function findById(PayrollPeriodId $id): ?PayrollPeriod
     {
         $model = PayrollPeriodModel::find($id->value);
+
         return $model ? $this->toAggregate($model) : null;
     }
 
     public function findByCode(string $periodCode): ?PayrollPeriod
     {
         $model = PayrollPeriodModel::where('period_code', $periodCode)->first();
+
         return $model ? $this->toAggregate($model) : null;
     }
 
     public function findAll(array $filters = []): array
     {
         $query = PayrollPeriodModel::query();
-        if (isset($filters['status'])) $query->where('status', $filters['status']);
-        if (isset($filters['from'])) $query->where('start_date', '>=', $filters['from']);
-        if (isset($filters['to'])) $query->where('end_date', '<=', $filters['to']);
-        return $query->orderBy('start_date', 'desc')->get()->map(fn($m) => $this->toAggregate($m))->all();
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+        if (isset($filters['from'])) {
+            $query->where('start_date', '>=', $filters['from']);
+        }
+        if (isset($filters['to'])) {
+            $query->where('end_date', '<=', $filters['to']);
+        }
+
+        return $query->orderBy('start_date', 'desc')->get()->map(fn ($m) => $this->toAggregate($m))->all();
     }
 
     private function toAggregate(PayrollPeriodModel $model): PayrollPeriod
@@ -86,6 +96,7 @@ class EloquentPayrollPeriodRepository implements PayrollPeriodRepositoryInterfac
         }
         $eventsProp = $ref->getProperty('recordedEvents');
         $eventsProp->setValue($period, []);
+
         return $period;
     }
 }

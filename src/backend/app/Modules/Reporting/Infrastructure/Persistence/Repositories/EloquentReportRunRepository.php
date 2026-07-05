@@ -16,17 +16,18 @@ class EloquentReportRunRepository implements ReportRunRepositoryInterface
     public function findById(ReportRunId $id): ?ReportRun
     {
         $record = $this->model->find($id->value());
+
         return $record ? self::toDomain($record) : null;
     }
 
     public function listByUser(string $userId): array
     {
-        return $this->model->where('requested_by', $userId)->orderByDesc('created_at')->get()->map(fn($r) => self::toDomain($r))->all();
+        return $this->model->where('requested_by', $userId)->orderByDesc('created_at')->get()->map(fn ($r) => self::toDomain($r))->all();
     }
 
     public function listAll(): array
     {
-        return $this->model->orderByDesc('created_at')->get()->map(fn($r) => self::toDomain($r))->all();
+        return $this->model->orderByDesc('created_at')->get()->map(fn ($r) => self::toDomain($r))->all();
     }
 
     public function save(ReportRun $run): void

@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Modules\Asset\Infrastructure\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\PermissionModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RoleModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RolePermissionModel;
+use Illuminate\Database\Seeder;
 
 class AssetPermissionSeeder extends Seeder
 {
@@ -30,8 +31,8 @@ class AssetPermissionSeeder extends Seeder
             $codes[] = $p->code;
         }
         RoleModel::where('code', 'SUPER_ADMIN')->each(
-            fn($r) => array_map(
-                fn($c) => RolePermissionModel::firstOrCreate(
+            fn ($r) => array_map(
+                fn ($c) => RolePermissionModel::firstOrCreate(
                     ['role_id' => $r->id, 'permission_code' => $c]
                 ),
                 $codes

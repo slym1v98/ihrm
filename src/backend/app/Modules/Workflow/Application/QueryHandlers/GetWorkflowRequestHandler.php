@@ -10,10 +10,14 @@ use App\Modules\Workflow\Domain\Repositories\WorkflowRequestRepositoryInterface;
 class GetWorkflowRequestHandler
 {
     public function __construct(private WorkflowRequestRepositoryInterface $requests) {}
+
     public function handle(GetWorkflowRequestQuery $query)
     {
         $request = $this->requests->findById(new WorkflowRequestId($query->id));
-        if (! $request) throw new WorkflowRequestNotFoundException();
+        if (! $request) {
+            throw new WorkflowRequestNotFoundException;
+        }
+
         return $request;
     }
 }

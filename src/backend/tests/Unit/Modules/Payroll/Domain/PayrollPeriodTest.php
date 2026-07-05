@@ -2,7 +2,8 @@
 
 namespace Tests\Unit\Modules\Payroll\Domain;
 
-use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\{PayrollPeriod, PayrollPeriodId};
+use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriod;
+use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriodId;
 use App\Modules\Payroll\Domain\Exceptions\PayrollNotApprovedException;
 use App\Modules\Payroll\Domain\Exceptions\PayrollPeriodLockedException;
 use App\Modules\Payroll\Domain\ValueObjects\PeriodStatus;
@@ -65,8 +66,11 @@ class PayrollPeriodTest extends TestCase
     public function test_locked_period_cannot_start_run(): void
     {
         $period = $this->newPeriod();
-        $period->startRun('u1'); $period->completeRun();
-        $period->submitForApproval('wfl-1'); $period->approve('m1'); $period->lock('l1');
+        $period->startRun('u1');
+        $period->completeRun();
+        $period->submitForApproval('wfl-1');
+        $period->approve('m1');
+        $period->lock('l1');
 
         $this->expectException(\RuntimeException::class);
         $period->startRun('u2');
@@ -75,8 +79,11 @@ class PayrollPeriodTest extends TestCase
     public function test_published_period_cannot_reopen(): void
     {
         $period = $this->newPeriod();
-        $period->startRun('u1'); $period->completeRun();
-        $period->submitForApproval('wfl-1'); $period->approve('m1'); $period->lock('l1');
+        $period->startRun('u1');
+        $period->completeRun();
+        $period->submitForApproval('wfl-1');
+        $period->approve('m1');
+        $period->lock('l1');
         $period->publish('p1');
 
         $this->expectException(PayrollPeriodLockedException::class);
@@ -86,7 +93,8 @@ class PayrollPeriodTest extends TestCase
     public function test_reject_returns_to_completed(): void
     {
         $period = $this->newPeriod();
-        $period->startRun('u1'); $period->completeRun();
+        $period->startRun('u1');
+        $period->completeRun();
         $period->submitForApproval('wfl-1');
         $period->reject();
         $this->assertSame(PeriodStatus::Completed, $period->getStatus());

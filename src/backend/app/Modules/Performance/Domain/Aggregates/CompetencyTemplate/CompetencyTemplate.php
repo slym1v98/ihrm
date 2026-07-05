@@ -20,6 +20,7 @@ class CompetencyTemplate
     {
         $t = new self($id, $code, $name, $rules, true);
         $t->recordedEvents[] = new CompetencyTemplateCreated($id->value);
+
         return $t;
     }
 
@@ -35,12 +36,41 @@ class CompetencyTemplate
         $this->rules = $rules;
     }
 
-    public function disable(): void { $this->active = false; }
+    public function disable(): void
+    {
+        $this->active = false;
+    }
 
-    public function popRecordedEvents(): array { $e=$this->recordedEvents; $this->recordedEvents=[]; return $e; }
-    public function getId(): CompetencyTemplateId { return $this->id; }
-    public function getCode(): string { return $this->code; }
-    public function getName(): string { return $this->name; }
-    public function getRules(): array { return $this->rules; }
-    public function isActive(): bool { return $this->active; }
+    public function popRecordedEvents(): array
+    {
+        $e = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $e;
+    }
+
+    public function getId(): CompetencyTemplateId
+    {
+        return $this->id;
+    }
+
+    public function getCode(): string
+    {
+        return $this->code;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getRules(): array
+    {
+        return $this->rules;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
 }

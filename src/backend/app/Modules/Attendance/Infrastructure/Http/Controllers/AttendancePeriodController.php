@@ -48,12 +48,14 @@ class AttendancePeriodController
     public function close(string $id): JsonResponse
     {
         $this->closeHandler->handle(new CloseAttendancePeriodCommand($id));
+
         return response()->json(['message' => 'Closed']);
     }
 
     public function reopen(string $id, ReopenAttendancePeriodRequest $request): JsonResponse
     {
         $this->reopenHandler->handle(new ReopenAttendancePeriodCommand($id, $request->string('reason')->toString()));
+
         return response()->json(['message' => 'Reopened']);
     }
 }

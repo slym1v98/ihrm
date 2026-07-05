@@ -24,16 +24,63 @@ class WorkflowAction
         $this->createdAt ??= CarbonImmutable::now();
     }
 
-    public function id(): WorkflowActionId { return $this->id; }
-    public function workflowRequestId(): WorkflowRequestId { return $this->workflowRequestId; }
-    public function stepOrder(): int { return $this->stepOrder; }
-    public function action(): WorkflowActionType { return $this->action; }
-    public function actorId(): string { return $this->actorId; }
-    public function comment(): ?string { return $this->comment; }
-    public function metadata(): array { return $this->metadata; }
-    public function resolvedApprovers(): array { return $this->resolvedApprovers; }
-    public function delegationMap(): array { return $this->delegationMap; }
-    public function createdAt(): CarbonImmutable { return $this->createdAt; }
-    public function stepExecutionType(): string { return $this->stepExecutionType; }
-    public function formData(): ?array { return $this->formData; }
+    public function id(): WorkflowActionId
+    {
+        return $this->id;
+    }
+
+    public function workflowRequestId(): WorkflowRequestId
+    {
+        return $this->workflowRequestId;
+    }
+
+    public function stepOrder(): int
+    {
+        return $this->stepOrder;
+    }
+
+    public function action(): WorkflowActionType
+    {
+        return $this->action;
+    }
+
+    public function actorId(): string
+    {
+        return $this->actorId;
+    }
+
+    public function comment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function metadata(): array
+    {
+        return $this->metadata;
+    }
+
+    public function resolvedApprovers(): array
+    {
+        return $this->resolvedApprovers;
+    }
+
+    public function delegationMap(): array
+    {
+        return $this->delegationMap;
+    }
+
+    public function createdAt(): CarbonImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function stepExecutionType(): string
+    {
+        return $this->stepExecutionType;
+    }
+
+    public function formData(): ?array
+    {
+        return $this->formData;
+    }
 }

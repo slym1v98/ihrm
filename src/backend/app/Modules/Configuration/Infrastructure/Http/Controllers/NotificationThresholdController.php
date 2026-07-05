@@ -11,6 +11,13 @@ use Illuminate\Http\Request;
 
 class NotificationThresholdController
 {
-    public function index(Request $request, NotificationThresholdRepositoryInterface $thresholds): PaginatedCollection { return new PaginatedCollection($thresholds->list((int) $request->integer('per_page', 20)), NotificationThresholdResource::class); }
-    public function store(StoreNotificationThresholdRequest $request, NotificationThresholdRepositoryInterface $thresholds): JsonResponse { return response()->json(['data' => new NotificationThresholdResource($thresholds->save($request->validated()))], 201); }
+    public function index(Request $request, NotificationThresholdRepositoryInterface $thresholds): PaginatedCollection
+    {
+        return new PaginatedCollection($thresholds->list((int) $request->integer('per_page', 20)), NotificationThresholdResource::class);
+    }
+
+    public function store(StoreNotificationThresholdRequest $request, NotificationThresholdRepositoryInterface $thresholds): JsonResponse
+    {
+        return response()->json(['data' => new NotificationThresholdResource($thresholds->save($request->validated()))], 201);
+    }
 }

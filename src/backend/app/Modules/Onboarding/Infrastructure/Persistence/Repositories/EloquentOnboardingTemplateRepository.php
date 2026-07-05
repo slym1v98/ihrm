@@ -13,29 +13,32 @@ class EloquentOnboardingTemplateRepository implements OnboardingTemplateReposito
     public function findById(OnboardingTemplateId $id): ?OnboardingTemplate
     {
         $model = OnboardingTemplateModel::find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 
     public function findByCode(string $code): ?OnboardingTemplate
     {
         $model = OnboardingTemplateModel::where('code', $code)->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 
     public function findMatching(?string $departmentId, ?string $positionId, ?string $locationId, ?string $employmentType): array
     {
         $models = OnboardingTemplateModel::where('active', true)->get();
+
         return array_values(
             array_filter(
-                $models->map(fn($m) => $this->toDomain($m))->toArray(),
-                fn(OnboardingTemplate $t) => $t->matches($departmentId, $positionId, $locationId, $employmentType)
+                $models->map(fn ($m) => $this->toDomain($m))->toArray(),
+                fn (OnboardingTemplate $t) => $t->matches($departmentId, $positionId, $locationId, $employmentType)
             )
         );
     }
 
     public function all(): array
     {
-        return OnboardingTemplateModel::all()->map(fn($m) => $this->toDomain($m))->toArray();
+        return OnboardingTemplateModel::all()->map(fn ($m) => $this->toDomain($m))->toArray();
     }
 
     public function save(OnboardingTemplate $template): void

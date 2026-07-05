@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Modules\Performance;
 
-use PHPUnit\Framework\TestCase;
 use App\Modules\Performance\Domain\Aggregates\PerformanceCycle\PerformanceCycle;
 use App\Modules\Performance\Domain\Aggregates\PerformanceCycle\PerformanceCycleId;
 use App\Modules\Performance\Domain\Exceptions\InvalidStatusTransitionException;
 use App\Modules\Performance\Domain\ValueObjects\CycleStatus;
+use PHPUnit\Framework\TestCase;
 
 class PerformanceCycleTest extends TestCase
 {

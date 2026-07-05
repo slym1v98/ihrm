@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class WorkflowTemplateModel extends Model
 {
     use HasUuids;
+
     protected $table = 'workflow_templates';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
+
     protected $fillable = ['id', 'code', 'name', 'description', 'active'];
+
     protected $casts = ['active' => 'boolean'];
 
     public function steps()

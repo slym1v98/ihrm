@@ -3,8 +3,8 @@
 namespace App\Modules\Payroll\Infrastructure\Ports;
 
 use App\Modules\Payroll\Domain\Ports\LeaveReadPort;
-use Illuminate\Support\Facades\DB;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseLeaveReadPort implements LeaveReadPort
 {
@@ -19,6 +19,7 @@ class DatabaseLeaveReadPort implements LeaveReadPort
             ->first();
 
         $totalDays = $rows ? ((float) $rows->total_minutes / 480) : 0.0;
+
         // Simplified: all leave is paid if approved (unpaid handling deferred to leave type config)
         return ['paid_days' => $totalDays, 'unpaid_days' => 0.0];
     }

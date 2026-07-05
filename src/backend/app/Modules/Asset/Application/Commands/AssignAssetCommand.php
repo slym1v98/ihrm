@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Application\Commands;
 
 class AssignAssetCommand

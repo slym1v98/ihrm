@@ -11,9 +11,14 @@ class ReportQueryRegistry
 
     public function resolve(string $class): ReportQueryInterface
     {
-        if (!class_exists($class)) throw new \RuntimeException("Report query class not found: {$class}");
+        if (! class_exists($class)) {
+            throw new \RuntimeException("Report query class not found: {$class}");
+        }
         $query = $this->container->make($class);
-        if (!$query instanceof ReportQueryInterface) throw new \RuntimeException("Report query class must implement ReportQueryInterface: {$class}");
+        if (! $query instanceof ReportQueryInterface) {
+            throw new \RuntimeException("Report query class must implement ReportQueryInterface: {$class}");
+        }
+
         return $query;
     }
 }

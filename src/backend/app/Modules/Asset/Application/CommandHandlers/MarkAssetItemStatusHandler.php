@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Application\CommandHandlers;
 
 use App\Modules\Asset\Application\Commands\MarkAssetItemStatusCommand;
@@ -19,7 +20,7 @@ class MarkAssetItemStatusHandler
     {
         $id = AssetItemId::fromString($command->id);
         $item = $this->itemRepo->findById($id);
-        if (!$item) {
+        if (! $item) {
             throw new AssetItemNotFoundException($command->id);
         }
         $activeAssignment = $this->assignmentRepo->findActiveByAsset($id);
@@ -28,6 +29,7 @@ class MarkAssetItemStatusHandler
         }
         $item->markStatus($command->newStatus);
         $this->itemRepo->save($item);
+
         return $item;
     }
 }

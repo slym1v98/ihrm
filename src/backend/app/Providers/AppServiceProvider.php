@@ -2,6 +2,21 @@
 
 namespace App\Providers;
 
+use App\Modules\Asset\Domain\Repositories\AssetAssignmentRepositoryInterface;
+use App\Modules\Asset\Domain\Repositories\AssetItemRepositoryInterface;
+use App\Modules\Asset\Domain\Repositories\AssetReturnRepositoryInterface;
+use App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories\EloquentAssetAssignmentRepository;
+use App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories\EloquentAssetItemRepository;
+use App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories\EloquentAssetReturnRepository;
+use App\Modules\Attendance\Application\Workflow\AttendancePeriodSubjectProvider;
+use App\Modules\Attendance\Domain\Repositories\AttendanceAdjustmentRequestRepositoryInterface;
+use App\Modules\Attendance\Domain\Repositories\AttendancePeriodRepositoryInterface;
+use App\Modules\Attendance\Domain\Repositories\AttendanceRawLogRepositoryInterface;
+use App\Modules\Attendance\Domain\Repositories\AttendanceTimesheetRepositoryInterface;
+use App\Modules\Attendance\Infrastructure\Persistence\Repositories\EloquentAttendanceAdjustmentRequestRepository;
+use App\Modules\Attendance\Infrastructure\Persistence\Repositories\EloquentAttendancePeriodRepository;
+use App\Modules\Attendance\Infrastructure\Persistence\Repositories\EloquentAttendanceRawLogRepository;
+use App\Modules\Attendance\Infrastructure\Persistence\Repositories\EloquentAttendanceTimesheetRepository;
 use App\Modules\Audit\Infrastructure\Listeners\AuditEventListener;
 use App\Modules\Configuration\Domain\Repositories\CodeGenerationRuleRepositoryInterface;
 use App\Modules\Configuration\Domain\Repositories\HolidayCalendarRepositoryInterface;
@@ -13,82 +28,8 @@ use App\Modules\Configuration\Infrastructure\Persistence\Repositories\EloquentHo
 use App\Modules\Configuration\Infrastructure\Persistence\Repositories\EloquentLookupRepository;
 use App\Modules\Configuration\Infrastructure\Persistence\Repositories\EloquentNotificationThresholdRepository;
 use App\Modules\Configuration\Infrastructure\Persistence\Repositories\EloquentSystemSettingRepository;
-use App\Modules\Employee\Domain\Repositories\ContractRepositoryInterface;
-use App\Modules\Employee\Domain\Repositories\EmployeeDocumentRepositoryInterface;
-use App\Modules\Employee\Domain\Repositories\EmployeeRepositoryInterface;
-use App\Modules\Employee\Infrastructure\Persistence\Repositories\EloquentContractRepository;
-use App\Modules\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeDocumentRepository;
-use App\Modules\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
-use App\Modules\Shift\Domain\Repositories\ShiftAssignmentRepositoryInterface;
-use App\Modules\Shift\Domain\Repositories\ShiftTemplateRepositoryInterface;
-use App\Modules\Shift\Infrastructure\Persistence\Repositories\EloquentShiftAssignmentRepository;
-use App\Modules\Shift\Infrastructure\Persistence\Repositories\EloquentShiftTemplateRepository;
-use App\Modules\Leave\Domain\Repositories\LeaveBalanceRepositoryInterface;
-use App\Modules\Leave\Domain\Repositories\LeavePolicyRepositoryInterface;
-use App\Modules\Leave\Domain\Repositories\LeaveRequestRepositoryInterface;
-use App\Modules\Leave\Domain\Repositories\LeaveTypeRepositoryInterface;
-use App\Modules\Leave\Domain\Services\LeaveWindowInterface;
-use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveBalanceRepository;
-use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeavePolicyRepository;
-use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveRequestRepository;
-use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveTypeRepository;
-use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveWindowRepository;
-use App\Modules\Leave\Application\Workflow\Listeners\SyncLeaveRequestOnWorkflowApproved;
-use App\Modules\Leave\Application\Workflow\Listeners\SyncLeaveRequestOnWorkflowRejected;
-use App\Modules\Workflow\Domain\Events\WorkflowApproved;
-use App\Modules\Workflow\Domain\Events\WorkflowRejected;
-use App\Modules\Recruitment\Domain\Events\OfferAccepted;
-use App\Modules\Recruitment\Application\Listeners\CreateEmployeeOnOfferAccepted;
 use App\Modules\Employee\Application\Listeners\ActivateEmployeeOnOnboardingComplete;
 use App\Modules\Employee\Application\Listeners\CreateOffboardingOnResign;
-use App\Modules\Onboarding\Domain\Events\OnboardingPlanCompleted;
-use App\Modules\Leave\Application\Workflow\LeaveRequestSubjectProvider;
-use App\Modules\Workflow\Application\Contracts\SubjectDataProvider;
-use App\Modules\Workflow\Application\Resolvers\DepartmentHeadResolver;
-use App\Modules\Workflow\Application\Resolvers\DirectManagerResolver;
-use App\Modules\Workflow\Application\Resolvers\RoleInDepartmentResolver;
-use App\Modules\Workflow\Application\Resolvers\RoleResolver;
-use App\Modules\Workflow\Application\Resolvers\SpecificUserResolver;
-use App\Modules\Attendance\Application\Workflow\AttendancePeriodSubjectProvider;
-use App\Modules\Payroll\Application\Workflow\PayrollPeriodSubjectProvider;
-use App\Modules\Workflow\Application\Services\ConditionEvaluator;
-use App\Modules\Workflow\Application\Services\DelegationResolver;
-use App\Modules\Workflow\Application\Services\ResolverRegistry;
-use App\Modules\Workflow\Application\Services\SubjectDataProviderRegistry;
-use App\Modules\Workflow\Application\Services\WorkflowEngine;
-use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface;
-use App\Modules\Workflow\Domain\Repositories\WorkflowRequestRepositoryInterface;
-use App\Modules\Workflow\Domain\Repositories\WorkflowDelegationRepositoryInterface;
-use App\Modules\Workflow\Infrastructure\Persistence\Repositories\EloquentWorkflowTemplateRepository;
-use App\Modules\Workflow\Infrastructure\Persistence\Repositories\EloquentWorkflowRequestRepository;
-use App\Modules\Workflow\Infrastructure\Persistence\Repositories\EloquentWorkflowDelegationRepository;
-use App\Modules\Attendance\Domain\Repositories\AttendanceRawLogRepositoryInterface;
-use App\Modules\Attendance\Domain\Repositories\AttendanceTimesheetRepositoryInterface;
-use App\Modules\Attendance\Domain\Repositories\AttendanceAdjustmentRequestRepositoryInterface;
-use App\Modules\Attendance\Domain\Repositories\AttendancePeriodRepositoryInterface;
-use App\Modules\Attendance\Infrastructure\Persistence\Repositories\EloquentAttendanceRawLogRepository;
-use App\Modules\Attendance\Infrastructure\Persistence\Repositories\EloquentAttendanceTimesheetRepository;
-use App\Modules\Attendance\Infrastructure\Persistence\Repositories\EloquentAttendanceAdjustmentRequestRepository;
-use App\Modules\Attendance\Infrastructure\Persistence\Repositories\EloquentAttendancePeriodRepository;
-use App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface;
-use App\Modules\Payroll\Domain\Repositories\PayrollComponentRepositoryInterface;
-use App\Modules\Payroll\Domain\Repositories\PayrollRunRepositoryInterface;
-use App\Modules\Payroll\Domain\Repositories\PayrollEntryRepositoryInterface;
-use App\Modules\Payroll\Domain\Repositories\PayrollAdjustmentRepositoryInterface;
-use App\Modules\Payroll\Domain\Repositories\PayslipRepositoryInterface;
-use App\Modules\Payroll\Domain\Ports\AttendanceReadPort;
-use App\Modules\Payroll\Domain\Ports\LeaveReadPort;
-use App\Modules\Payroll\Domain\Ports\EmployeeContractReadPort;
-use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollPeriodRepository;
-use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollComponentRepository;
-use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollRunRepository;
-use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollEntryRepository;
-use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollAdjustmentRepository;
-use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayslipRepository;
-use App\Modules\Payroll\Infrastructure\Ports\DatabaseAttendanceReadPort;
-use App\Modules\Payroll\Infrastructure\Ports\DatabaseLeaveReadPort;
-use App\Modules\Payroll\Infrastructure\Ports\DatabaseEmployeeContractReadPort;
-
 use App\Modules\Employee\Domain\Events\ContractActivated;
 use App\Modules\Employee\Domain\Events\ContractCreated;
 use App\Modules\Employee\Domain\Events\ContractExpired;
@@ -103,29 +44,12 @@ use App\Modules\Employee\Domain\Events\EmployeeEmploymentChanged;
 use App\Modules\Employee\Domain\Events\EmployeeManagerChanged;
 use App\Modules\Employee\Domain\Events\EmployeePersonalInfoUpdated;
 use App\Modules\Employee\Domain\Events\EmployeeStatusChanged;
-use App\Modules\Identity\Domain\Repositories\RoleRepositoryInterface;
-use App\Modules\Identity\Domain\Repositories\UserRepositoryInterface;
-use App\Modules\Organization\Domain\Repositories\BranchRepositoryInterface;
-use App\Modules\Organization\Domain\Repositories\DepartmentRepositoryInterface;
-use App\Modules\Organization\Domain\Repositories\PositionRepositoryInterface;
-use App\Modules\Organization\Domain\Events\BranchActivated;
-use App\Modules\Organization\Domain\Events\BranchCreated;
-use App\Modules\Organization\Domain\Events\BranchDeactivated;
-use App\Modules\Organization\Domain\Events\BranchUpdated;
-use App\Modules\Organization\Domain\Events\DepartmentActivated;
-use App\Modules\Organization\Domain\Events\DepartmentCreated;
-use App\Modules\Organization\Domain\Events\DepartmentDeactivated;
-use App\Modules\Organization\Domain\Events\DepartmentMoved;
-use App\Modules\Organization\Domain\Events\DepartmentUpdated;
-use App\Modules\Organization\Domain\Events\PositionActivated;
-use App\Modules\Organization\Domain\Events\PositionCreated;
-use App\Modules\Organization\Domain\Events\PositionDeactivated;
-use App\Modules\Organization\Domain\Events\PositionUpdated;
-use App\Modules\Organization\Infrastructure\Persistence\Repositories\EloquentBranchRepository;
-use App\Modules\Organization\Infrastructure\Persistence\Repositories\EloquentDepartmentRepository;
-use App\Modules\Organization\Infrastructure\Persistence\Repositories\EloquentPositionRepository;
-use App\Modules\Identity\Infrastructure\Persistence\Repositories\EloquentRoleRepository;
-use App\Modules\Identity\Infrastructure\Persistence\Repositories\EloquentUserRepository;
+use App\Modules\Employee\Domain\Repositories\ContractRepositoryInterface;
+use App\Modules\Employee\Domain\Repositories\EmployeeDocumentRepositoryInterface;
+use App\Modules\Employee\Domain\Repositories\EmployeeRepositoryInterface;
+use App\Modules\Employee\Infrastructure\Persistence\Repositories\EloquentContractRepository;
+use App\Modules\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeDocumentRepository;
+use App\Modules\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
 use App\Modules\Identity\Domain\Events\RoleCreated;
 use App\Modules\Identity\Domain\Events\RolePermissionGranted;
 use App\Modules\Identity\Domain\Events\RolePermissionRevoked;
@@ -139,6 +63,142 @@ use App\Modules\Identity\Domain\Events\UserPasswordChanged;
 use App\Modules\Identity\Domain\Events\UserReactivated;
 use App\Modules\Identity\Domain\Events\UserRoleAssigned;
 use App\Modules\Identity\Domain\Events\UserRoleRevoked;
+use App\Modules\Identity\Domain\Repositories\RoleRepositoryInterface;
+use App\Modules\Identity\Domain\Repositories\UserRepositoryInterface;
+use App\Modules\Identity\Infrastructure\Persistence\Repositories\EloquentRoleRepository;
+use App\Modules\Identity\Infrastructure\Persistence\Repositories\EloquentUserRepository;
+use App\Modules\Leave\Application\Workflow\LeaveRequestSubjectProvider;
+use App\Modules\Leave\Application\Workflow\Listeners\SyncLeaveRequestOnWorkflowApproved;
+use App\Modules\Leave\Application\Workflow\Listeners\SyncLeaveRequestOnWorkflowRejected;
+use App\Modules\Leave\Domain\Repositories\LeaveBalanceRepositoryInterface;
+use App\Modules\Leave\Domain\Repositories\LeavePolicyRepositoryInterface;
+use App\Modules\Leave\Domain\Repositories\LeaveRequestRepositoryInterface;
+use App\Modules\Leave\Domain\Repositories\LeaveTypeRepositoryInterface;
+use App\Modules\Leave\Domain\Services\LeaveWindowInterface;
+use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveBalanceRepository;
+use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeavePolicyRepository;
+use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveRequestRepository;
+use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveTypeRepository;
+use App\Modules\Leave\Infrastructure\Persistence\Repositories\EloquentLeaveWindowRepository;
+use App\Modules\Notification\Application\NotificationPublisherService;
+use App\Modules\Notification\Domain\Repositories\MessageTemplateRepositoryInterface;
+use App\Modules\Notification\Domain\Repositories\NotificationMessageRepositoryInterface;
+use App\Modules\Notification\Domain\Repositories\NotificationOutboxRepositoryInterface;
+use App\Modules\Notification\Domain\Repositories\UserNotificationPreferenceRepositoryInterface;
+use App\Modules\Notification\Domain\Services\NotificationPublisher;
+use App\Modules\Notification\Infrastructure\Channels\Contracts\NotificationChannelInterface;
+use App\Modules\Notification\Infrastructure\Channels\EmailChannel;
+use App\Modules\Notification\Infrastructure\Channels\InAppChannel;
+use App\Modules\Notification\Infrastructure\Channels\SmsChannel;
+use App\Modules\Notification\Infrastructure\Console\ProcessNotificationOutboxCommand;
+use App\Modules\Notification\Infrastructure\Persistence\Repositories\EloquentMessageTemplateRepository;
+use App\Modules\Notification\Infrastructure\Persistence\Repositories\EloquentNotificationMessageRepository;
+use App\Modules\Notification\Infrastructure\Persistence\Repositories\EloquentNotificationOutboxRepository;
+use App\Modules\Notification\Infrastructure\Persistence\Repositories\EloquentUserNotificationPreferenceRepository;
+use App\Modules\Offboarding\Domain\Repositories\FinalClearanceRepositoryInterface;
+use App\Modules\Offboarding\Domain\Repositories\OffboardingPlanRepositoryInterface;
+use App\Modules\Offboarding\Domain\Repositories\OffboardingRequestRepositoryInterface;
+use App\Modules\Offboarding\Domain\Repositories\OffboardingTaskRepositoryInterface;
+use App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentFinalClearanceRepository;
+use App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingPlanRepository;
+use App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingRequestRepository;
+use App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingTaskRepository;
+use App\Modules\Onboarding\Domain\Events\OnboardingPlanCompleted;
+use App\Modules\Onboarding\Domain\Repositories\OnboardingPlanRepositoryInterface;
+use App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepositoryInterface;
+use App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface;
+use App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingPlanRepository;
+use App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTaskRepository;
+use App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTemplateRepository;
+use App\Modules\Organization\Domain\Events\BranchActivated;
+use App\Modules\Organization\Domain\Events\BranchCreated;
+use App\Modules\Organization\Domain\Events\BranchDeactivated;
+use App\Modules\Organization\Domain\Events\BranchUpdated;
+use App\Modules\Organization\Domain\Events\DepartmentActivated;
+use App\Modules\Organization\Domain\Events\DepartmentCreated;
+use App\Modules\Organization\Domain\Events\DepartmentDeactivated;
+use App\Modules\Organization\Domain\Events\DepartmentMoved;
+use App\Modules\Organization\Domain\Events\DepartmentUpdated;
+use App\Modules\Organization\Domain\Events\PositionActivated;
+use App\Modules\Organization\Domain\Events\PositionCreated;
+use App\Modules\Organization\Domain\Events\PositionDeactivated;
+use App\Modules\Organization\Domain\Events\PositionUpdated;
+use App\Modules\Organization\Domain\Repositories\BranchRepositoryInterface;
+use App\Modules\Organization\Domain\Repositories\DepartmentRepositoryInterface;
+use App\Modules\Organization\Domain\Repositories\PositionRepositoryInterface;
+use App\Modules\Organization\Infrastructure\Persistence\Repositories\EloquentBranchRepository;
+use App\Modules\Organization\Infrastructure\Persistence\Repositories\EloquentDepartmentRepository;
+use App\Modules\Organization\Infrastructure\Persistence\Repositories\EloquentPositionRepository;
+use App\Modules\Payroll\Application\Workflow\PayrollPeriodSubjectProvider;
+use App\Modules\Payroll\Domain\Ports\AttendanceReadPort;
+use App\Modules\Payroll\Domain\Ports\EmployeeContractReadPort;
+use App\Modules\Payroll\Domain\Ports\LeaveReadPort;
+use App\Modules\Payroll\Domain\Repositories\PayrollAdjustmentRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollComponentRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollEntryRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollRunRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayslipRepositoryInterface;
+use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollAdjustmentRepository;
+use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollComponentRepository;
+use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollEntryRepository;
+use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollPeriodRepository;
+use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayrollRunRepository;
+use App\Modules\Payroll\Infrastructure\Persistence\Repositories\EloquentPayslipRepository;
+use App\Modules\Payroll\Infrastructure\Ports\DatabaseAttendanceReadPort;
+use App\Modules\Payroll\Infrastructure\Ports\DatabaseEmployeeContractReadPort;
+use App\Modules\Payroll\Infrastructure\Ports\DatabaseLeaveReadPort;
+use App\Modules\Performance\Domain\Repositories\CompetencyTemplateRepositoryInterface;
+use App\Modules\Performance\Domain\Repositories\GoalRepositoryInterface;
+use App\Modules\Performance\Domain\Repositories\PerformanceCycleRepositoryInterface;
+use App\Modules\Performance\Domain\Repositories\PerformanceReviewRepositoryInterface;
+use App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentCompetencyTemplateRepository;
+use App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentGoalRepository;
+use App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentPerformanceCycleRepository;
+use App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentPerformanceReviewRepository;
+use App\Modules\Recruitment\Application\Listeners\CreateEmployeeOnOfferAccepted;
+use App\Modules\Recruitment\Domain\Events\OfferAccepted;
+use App\Modules\Recruitment\Domain\Repositories\CandidateRepositoryInterface;
+use App\Modules\Recruitment\Domain\Repositories\InterviewRepositoryInterface;
+use App\Modules\Recruitment\Domain\Repositories\OfferRepositoryInterface;
+use App\Modules\Recruitment\Domain\Repositories\RecruitmentRequisitionRepositoryInterface;
+use App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentCandidateRepository;
+use App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentInterviewRepository;
+use App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentOfferRepository;
+use App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentRecruitmentRequisitionRepository;
+use App\Modules\Reporting\Domain\Repositories\ReportDefinitionRepositoryInterface;
+use App\Modules\Reporting\Domain\Repositories\ReportRunRepositoryInterface;
+use App\Modules\Reporting\Infrastructure\Persistence\Repositories\EloquentReportDefinitionRepository;
+use App\Modules\Reporting\Infrastructure\Persistence\Repositories\EloquentReportRunRepository;
+use App\Modules\Shift\Domain\Repositories\ShiftAssignmentRepositoryInterface;
+use App\Modules\Shift\Domain\Repositories\ShiftTemplateRepositoryInterface;
+use App\Modules\Shift\Infrastructure\Persistence\Repositories\EloquentShiftAssignmentRepository;
+use App\Modules\Shift\Infrastructure\Persistence\Repositories\EloquentShiftTemplateRepository;
+use App\Modules\Training\Domain\Repositories\TrainingCourseRepositoryInterface;
+use App\Modules\Training\Domain\Repositories\TrainingEnrollmentRepositoryInterface;
+use App\Modules\Training\Domain\Repositories\TrainingResultRepositoryInterface;
+use App\Modules\Training\Domain\Repositories\TrainingSessionRepositoryInterface;
+use App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingCourseRepository;
+use App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingEnrollmentRepository;
+use App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingResultRepository;
+use App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingSessionRepository;
+use App\Modules\Workflow\Application\Resolvers\DepartmentHeadResolver;
+use App\Modules\Workflow\Application\Resolvers\DirectManagerResolver;
+use App\Modules\Workflow\Application\Resolvers\RoleInDepartmentResolver;
+use App\Modules\Workflow\Application\Resolvers\RoleResolver;
+use App\Modules\Workflow\Application\Resolvers\SpecificUserResolver;
+use App\Modules\Workflow\Application\Services\ResolverRegistry;
+use App\Modules\Workflow\Application\Services\SubjectDataProviderRegistry;
+use App\Modules\Workflow\Application\Services\WorkflowEngine;
+use App\Modules\Workflow\Domain\Events\WorkflowApproved;
+use App\Modules\Workflow\Domain\Events\WorkflowRejected;
+use App\Modules\Workflow\Domain\Repositories\WorkflowDelegationRepositoryInterface;
+use App\Modules\Workflow\Domain\Repositories\WorkflowRequestRepositoryInterface;
+use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface;
+use App\Modules\Workflow\Infrastructure\Console\ProcessSlaEscalation;
+use App\Modules\Workflow\Infrastructure\Persistence\Repositories\EloquentWorkflowDelegationRepository;
+use App\Modules\Workflow\Infrastructure\Persistence\Repositories\EloquentWorkflowRequestRepository;
+use App\Modules\Workflow\Infrastructure\Persistence\Repositories\EloquentWorkflowTemplateRepository;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -146,7 +206,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        
+
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, EloquentRoleRepository::class);
         $this->app->bind(LookupRepositoryInterface::class, EloquentLookupRepository::class);
@@ -171,10 +231,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(WorkflowRequestRepositoryInterface::class, EloquentWorkflowRequestRepository::class);
         $this->app->bind(WorkflowDelegationRepositoryInterface::class, EloquentWorkflowDelegationRepository::class);
         $this->app->singleton(ResolverRegistry::class, function () {
-            $r = new ResolverRegistry();
-            $r->register(new SpecificUserResolver());
-            $r->register(new DirectManagerResolver());
-            $r->register(new DepartmentHeadResolver());
+            $r = new ResolverRegistry;
+            $r->register(new SpecificUserResolver);
+            $r->register(new DirectManagerResolver);
+            $r->register(new DepartmentHeadResolver);
             $r->register(new RoleResolver(fn (string $roleCode) => \DB::table('users')
                 ->join('user_roles', 'user_roles.user_id', '=', 'users.id')
                 ->join('roles', 'roles.id', '=', 'user_roles.role_id')
@@ -189,25 +249,27 @@ class AppServiceProvider extends ServiceProvider
                 ->where('employees.department_id', $deptId)
                 ->whereNull('user_roles.revoked_at')
                 ->pluck('users.id')->map(fn ($id) => (string) $id)->toArray()));
+
             return $r;
         });
         $this->app->singleton(SubjectDataProviderRegistry::class, function () {
-            $p = new SubjectDataProviderRegistry();
+            $p = new SubjectDataProviderRegistry;
             $p->register(new LeaveRequestSubjectProvider(
-                app(\App\Modules\Leave\Domain\Repositories\LeaveRequestRepositoryInterface::class),
-                app(\App\Modules\Leave\Domain\Repositories\LeaveTypeRepositoryInterface::class),
-                app(\App\Modules\Employee\Domain\Repositories\EmployeeRepositoryInterface::class),
+                app(LeaveRequestRepositoryInterface::class),
+                app(LeaveTypeRepositoryInterface::class),
+                app(EmployeeRepositoryInterface::class),
             ));
             $p->register(new AttendancePeriodSubjectProvider(
-                app(\App\Modules\Attendance\Domain\Repositories\AttendancePeriodRepositoryInterface::class),
+                app(AttendancePeriodRepositoryInterface::class),
             ));
             $p->register(new PayrollPeriodSubjectProvider(
-                app(\App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface::class),
+                app(PayrollPeriodRepositoryInterface::class),
             ));
+
             return $p;
         });
         $this->app->singleton(WorkflowEngine::class);
-        $this->commands([\App\Modules\Workflow\Infrastructure\Console\ProcessSlaEscalation::class]);
+        $this->commands([ProcessSlaEscalation::class]);
         $this->app->bind(AttendanceRawLogRepositoryInterface::class, EloquentAttendanceRawLogRepository::class);
         $this->app->bind(AttendanceTimesheetRepositoryInterface::class, EloquentAttendanceTimesheetRepository::class);
         $this->app->bind(AttendanceAdjustmentRequestRepositoryInterface::class, EloquentAttendanceAdjustmentRequestRepository::class);
@@ -221,47 +283,47 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AttendanceReadPort::class, DatabaseAttendanceReadPort::class);
         $this->app->bind(LeaveReadPort::class, DatabaseLeaveReadPort::class);
         $this->app->bind(EmployeeContractReadPort::class, DatabaseEmployeeContractReadPort::class);
-        $this->app->bind(\App\Modules\Notification\Domain\Repositories\MessageTemplateRepositoryInterface::class, \App\Modules\Notification\Infrastructure\Persistence\Repositories\EloquentMessageTemplateRepository::class);
-        $this->app->bind(\App\Modules\Notification\Domain\Repositories\NotificationMessageRepositoryInterface::class, \App\Modules\Notification\Infrastructure\Persistence\Repositories\EloquentNotificationMessageRepository::class);
-        $this->app->bind(\App\Modules\Notification\Domain\Repositories\UserNotificationPreferenceRepositoryInterface::class, \App\Modules\Notification\Infrastructure\Persistence\Repositories\EloquentUserNotificationPreferenceRepository::class);
-        $this->app->bind(\App\Modules\Notification\Domain\Repositories\NotificationOutboxRepositoryInterface::class, \App\Modules\Notification\Infrastructure\Persistence\Repositories\EloquentNotificationOutboxRepository::class);
-        $this->app->bind(\App\Modules\Notification\Domain\Services\NotificationPublisher::class, \App\Modules\Notification\Application\NotificationPublisherService::class);
-        $this->app->bind(\App\Modules\Notification\Infrastructure\Channels\Contracts\NotificationChannelInterface::class . ':in_app', \App\Modules\Notification\Infrastructure\Channels\InAppChannel::class);
-        $this->app->bind(\App\Modules\Notification\Infrastructure\Channels\Contracts\NotificationChannelInterface::class . ':email', \App\Modules\Notification\Infrastructure\Channels\EmailChannel::class);
-        $this->app->bind(\App\Modules\Notification\Infrastructure\Channels\Contracts\NotificationChannelInterface::class . ':sms', \App\Modules\Notification\Infrastructure\Channels\SmsChannel::class);
-        $this->app->bind(\App\Modules\Reporting\Domain\Repositories\ReportDefinitionRepositoryInterface::class, \App\Modules\Reporting\Infrastructure\Persistence\Repositories\EloquentReportDefinitionRepository::class);
-        $this->app->bind(\App\Modules\Reporting\Domain\Repositories\ReportRunRepositoryInterface::class, \App\Modules\Reporting\Infrastructure\Persistence\Repositories\EloquentReportRunRepository::class);
-        $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\RecruitmentRequisitionRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentRecruitmentRequisitionRepository::class);
-        $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\CandidateRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentCandidateRepository::class);
-        $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\InterviewRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentInterviewRepository::class);
-        $this->app->bind(\App\Modules\Recruitment\Domain\Repositories\OfferRepositoryInterface::class, \App\Modules\Recruitment\Infrastructure\Persistence\Repositories\EloquentOfferRepository::class);
-        $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTemplateRepository::class);
-        $this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingPlanRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingPlanRepository::class);
-                $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\OffboardingRequestRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingRequestRepository::class);
-        $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\OffboardingPlanRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingPlanRepository::class);
-        $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\OffboardingTaskRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentOffboardingTaskRepository::class);
-        $this->app->bind(\App\Modules\Offboarding\Domain\Repositories\FinalClearanceRepositoryInterface::class, \App\Modules\Offboarding\Infrastructure\Persistence\Repositories\EloquentFinalClearanceRepository::class);
-$this->app->bind(\App\Modules\Onboarding\Domain\Repositories\OnboardingTaskRepositoryInterface::class, \App\Modules\Onboarding\Infrastructure\Persistence\Repositories\EloquentOnboardingTaskRepository::class);
-        $this->app->bind(\App\Modules\Performance\Domain\Repositories\CompetencyTemplateRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentCompetencyTemplateRepository::class);
-        $this->app->bind(\App\Modules\Performance\Domain\Repositories\GoalRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentGoalRepository::class);
-        $this->app->bind(\App\Modules\Performance\Domain\Repositories\PerformanceCycleRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentPerformanceCycleRepository::class);
-        $this->app->bind(\App\Modules\Performance\Domain\Repositories\PerformanceReviewRepositoryInterface::class, \App\Modules\Performance\Infrastructure\Persistence\Repositories\EloquentPerformanceReviewRepository::class);
-        $this->app->bind(\App\Modules\Training\Domain\Repositories\TrainingCourseRepositoryInterface::class, \App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingCourseRepository::class);
-        $this->app->bind(\App\Modules\Training\Domain\Repositories\TrainingSessionRepositoryInterface::class, \App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingSessionRepository::class);
-        $this->app->bind(\App\Modules\Training\Domain\Repositories\TrainingEnrollmentRepositoryInterface::class, \App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingEnrollmentRepository::class);
-        $this->app->bind(\App\Modules\Training\Domain\Repositories\TrainingResultRepositoryInterface::class, \App\Modules\Training\Infrastructure\Persistence\Repositories\EloquentTrainingResultRepository::class);
-        $this->commands([\App\Modules\Notification\Infrastructure\Console\ProcessNotificationOutboxCommand::class]);
+        $this->app->bind(MessageTemplateRepositoryInterface::class, EloquentMessageTemplateRepository::class);
+        $this->app->bind(NotificationMessageRepositoryInterface::class, EloquentNotificationMessageRepository::class);
+        $this->app->bind(UserNotificationPreferenceRepositoryInterface::class, EloquentUserNotificationPreferenceRepository::class);
+        $this->app->bind(NotificationOutboxRepositoryInterface::class, EloquentNotificationOutboxRepository::class);
+        $this->app->bind(NotificationPublisher::class, NotificationPublisherService::class);
+        $this->app->bind(NotificationChannelInterface::class.':in_app', InAppChannel::class);
+        $this->app->bind(NotificationChannelInterface::class.':email', EmailChannel::class);
+        $this->app->bind(NotificationChannelInterface::class.':sms', SmsChannel::class);
+        $this->app->bind(ReportDefinitionRepositoryInterface::class, EloquentReportDefinitionRepository::class);
+        $this->app->bind(ReportRunRepositoryInterface::class, EloquentReportRunRepository::class);
+        $this->app->bind(RecruitmentRequisitionRepositoryInterface::class, EloquentRecruitmentRequisitionRepository::class);
+        $this->app->bind(CandidateRepositoryInterface::class, EloquentCandidateRepository::class);
+        $this->app->bind(InterviewRepositoryInterface::class, EloquentInterviewRepository::class);
+        $this->app->bind(OfferRepositoryInterface::class, EloquentOfferRepository::class);
+        $this->app->bind(OnboardingTemplateRepositoryInterface::class, EloquentOnboardingTemplateRepository::class);
+        $this->app->bind(OnboardingPlanRepositoryInterface::class, EloquentOnboardingPlanRepository::class);
+        $this->app->bind(OffboardingRequestRepositoryInterface::class, EloquentOffboardingRequestRepository::class);
+        $this->app->bind(OffboardingPlanRepositoryInterface::class, EloquentOffboardingPlanRepository::class);
+        $this->app->bind(OffboardingTaskRepositoryInterface::class, EloquentOffboardingTaskRepository::class);
+        $this->app->bind(FinalClearanceRepositoryInterface::class, EloquentFinalClearanceRepository::class);
+        $this->app->bind(OnboardingTaskRepositoryInterface::class, EloquentOnboardingTaskRepository::class);
+        $this->app->bind(CompetencyTemplateRepositoryInterface::class, EloquentCompetencyTemplateRepository::class);
+        $this->app->bind(GoalRepositoryInterface::class, EloquentGoalRepository::class);
+        $this->app->bind(PerformanceCycleRepositoryInterface::class, EloquentPerformanceCycleRepository::class);
+        $this->app->bind(PerformanceReviewRepositoryInterface::class, EloquentPerformanceReviewRepository::class);
+        $this->app->bind(TrainingCourseRepositoryInterface::class, EloquentTrainingCourseRepository::class);
+        $this->app->bind(TrainingSessionRepositoryInterface::class, EloquentTrainingSessionRepository::class);
+        $this->app->bind(TrainingEnrollmentRepositoryInterface::class, EloquentTrainingEnrollmentRepository::class);
+        $this->app->bind(TrainingResultRepositoryInterface::class, EloquentTrainingResultRepository::class);
+        $this->commands([ProcessNotificationOutboxCommand::class]);
         $this->app->bind(
-            \App\Modules\Asset\Domain\Repositories\AssetItemRepositoryInterface::class,
-            \App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories\EloquentAssetItemRepository::class,
+            AssetItemRepositoryInterface::class,
+            EloquentAssetItemRepository::class,
         );
         $this->app->bind(
-            \App\Modules\Asset\Domain\Repositories\AssetAssignmentRepositoryInterface::class,
-            \App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories\EloquentAssetAssignmentRepository::class,
+            AssetAssignmentRepositoryInterface::class,
+            EloquentAssetAssignmentRepository::class,
         );
         $this->app->bind(
-            \App\Modules\Asset\Domain\Repositories\AssetReturnRepositoryInterface::class,
-            \App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories\EloquentAssetReturnRepository::class,
+            AssetReturnRepositoryInterface::class,
+            EloquentAssetReturnRepository::class,
         );
     }
 

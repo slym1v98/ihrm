@@ -28,7 +28,8 @@ final class EmployeeDocument
     public static function upload(EmployeeDocumentId $id, EmployeeId $employeeId, string $documentType, DocumentDescriptor $descriptor, ?string $category = null, ?DateTimeImmutable $issueDate = null, ?DateTimeImmutable $expiryDate = null): self
     {
         $document = new self($id, $employeeId, $documentType, $category, $descriptor, $issueDate, $expiryDate, DocumentStatus::Active);
-        $document->record(new EmployeeDocumentUploaded($id, $employeeId, $documentType, $descriptor->path, new DateTimeImmutable()));
+        $document->record(new EmployeeDocumentUploaded($id, $employeeId, $documentType, $descriptor->path, new DateTimeImmutable));
+
         return $document;
     }
 
@@ -49,20 +50,21 @@ final class EmployeeDocument
     {
         $this->status = DocumentStatus::Archived;
         $replacement = new self($newId, $this->employeeId, $this->documentType, $this->category, $newDescriptor, $this->issueDate, $this->expiryDate, DocumentStatus::Active);
-        $replacement->record(new EmployeeDocumentReplaced($newId, $this->employeeId, $newDescriptor->path, $this->descriptor->path, new DateTimeImmutable()));
+        $replacement->record(new EmployeeDocumentReplaced($newId, $this->employeeId, $newDescriptor->path, $this->descriptor->path, new DateTimeImmutable));
+
         return $replacement;
     }
 
     public function archive(): void
     {
         $this->status = DocumentStatus::Archived;
-        $this->record(new EmployeeDocumentArchived($this->id, $this->employeeId, new DateTimeImmutable()));
+        $this->record(new EmployeeDocumentArchived($this->id, $this->employeeId, new DateTimeImmutable));
     }
 
     public function markExpired(): void
     {
         $this->status = DocumentStatus::Expired;
-        $this->record(new EmployeeDocumentExpired($this->id, $this->employeeId, new DateTimeImmutable()));
+        $this->record(new EmployeeDocumentExpired($this->id, $this->employeeId, new DateTimeImmutable));
     }
 
     public function status(): DocumentStatus
@@ -70,18 +72,46 @@ final class EmployeeDocument
         return $this->status;
     }
 
-    public function id(): EmployeeDocumentId { return $this->id; }
-    public function employeeId(): EmployeeId { return $this->employeeId; }
-    public function documentType(): string { return $this->documentType; }
-    public function category(): ?string { return $this->category; }
-    public function descriptor(): DocumentDescriptor { return $this->descriptor; }
-    public function issueDate(): ?DateTimeImmutable { return $this->issueDate; }
-    public function expiryDate(): ?DateTimeImmutable { return $this->expiryDate; }
+    public function id(): EmployeeDocumentId
+    {
+        return $this->id;
+    }
+
+    public function employeeId(): EmployeeId
+    {
+        return $this->employeeId;
+    }
+
+    public function documentType(): string
+    {
+        return $this->documentType;
+    }
+
+    public function category(): ?string
+    {
+        return $this->category;
+    }
+
+    public function descriptor(): DocumentDescriptor
+    {
+        return $this->descriptor;
+    }
+
+    public function issueDate(): ?DateTimeImmutable
+    {
+        return $this->issueDate;
+    }
+
+    public function expiryDate(): ?DateTimeImmutable
+    {
+        return $this->expiryDate;
+    }
 
     public function releaseEvents(): array
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 

@@ -2,10 +2,10 @@
 
 namespace App\Modules\Recruitment\Infrastructure\Seeders;
 
-use App\Modules\Organization\Infrastructure\Persistence\Eloquent\DepartmentModel;
-use App\Modules\Recruitment\Infrastructure\Persistence\Eloquent\RecruitmentRequisitionModel;
-use App\Modules\Recruitment\Infrastructure\Persistence\Eloquent\CandidateModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
+use App\Modules\Organization\Infrastructure\Persistence\Eloquent\DepartmentModel;
+use App\Modules\Recruitment\Infrastructure\Persistence\Eloquent\CandidateModel;
+use App\Modules\Recruitment\Infrastructure\Persistence\Eloquent\RecruitmentRequisitionModel;
 use Illuminate\Database\Seeder;
 
 class DemoRecruitmentSeeder extends Seeder
@@ -16,7 +16,9 @@ class DemoRecruitmentSeeder extends Seeder
         $salesDept = DepartmentModel::where('code', 'SALES')->first();
         $adminUser = UserModel::where('email', 'admin@ihrm.local')->first();
 
-        if (!$hrDept || !$adminUser) return;
+        if (! $hrDept || ! $adminUser) {
+            return;
+        }
 
         $requisitions = [
             [
@@ -46,8 +48,8 @@ class DemoRecruitmentSeeder extends Seeder
             );
 
             $candidates = [
-                ['full_name' => 'Nguyễn Văn A', 'email' => 'candidate.a.' . substr($model->id, 0, 8) . '@gmail.com', 'phone' => '0901111001', 'source' => 'linkedin', 'status' => 'new'],
-                ['full_name' => 'Trần Thị B', 'email' => 'candidate.b.' . substr($model->id, 0, 8) . '@gmail.com', 'phone' => '0901111002', 'source' => 'referral', 'status' => 'interview'],
+                ['full_name' => 'Nguyễn Văn A', 'email' => 'candidate.a.'.substr($model->id, 0, 8).'@gmail.com', 'phone' => '0901111001', 'source' => 'linkedin', 'status' => 'new'],
+                ['full_name' => 'Trần Thị B', 'email' => 'candidate.b.'.substr($model->id, 0, 8).'@gmail.com', 'phone' => '0901111002', 'source' => 'referral', 'status' => 'interview'],
             ];
 
             foreach ($candidates as $c) {

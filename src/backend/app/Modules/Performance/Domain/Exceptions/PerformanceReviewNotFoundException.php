@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Performance\Domain\Exceptions;
 
 class PerformanceReviewNotFoundException extends \RuntimeException

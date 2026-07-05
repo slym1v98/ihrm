@@ -61,13 +61,15 @@ class DepartmentController
         );
 
         $model = DepartmentModel::with('parent')->find($department->id()->value);
+
         return response()->json(['data' => new DepartmentResource($model)], 201);
     }
 
     public function show(string $id): JsonResponse
     {
         $model = DepartmentModel::with('parent')->find($id);
-        abort_if(!$model, 404, 'Department not found');
+        abort_if(! $model, 404, 'Department not found');
+
         return response()->json(['data' => new DepartmentResource($model)]);
     }
 
@@ -83,6 +85,7 @@ class DepartmentController
         );
 
         $model = DepartmentModel::with('parent')->find($id);
+
         return response()->json(['data' => new DepartmentResource($model)]);
     }
 
@@ -97,6 +100,7 @@ class DepartmentController
         );
 
         $model = DepartmentModel::with('parent')->find($id);
+
         return response()->json(['data' => new DepartmentResource($model)]);
     }
 
@@ -106,6 +110,7 @@ class DepartmentController
             new ActivateDepartmentCommand(DepartmentId::fromString($id)),
             (string) $request->user()->id,
         );
+
         return response()->json(['message' => 'Activated']);
     }
 
@@ -115,6 +120,7 @@ class DepartmentController
             new DeactivateDepartmentCommand(DepartmentId::fromString($id)),
             (string) $request->user()->id,
         );
+
         return response()->json(['message' => 'Deactivated']);
     }
 }

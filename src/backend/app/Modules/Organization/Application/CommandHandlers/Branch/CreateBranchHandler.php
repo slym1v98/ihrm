@@ -2,12 +2,12 @@
 
 namespace App\Modules\Organization\Application\CommandHandlers\Branch;
 
+use App\Modules\Identity\Application\Services\AuthorizationService;
 use App\Modules\Organization\Application\Commands\Branch\CreateBranchCommand;
 use App\Modules\Organization\Domain\Aggregates\Branch\Branch;
 use App\Modules\Organization\Domain\Aggregates\Branch\BranchId;
 use App\Modules\Organization\Domain\Exceptions\DuplicateBranchCodeException;
 use App\Modules\Organization\Domain\Repositories\BranchRepositoryInterface;
-use App\Modules\Identity\Application\Services\AuthorizationService;
 use Ramsey\Uuid\Uuid;
 
 class CreateBranchHandler

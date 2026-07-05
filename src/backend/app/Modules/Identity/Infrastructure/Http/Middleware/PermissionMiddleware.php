@@ -17,9 +17,14 @@ class PermissionMiddleware
         $user = $request->user();
 
         if (! $user || ! $this->authz->userHasPermission((string) $user->id, $permissionCode)) {
-            $exception = new class('PERMISSION_DENIED', "Missing permission: {$permissionCode}") extends AppException {
-                public function getHttpStatus(): int { return 403; }
+            $exception = new class('PERMISSION_DENIED', "Missing permission: {$permissionCode}") extends AppException
+            {
+                public function getHttpStatus(): int
+                {
+                    return 403;
+                }
             };
+
             return response()->json(
                 (new ErrorResource($exception))->toArray($request),
                 403,

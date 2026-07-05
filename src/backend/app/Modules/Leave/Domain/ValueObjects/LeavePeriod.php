@@ -17,10 +17,25 @@ class LeavePeriod
         }
     }
 
-    public function startAt(): CarbonImmutable { return $this->startAt; }
-    public function endAt(): CarbonImmutable { return $this->endAt; }
-    public function durationUnit(): DurationUnit { return $this->durationUnit; }
-    public function durationMinutes(): int { return $this->durationMinutes; }
+    public function startAt(): CarbonImmutable
+    {
+        return $this->startAt;
+    }
+
+    public function endAt(): CarbonImmutable
+    {
+        return $this->endAt;
+    }
+
+    public function durationUnit(): DurationUnit
+    {
+        return $this->durationUnit;
+    }
+
+    public function durationMinutes(): int
+    {
+        return $this->durationMinutes;
+    }
 
     public function overlaps(self $other): bool
     {

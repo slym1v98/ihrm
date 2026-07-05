@@ -19,13 +19,17 @@ class EloquentPositionRepository implements PositionRepositoryInterface
     public function findById(PositionId $id): Position
     {
         $record = $this->model->find($id->value);
-        if (!$record) throw new PositionNotFoundException($id->value);
+        if (! $record) {
+            throw new PositionNotFoundException($id->value);
+        }
+
         return $this->toDomain($record);
     }
 
     public function findByCode(PositionCode $code): ?Position
     {
         $record = $this->model->where('code', $code->value)->first();
+
         return $record ? $this->toDomain($record) : null;
     }
 

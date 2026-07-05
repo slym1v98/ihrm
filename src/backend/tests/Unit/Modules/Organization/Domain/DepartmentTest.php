@@ -19,14 +19,16 @@ use PHPUnit\Framework\TestCase;
 class DepartmentTest extends TestCase
 {
     private BranchId $branchId;
+
     private DepartmentId $parentId;
+
     private DepartmentId $childId;
 
     protected function setUp(): void
     {
         $this->branchId = BranchId::fromString('550e8400-e29b-41d4-a716-446655440000');
         $this->parentId = DepartmentId::fromString('660e8400-e29b-41d4-a716-446655440001');
-        $this->childId  = DepartmentId::fromString('660e8400-e29b-41d4-a716-446655440002');
+        $this->childId = DepartmentId::fromString('660e8400-e29b-41d4-a716-446655440002');
     }
 
     private function makeDept(DepartmentId $id, string $code = 'IT', ?DepartmentId $parentId = null): Department
@@ -34,7 +36,7 @@ class DepartmentTest extends TestCase
         return Department::create(
             $id,
             DepartmentCode::fromString($code),
-            DepartmentName::fromString($code . ' Dept'),
+            DepartmentName::fromString($code.' Dept'),
             $this->branchId,
             $parentId,
         );

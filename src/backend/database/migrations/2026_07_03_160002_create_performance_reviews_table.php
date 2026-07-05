@@ -4,8 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    public function up(): void {
+return new class extends Migration
+{
+    public function up(): void
+    {
         Schema::create('performance_reviews', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('cycle_id');
@@ -22,5 +24,9 @@ return new class extends Migration {
             $table->index(['cycle_id', 'status']);
         });
     }
-    public function down(): void { Schema::dropIfExists('performance_reviews'); }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('performance_reviews');
+    }
 };

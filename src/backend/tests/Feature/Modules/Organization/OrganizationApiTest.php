@@ -4,6 +4,8 @@ namespace Tests\Feature\Modules\Organization;
 
 use App\Modules\Organization\Infrastructure\Persistence\Eloquent\BranchModel;
 use App\Modules\Organization\Infrastructure\Persistence\Eloquent\DepartmentModel;
+use App\Modules\Organization\Infrastructure\Seeders\OrgStructureSeeder;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,8 +18,8 @@ class OrganizationApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
-        $this->seed(\App\Modules\Organization\Infrastructure\Seeders\OrgStructureSeeder::class);
+        $this->seed(DatabaseSeeder::class);
+        $this->seed(OrgStructureSeeder::class);
 
         $response = $this->postJson('/api/v1/auth/login', [
             'email' => 'admin@ihrm.local',

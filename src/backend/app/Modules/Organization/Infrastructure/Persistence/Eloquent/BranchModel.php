@@ -11,8 +11,11 @@ class BranchModel extends Model
     use HasUuids;
 
     protected $table = 'branches';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
 
     public function departments(): HasMany

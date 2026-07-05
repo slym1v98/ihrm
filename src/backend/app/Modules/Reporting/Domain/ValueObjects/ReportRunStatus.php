@@ -4,10 +4,10 @@ namespace App\Modules\Reporting\Domain\ValueObjects;
 
 enum ReportRunStatus: string
 {
-    case Requested = "requested";
-    case Running = "running";
-    case Completed = "completed";
-    case Failed = "failed";
+    case Requested = 'requested';
+    case Running = 'running';
+    case Completed = 'completed';
+    case Failed = 'failed';
 
     public function canTransitionTo(self $target): bool
     {

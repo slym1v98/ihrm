@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Application\CommandHandlers;
 
 use App\Modules\Asset\Application\Commands\AssignAssetCommand;
@@ -22,7 +23,7 @@ class AssignAssetHandler
     {
         $assetId = AssetItemId::fromString($command->assetItemId);
         $item = $this->itemRepo->findById($assetId);
-        if (!$item) {
+        if (! $item) {
             throw new AssetItemNotFoundException($command->assetItemId);
         }
         if ($this->assignmentRepo->findActiveByAsset($assetId)) {
@@ -33,12 +34,13 @@ class AssignAssetHandler
             AssetAssignmentId::generate(),
             $assetId,
             $command->employeeId,
-            new \DateTimeImmutable(),
+            new \DateTimeImmutable,
             $command->expectedReturnAt ? new \DateTimeImmutable($command->expectedReturnAt) : null,
             AssetCondition::from($command->conditionOnIssue ?? $item->getCondition()->value),
         );
         $this->itemRepo->save($item);
         $this->assignmentRepo->save($assignment);
+
         return $assignment;
     }
 }

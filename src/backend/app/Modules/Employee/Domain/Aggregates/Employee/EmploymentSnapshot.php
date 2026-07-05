@@ -11,6 +11,5 @@ final readonly class EmploymentSnapshot
         public ?string $departmentId,
         public ?string $positionId,
         public DateTimeImmutable $effectiveAt = new DateTimeImmutable,
-    ) {
-    }
+    ) {}
 }

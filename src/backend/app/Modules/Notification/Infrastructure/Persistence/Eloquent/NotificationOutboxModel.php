@@ -2,14 +2,17 @@
 
 namespace App\Modules\Notification\Infrastructure\Persistence\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class NotificationOutboxModel extends Model
 {
     use HasUuids;
+
     protected $table = 'notification_outbox';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [

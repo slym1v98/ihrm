@@ -49,13 +49,15 @@ class EmployeeController
         );
 
         $model = EmployeeModel::find($employee->id()->value);
+
         return response()->json(['data' => new EmployeeResource($model)], 201);
     }
 
     public function show(string $id): JsonResponse
     {
         $model = EmployeeModel::find($id);
-        abort_if(!$model, 404, 'Employee not found');
+        abort_if(! $model, 404, 'Employee not found');
+
         return response()->json(['data' => new EmployeeResource($model)]);
     }
 
@@ -100,7 +102,7 @@ class EmployeeController
     public function changeStatus(Request $request, string $id): JsonResponse
     {
         $status = $request->input('status');
-        if (!$status && $request->filled('action')) {
+        if (! $status && $request->filled('action')) {
             $status = $request->input('action') === 'activate' ? 'active' : 'inactive';
         }
 

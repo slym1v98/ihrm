@@ -10,5 +10,9 @@ class InvalidShiftTemplateException extends AppException
     {
         parent::__construct('INVALID_SHIFT_TEMPLATE', $message ?: 'Invalid shift template.');
     }
-    public function getHttpStatus(): int { return 422; }
+
+    public function getHttpStatus(): int
+    {
+        return 422;
+    }
 }

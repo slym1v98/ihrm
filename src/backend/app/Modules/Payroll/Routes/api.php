@@ -1,32 +1,30 @@
 <?php
 
-use App\Modules\Payroll\Infrastructure\Http\Controllers\{
-    Actions\ListPayrollPeriodsController,
-    Actions\StorePayrollPeriodController,
-    Actions\ShowPayrollPeriodController,
-    Actions\ShowPayrollPeriodSummaryController,
-    Actions\SubmitPayrollPeriodApprovalController,
-    Actions\ApprovePayrollPeriodController,
-    Actions\RejectPayrollPeriodController,
-    Actions\LockPayrollPeriodController,
-    Actions\ReopenPayrollPeriodController,
-    Actions\StartPayrollRunController,
-    Actions\ListPayrollEntriesController,
-    Actions\ShowPayrollEntryController,
-    Actions\ReviewPayrollEntryController,
-    Actions\ListPayrollAdjustmentsController,
-    Actions\StorePayrollAdjustmentController,
-    Actions\ApprovePayrollAdjustmentController,
-    Actions\RejectPayrollAdjustmentController,
-    Actions\ListPayslipsController,
-    Actions\ShowPayslipController,
-    Actions\DownloadPayslipController,
-    Actions\PublishPayslipsController,
-    Actions\ListPayrollComponentsController,
-    Actions\StorePayrollComponentController,
-    Actions\UpdatePayrollComponentController,
-    Actions\DeletePayrollComponentController,
-};
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ApprovePayrollAdjustmentController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ApprovePayrollPeriodController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\DeletePayrollComponentController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\DownloadPayslipController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ListPayrollAdjustmentsController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ListPayrollComponentsController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ListPayrollEntriesController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ListPayrollPeriodsController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ListPayslipsController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\LockPayrollPeriodController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\PublishPayslipsController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\RejectPayrollAdjustmentController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\RejectPayrollPeriodController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ReopenPayrollPeriodController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ReviewPayrollEntryController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ShowPayrollEntryController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ShowPayrollPeriodController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ShowPayrollPeriodSummaryController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\ShowPayslipController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\StartPayrollRunController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\StorePayrollAdjustmentController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\StorePayrollComponentController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\StorePayrollPeriodController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\SubmitPayrollPeriodApprovalController;
+use App\Modules\Payroll\Infrastructure\Http\Controllers\Actions\UpdatePayrollComponentController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {

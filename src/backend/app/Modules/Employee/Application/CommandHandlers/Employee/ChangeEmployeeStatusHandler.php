@@ -18,7 +18,9 @@ class ChangeEmployeeStatusHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.status.change');
         $employee = $this->employees->findById(EmployeeId::fromString($command->employeeId));
-        if (! $employee) throw new EmployeeNotFoundException($command->employeeId);
+        if (! $employee) {
+            throw new EmployeeNotFoundException($command->employeeId);
+        }
         $employee->changeStatus(EmployeeStatus::from($command->status), $this->policy, $command->reason);
         $this->employees->saveAndDispatch($employee);
     }

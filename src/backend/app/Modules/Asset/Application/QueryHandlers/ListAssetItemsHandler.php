@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Application\QueryHandlers;
 
 use App\Modules\Asset\Application\Queries\ListAssetItemsQuery;

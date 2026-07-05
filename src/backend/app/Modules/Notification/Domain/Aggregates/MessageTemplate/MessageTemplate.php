@@ -69,12 +69,43 @@ class MessageTemplate
         return ['subject' => $subject, 'body' => $body];
     }
 
-    public function getId(): MessageTemplateId { return $this->id; }
-    public function getCode(): string { return $this->code; }
-    public function getName(): string { return $this->name; }
-    public function getChannel(): Channel { return $this->channel; }
-    public function getSubject(): string { return $this->subject; }
-    public function getBody(): string { return $this->body; }
-    public function getVariables(): array { return $this->variables; }
-    public function isActive(): bool { return $this->active; }
+    public function getId(): MessageTemplateId
+    {
+        return $this->id;
+    }
+
+    public function getCode(): string
+    {
+        return $this->code;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getChannel(): Channel
+    {
+        return $this->channel;
+    }
+
+    public function getSubject(): string
+    {
+        return $this->subject;
+    }
+
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
+    public function getVariables(): array
+    {
+        return $this->variables;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
 }

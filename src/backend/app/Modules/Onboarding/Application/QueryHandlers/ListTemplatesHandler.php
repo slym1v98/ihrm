@@ -18,6 +18,7 @@ class ListTemplatesHandler
                 $query->departmentId, $query->positionId, $query->locationId, $query->employmentType,
             );
         }
+
         return $this->templateRepo->all();
     }
 }

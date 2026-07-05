@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Modules\Payroll\Application\Commands\PayrollAdjustment;
+
 readonly class SubmitPayrollAdjustmentCommand
 {
     public function __construct(

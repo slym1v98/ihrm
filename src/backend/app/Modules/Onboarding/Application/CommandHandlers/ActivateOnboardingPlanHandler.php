@@ -4,8 +4,8 @@ namespace App\Modules\Onboarding\Application\CommandHandlers;
 
 use App\Modules\Onboarding\Application\Commands\ActivateOnboardingPlanCommand;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingPlan\OnboardingPlanId;
-use App\Modules\Onboarding\Domain\Repositories\OnboardingPlanRepositoryInterface;
 use App\Modules\Onboarding\Domain\Exceptions\OnboardingPlanNotFoundException;
+use App\Modules\Onboarding\Domain\Repositories\OnboardingPlanRepositoryInterface;
 
 class ActivateOnboardingPlanHandler
 {
@@ -16,9 +16,13 @@ class ActivateOnboardingPlanHandler
     public function handle(ActivateOnboardingPlanCommand $command): void
     {
         $plan = $this->planRepo->findById(OnboardingPlanId::fromString($command->planId));
-        if (!$plan) { throw new OnboardingPlanNotFoundException($command->planId); }
+        if (! $plan) {
+            throw new OnboardingPlanNotFoundException($command->planId);
+        }
         $plan->activate();
         $this->planRepo->save($plan);
-        foreach ($plan->popRecordedEvents() as $event) { event($event); }
+        foreach ($plan->popRecordedEvents() as $event) {
+            event($event);
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Modules\Workflow;
 
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -16,7 +17,7 @@ class WorkflowSlaEscalationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
         $res = $this->postJson('/api/v1/auth/login', ['email' => 'admin@ihrm.local', 'password' => 'password']);
         $this->token = $res->json('data.access_token');
     }

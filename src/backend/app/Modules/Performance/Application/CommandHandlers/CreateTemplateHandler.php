@@ -10,10 +10,12 @@ use App\Modules\Performance\Domain\Repositories\CompetencyTemplateRepositoryInte
 class CreateTemplateHandler
 {
     public function __construct(private readonly CompetencyTemplateRepositoryInterface $repo) {}
+
     public function handle(CreateTemplateCommand $cmd): CompetencyTemplate
     {
         $t = CompetencyTemplate::create(CompetencyTemplateId::generate(), $cmd->code, $cmd->name, $cmd->rules);
         $this->repo->save($t);
+
         return $t;
     }
 }

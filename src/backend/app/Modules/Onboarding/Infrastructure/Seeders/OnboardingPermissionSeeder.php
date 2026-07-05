@@ -2,10 +2,10 @@
 
 namespace App\Modules\Onboarding\Infrastructure\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\PermissionModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RoleModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RolePermissionModel;
+use Illuminate\Database\Seeder;
 
 class OnboardingPermissionSeeder extends Seeder
 {

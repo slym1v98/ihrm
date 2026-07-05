@@ -3,7 +3,12 @@
     "name": "intrustdss/ihrm-backend",
     "type": "project",
     "description": "iHRM (IntrustDSS Human Resource Management) backend.",
-    "keywords": ["ihrm", "hrm", "intrustdss", "laravel"],
+    "keywords": [
+        "ihrm",
+        "hrm",
+        "intrustdss",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -13,6 +18,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.0",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
@@ -66,7 +72,11 @@
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
-        ]
+        ],
+        "analyse": "phpstan analyse --memory-limit=2G",
+        "analyse:ci": "phpstan analyse --no-progress --error-format=github",
+        "lint": "pint",
+        "lint:test": "pint --test"
     },
     "extra": {
         "laravel": {

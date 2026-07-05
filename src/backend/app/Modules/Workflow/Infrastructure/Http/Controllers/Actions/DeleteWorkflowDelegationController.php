@@ -8,5 +8,9 @@ use App\Modules\Workflow\Infrastructure\Http\Controllers\WorkflowDelegationContr
 class DeleteWorkflowDelegationController
 {
     public function __construct(private WorkflowDelegationController $controller) {}
-    public function __invoke(string $id, RevokeWorkflowDelegationHandler $handler) { return $this->controller->destroy($id, $handler); }
+
+    public function __invoke(string $id, RevokeWorkflowDelegationHandler $handler)
+    {
+        return $this->controller->destroy($id, $handler);
+    }
 }

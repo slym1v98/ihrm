@@ -10,5 +10,9 @@ class DuplicateShiftTemplateCodeException extends AppException
     {
         parent::__construct('DUPLICATE_SHIFT_TEMPLATE_CODE', "Shift template code already exists: {$code}");
     }
-    public function getHttpStatus(): int { return 409; }
+
+    public function getHttpStatus(): int
+    {
+        return 409;
+    }
 }

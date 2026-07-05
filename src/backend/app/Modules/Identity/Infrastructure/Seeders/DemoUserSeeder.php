@@ -7,7 +7,6 @@ use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserRoleModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Ramsey\Uuid\Uuid;
 
 class DemoUserSeeder extends Seeder
 {

@@ -10,5 +10,9 @@ class ShiftTemplateNotFoundException extends AppException
     {
         parent::__construct('SHIFT_TEMPLATE_NOT_FOUND', "ShiftTemplate not found: {$id}");
     }
-    public function getHttpStatus(): int { return 404; }
+
+    public function getHttpStatus(): int
+    {
+        return 404;
+    }
 }

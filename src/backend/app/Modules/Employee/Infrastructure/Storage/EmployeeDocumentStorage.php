@@ -15,7 +15,7 @@ class EmployeeDocumentStorage
     {
         $name = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
         $extension = $file->getClientOriginalExtension();
-        $fileName = $documentId->value . '_' . $name . ($extension ? ".{$extension}" : '');
+        $fileName = $documentId->value.'_'.$name.($extension ? ".{$extension}" : '');
         $path = "employees/{$employeeId->value}/documents/{$fileName}";
 
         Storage::disk('minio')->put($path, file_get_contents($file->getRealPath()));

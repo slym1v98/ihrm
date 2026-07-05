@@ -30,6 +30,7 @@ final readonly class ShiftWindow
         if ($this->isOvernight) {
             return (1440 - $startMin) + $endMin;
         }
+
         return $endMin - $startMin;
     }
 
@@ -37,6 +38,7 @@ final readonly class ShiftWindow
     {
         $s = explode(':', $this->start);
         $e = explode(':', $this->end);
+
         return ((int) $s[0] * 60 + (int) $s[1]) > ((int) $e[0] * 60 + (int) $e[1]);
     }
 }

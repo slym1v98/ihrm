@@ -30,6 +30,7 @@ class AssetItem
     {
         $item = new self($id, $assetCode, $assetType, $name, $serialNumber, $condition, AssetItemStatus::Available, $notes, null, null);
         $item->recordedEvents[] = new AssetItemCreated($id);
+
         return $item;
     }
 
@@ -50,7 +51,7 @@ class AssetItem
 
     public function markStatus(AssetItemStatus $status): void
     {
-        if (!$this->status->canTransitionTo($status)) {
+        if (! $this->status->canTransitionTo($status)) {
             throw new AssetStatusTransitionException($this->status->value, $status->value);
         }
 
@@ -74,17 +75,55 @@ class AssetItem
         };
     }
 
-    public function getId(): AssetItemId { return $this->id; }
-    public function getAssetCode(): string { return $this->assetCode; }
-    public function getAssetType(): string { return $this->assetType; }
-    public function getName(): string { return $this->name; }
-    public function getSerialNumber(): ?string { return $this->serialNumber; }
-    public function getCondition(): AssetCondition { return $this->condition; }
-    public function getStatus(): AssetItemStatus { return $this->status; }
-    public function getNotes(): ?string { return $this->notes; }
-    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): AssetItemId
+    {
+        return $this->id;
+    }
 
+    public function getAssetCode(): string
+    {
+        return $this->assetCode;
+    }
+
+    public function getAssetType(): string
+    {
+        return $this->assetType;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getSerialNumber(): ?string
+    {
+        return $this->serialNumber;
+    }
+
+    public function getCondition(): AssetCondition
+    {
+        return $this->condition;
+    }
+
+    public function getStatus(): AssetItemStatus
+    {
+        return $this->status;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function toArray(): array
     {
@@ -102,6 +141,16 @@ class AssetItem
         ];
     }
 
-    public function recordEvent(object $event): void { $this->recordedEvents[] = $event; }
-    public function popRecordedEvents(): array { $events = $this->recordedEvents; $this->recordedEvents = []; return $events; }
+    public function recordEvent(object $event): void
+    {
+        $this->recordedEvents[] = $event;
+    }
+
+    public function popRecordedEvents(): array
+    {
+        $events = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $events;
+    }
 }

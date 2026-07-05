@@ -26,7 +26,9 @@ class AssignShiftHandler
         $this->authorizationService->requirePermission($userId, 'shift.template.update');
 
         $template = $this->templates->findById(ShiftTemplateId::fromString($command->shiftTemplateId));
-        if (!$template) throw new ShiftTemplateNotFoundException($command->shiftTemplateId);
+        if (! $template) {
+            throw new ShiftTemplateNotFoundException($command->shiftTemplateId);
+        }
 
         $assignment = ShiftAssignment::assign(
             ShiftAssignmentId::generate(),
@@ -44,6 +46,7 @@ class AssignShiftHandler
         );
 
         $this->assignments->saveAndDispatch($assignment);
+
         return $assignment;
     }
 }

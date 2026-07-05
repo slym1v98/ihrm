@@ -1,12 +1,13 @@
 <?php
+
 namespace Tests\Unit\Modules\Asset;
 
-use PHPUnit\Framework\TestCase;
 use App\Modules\Asset\Domain\Aggregates\AssetItem\AssetItem;
+use App\Modules\Asset\Domain\Exceptions\AssetStatusTransitionException;
 use App\Modules\Asset\Domain\ValueObjects\AssetCondition;
 use App\Modules\Asset\Domain\ValueObjects\AssetItemId;
 use App\Modules\Asset\Domain\ValueObjects\AssetItemStatus;
-use App\Modules\Asset\Domain\Exceptions\AssetStatusTransitionException;
+use PHPUnit\Framework\TestCase;
 
 class AssetItemTest extends TestCase
 {

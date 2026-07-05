@@ -4,7 +4,6 @@ namespace App\Modules\Notification\Infrastructure\Persistence\Repositories;
 
 use App\Modules\Notification\Domain\Aggregates\NotificationMessage\NotificationMessage;
 use App\Modules\Notification\Domain\Aggregates\NotificationMessage\NotificationMessageId;
-use App\Modules\Notification\Domain\Aggregates\MessageTemplate\MessageTemplate;
 use App\Modules\Notification\Domain\Repositories\NotificationMessageRepositoryInterface;
 use App\Modules\Notification\Domain\ValueObjects\Channel;
 use App\Modules\Notification\Domain\ValueObjects\MessageStatus;
@@ -20,6 +19,7 @@ class EloquentNotificationMessageRepository implements NotificationMessageReposi
     public function findById(NotificationMessageId $id): ?NotificationMessage
     {
         $record = $this->model->find($id->value());
+
         return $record ? self::toDomain($record) : null;
     }
 
@@ -29,6 +29,7 @@ class EloquentNotificationMessageRepository implements NotificationMessageReposi
         if ($status !== null) {
             $query->where('status', $status);
         }
+
         return $query->orderByDesc('created_at')->paginate($perPage);
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Application\CommandHandlers;
 
 use App\Modules\Asset\Application\Commands\CreateAssetItemCommand;
@@ -25,6 +26,7 @@ class CreateAssetItemHandler
             $command->notes,
         );
         $this->repo->save($item);
+
         return $item;
     }
 }

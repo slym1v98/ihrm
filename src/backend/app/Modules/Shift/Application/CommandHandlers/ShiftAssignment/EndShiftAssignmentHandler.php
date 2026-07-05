@@ -17,7 +17,9 @@ class EndShiftAssignmentHandler
     {
         $this->authorizationService->requirePermission($userId, 'shift.template.update');
         $assignment = $this->assignments->findById(ShiftAssignmentId::fromString($command->id));
-        if (!$assignment) throw new ShiftAssignmentNotFoundException($command->id);
+        if (! $assignment) {
+            throw new ShiftAssignmentNotFoundException($command->id);
+        }
         $assignment->endAssignment(new DateTimeImmutable($command->effectiveTo));
         $this->assignments->saveAndDispatch($assignment);
     }

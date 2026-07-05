@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Modules\Onboarding;
 
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Organization\Infrastructure\Persistence\Eloquent\DepartmentModel;
 use Tests\TestCase;
 
 class OnboardingApiTest extends TestCase
@@ -15,7 +15,7 @@ class OnboardingApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
         $response = $this->postJson('/api/v1/auth/login', ['email' => 'admin@ihrm.local', 'password' => 'password']);
         $this->token = $response->json('data.access_token');
     }

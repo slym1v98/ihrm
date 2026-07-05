@@ -89,14 +89,53 @@ class NotificationOutbox
         return self::BACKOFF_BASE * (2 ** $this->attempts);
     }
 
-    public function getId(): NotificationOutboxId { return $this->id; }
-    public function getNotificationMessageId(): string { return $this->notificationMessageId; }
-    public function getChannel(): Channel { return $this->channel; }
-    public function getStatus(): OutboxStatus { return $this->status; }
-    public function getAttempts(): int { return $this->attempts; }
-    public function getMaxAttempts(): int { return $this->maxAttempts; }
-    public function getAvailableAt(): CarbonImmutable { return $this->availableAt; }
-    public function getLockedAt(): ?CarbonImmutable { return $this->lockedAt; }
-    public function getLockedBy(): ?string { return $this->lockedBy; }
-    public function getLastError(): ?string { return $this->lastError; }
+    public function getId(): NotificationOutboxId
+    {
+        return $this->id;
+    }
+
+    public function getNotificationMessageId(): string
+    {
+        return $this->notificationMessageId;
+    }
+
+    public function getChannel(): Channel
+    {
+        return $this->channel;
+    }
+
+    public function getStatus(): OutboxStatus
+    {
+        return $this->status;
+    }
+
+    public function getAttempts(): int
+    {
+        return $this->attempts;
+    }
+
+    public function getMaxAttempts(): int
+    {
+        return $this->maxAttempts;
+    }
+
+    public function getAvailableAt(): CarbonImmutable
+    {
+        return $this->availableAt;
+    }
+
+    public function getLockedAt(): ?CarbonImmutable
+    {
+        return $this->lockedAt;
+    }
+
+    public function getLockedBy(): ?string
+    {
+        return $this->lockedBy;
+    }
+
+    public function getLastError(): ?string
+    {
+        return $this->lastError;
+    }
 }

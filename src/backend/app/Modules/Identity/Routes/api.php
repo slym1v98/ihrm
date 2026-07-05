@@ -1,31 +1,27 @@
 <?php
 
-use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\{
-    ActivateRoleController,
-    AssignRoleUserController,
-    ChangePasswordAuthController,
-    DeactivateRoleController,
-    DisableUserController,
-    GrantPermissionRoleController,
-    ListPermissionController,
-    ListRoleController,
-    ListUserController,
-    LoginAuthController,
-    LogoutAuthController,
-    MeAuthController,
-    ReactivateUserController,
-    RevokePermissionRoleController,
-    RevokeRoleUserController,
-    ShowRoleController,
-    ShowUserController,
-    StoreRoleController,
-    StoreUserController,
-    UpdateRoleController,
-    UpdateUserController,
-};
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\ActivateRoleController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\AssignRoleUserController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\ChangePasswordAuthController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\DeactivateRoleController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\DisableUserController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\GrantPermissionRoleController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\ListPermissionController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\ListRoleController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\ListUserController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\LoginAuthController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\LogoutAuthController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\MeAuthController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\ReactivateUserController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\RevokePermissionRoleController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\RevokeRoleUserController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\ShowRoleController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\ShowUserController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\StoreRoleController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\StoreUserController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\UpdateRoleController;
+use App\Modules\Identity\Infrastructure\Http\Controllers\Actions\UpdateUserController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1')->group(function () {
     Route::post('/auth/login', LoginAuthController::class);

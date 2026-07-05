@@ -32,7 +32,7 @@ class EmployeeTest extends TestCase
         $employee = Employee::create(EmployeeId::generate(), EmployeeCode::fromString('EMP001'), PersonalName::of('Ada', 'Lovelace'));
 
         $this->expectException(InvalidEmployeeStatusTransitionException::class);
-        $employee->changeStatus(EmployeeStatus::Resigned, new EmployeeLifecyclePolicy());
+        $employee->changeStatus(EmployeeStatus::Resigned, new EmployeeLifecyclePolicy);
     }
 
     public function test_valid_status_transition_emits_event(): void
@@ -40,7 +40,7 @@ class EmployeeTest extends TestCase
         $employee = Employee::create(EmployeeId::generate(), EmployeeCode::fromString('EMP001'), PersonalName::of('Ada', 'Lovelace'));
         $employee->releaseEvents();
 
-        $employee->changeStatus(EmployeeStatus::Active, new EmployeeLifecyclePolicy());
+        $employee->changeStatus(EmployeeStatus::Active, new EmployeeLifecyclePolicy);
 
         $events = $employee->releaseEvents();
         $this->assertCount(1, $events);

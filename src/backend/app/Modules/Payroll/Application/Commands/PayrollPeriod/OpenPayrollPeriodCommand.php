@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Modules\Payroll\Application\Commands\PayrollPeriod;
+
 use DateTimeImmutable;
+
 readonly class OpenPayrollPeriodCommand
 {
     public function __construct(

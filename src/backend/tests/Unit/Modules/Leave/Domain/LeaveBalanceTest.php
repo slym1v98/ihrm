@@ -1,5 +1,7 @@
 <?php
+
 namespace Tests\Unit\Modules\Leave\Domain;
+
 use App\Modules\Leave\Domain\Aggregates\LeaveBalance\LeaveBalance;
 use App\Modules\Leave\Domain\Aggregates\LeaveBalance\LeaveBalanceId;
 use App\Modules\Leave\Domain\Aggregates\LeaveType\LeaveTypeId;

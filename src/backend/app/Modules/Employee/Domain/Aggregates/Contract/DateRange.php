@@ -9,8 +9,7 @@ final readonly class DateRange
     public function __construct(
         public DateTimeImmutable $start,
         public ?DateTimeImmutable $end = null,
-    ) {
-    }
+    ) {}
 
     public function includes(DateTimeImmutable $date): bool
     {
@@ -20,6 +19,7 @@ final readonly class DateRange
         if ($this->end !== null && $date > $this->end) {
             return false;
         }
+
         return true;
     }
 
@@ -31,6 +31,7 @@ final readonly class DateRange
         if ($other->end === null) {
             return $this->end >= $other->start;
         }
+
         return $this->start <= $other->end && $other->start <= $this->end;
     }
 }

@@ -14,6 +14,7 @@ class EloquentAttendanceTimesheetRepository implements AttendanceTimesheetReposi
     public function findById(string $id): ?AttendanceTimesheet
     {
         $model = AttendanceTimesheetModel::find($id);
+
         return $model ? $this->toAggregate($model) : null;
     }
 
@@ -23,6 +24,7 @@ class EloquentAttendanceTimesheetRepository implements AttendanceTimesheetReposi
             ->where('work_date', $workDate)
             ->where('attendance_period_id', $periodId)
             ->first();
+
         return $model ? $this->toAggregate($model) : null;
     }
 

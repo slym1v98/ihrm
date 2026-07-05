@@ -3,8 +3,8 @@
 namespace App\Modules\Payroll\Infrastructure\Ports;
 
 use App\Modules\Payroll\Domain\Ports\AttendanceReadPort;
-use Illuminate\Support\Facades\DB;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseAttendanceReadPort implements AttendanceReadPort
 {
@@ -33,6 +33,7 @@ class DatabaseAttendanceReadPort implements AttendanceReadPort
                 'unpaid_leave_minutes' => (int) $rows->unpaid_leave_minutes,
             ];
         }
-        return ['worked_minutes'=>0,'overtime_minutes'=>0,'late_minutes'=>0,'early_leave_minutes'=>0,'paid_leave_minutes'=>0,'unpaid_leave_minutes'=>0];
+
+        return ['worked_minutes' => 0, 'overtime_minutes' => 0, 'late_minutes' => 0, 'early_leave_minutes' => 0, 'paid_leave_minutes' => 0, 'unpaid_leave_minutes' => 0];
     }
 }

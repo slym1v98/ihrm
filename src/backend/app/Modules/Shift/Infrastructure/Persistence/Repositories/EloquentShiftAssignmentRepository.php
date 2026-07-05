@@ -18,19 +18,20 @@ class EloquentShiftAssignmentRepository implements ShiftAssignmentRepositoryInte
     public function findById(ShiftAssignmentId $id): ?ShiftAssignment
     {
         $record = $this->model->find($id->value);
+
         return $record ? $this->toDomain($record) : null;
     }
 
     public function findByEmployeeId(string $employeeId): array
     {
         return $this->model->where('assignable_type', 'employee')->where('assignable_id', $employeeId)
-            ->get()->map(fn($r) => $this->toDomain($r))->all();
+            ->get()->map(fn ($r) => $this->toDomain($r))->all();
     }
 
     public function findByDepartmentId(string $departmentId): array
     {
         return $this->model->where('assignable_type', 'department')->where('assignable_id', $departmentId)
-            ->get()->map(fn($r) => $this->toDomain($r))->all();
+            ->get()->map(fn ($r) => $this->toDomain($r))->all();
     }
 
     public function findActiveByEntity(string $entityType, string $entityId, DateTimeImmutable $date): array
@@ -43,13 +44,12 @@ class EloquentShiftAssignmentRepository implements ShiftAssignmentRepositoryInte
                 $q->whereNull('effective_to')->orWhere('effective_to', '>=', $date->format('Y-m-d'));
             })
             ->where('effective_from', '<=', $date->format('Y-m-d'))
-            ->get()->map(fn($r) => $this->toDomain($r))->all();
+            ->get()->map(fn ($r) => $this->toDomain($r))->all();
     }
 
     public function findAllPaginated(int $page, int $perPage = 15): array
     {
-        return $this->model->query()->orderBy('created_at', 'desc')
-            ->paginate($perPage, ['*'], 'page', $page)->items();
+        return array_map(fn ($m) => $this->toDomain($m), $this->model->query()->orderBy('created_at', 'desc')->paginate($perPage, ['*'], 'page', $page)->items());
     }
 
     public function saveAndDispatch(ShiftAssignment $assignment): void

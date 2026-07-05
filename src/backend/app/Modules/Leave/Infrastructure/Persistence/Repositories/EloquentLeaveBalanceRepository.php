@@ -19,6 +19,7 @@ class EloquentLeaveBalanceRepository implements LeaveBalanceRepositoryInterface
             ->where('leave_type_id', $typeId->value())
             ->where('year', $year)
             ->first();
+
         return $record ? self::toDomain($record) : null;
     }
 
@@ -28,7 +29,8 @@ class EloquentLeaveBalanceRepository implements LeaveBalanceRepositoryInterface
         if ($year) {
             $query->where('year', $year);
         }
-        return $query->get()->map(fn($r) => self::toDomain($r))->all();
+
+        return $query->get()->map(fn ($r) => self::toDomain($r))->all();
     }
 
     public function save(LeaveBalance $balance): void

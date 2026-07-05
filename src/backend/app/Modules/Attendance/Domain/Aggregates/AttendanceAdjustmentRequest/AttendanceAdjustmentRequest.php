@@ -106,17 +106,57 @@ class AttendanceAdjustmentRequest
     {
         $events = $this->events;
         $this->events = [];
+
         return $events;
     }
 
-    public function id(): AttendanceAdjustmentRequestId { return $this->id; }
-    public function attendanceTimesheetId(): string { return $this->attendanceTimesheetId; }
-    public function employeeId(): string { return $this->employeeId; }
-    public function requestedBy(): string { return $this->requestedBy; }
-    public function reason(): string { return $this->reason; }
-    public function evidenceFile(): ?string { return $this->evidenceFile; }
-    public function corrections(): array { return $this->corrections; }
-    public function status(): AdjustmentStatus { return $this->status; }
-    public function approvedBy(): ?string { return $this->approvedBy; }
-    public function approvedAt(): ?CarbonImmutable { return $this->approvedAt; }
+    public function id(): AttendanceAdjustmentRequestId
+    {
+        return $this->id;
+    }
+
+    public function attendanceTimesheetId(): string
+    {
+        return $this->attendanceTimesheetId;
+    }
+
+    public function employeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    public function requestedBy(): string
+    {
+        return $this->requestedBy;
+    }
+
+    public function reason(): string
+    {
+        return $this->reason;
+    }
+
+    public function evidenceFile(): ?string
+    {
+        return $this->evidenceFile;
+    }
+
+    public function corrections(): array
+    {
+        return $this->corrections;
+    }
+
+    public function status(): AdjustmentStatus
+    {
+        return $this->status;
+    }
+
+    public function approvedBy(): ?string
+    {
+        return $this->approvedBy;
+    }
+
+    public function approvedAt(): ?CarbonImmutable
+    {
+        return $this->approvedAt;
+    }
 }

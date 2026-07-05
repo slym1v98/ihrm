@@ -11,7 +11,6 @@ use App\Modules\Notification\Domain\Aggregates\NotificationOutbox\NotificationOu
 use App\Modules\Notification\Domain\Aggregates\UserNotificationPreference\UserNotificationPreference;
 use App\Modules\Notification\Domain\Aggregates\UserNotificationPreference\UserNotificationPreferenceId;
 use App\Modules\Notification\Domain\ValueObjects\Channel;
-use App\Modules\Notification\Domain\ValueObjects\NotificationPriority;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\TestCase;
 

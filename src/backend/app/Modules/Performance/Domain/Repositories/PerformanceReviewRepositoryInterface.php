@@ -8,7 +8,10 @@ use App\Modules\Performance\Domain\Aggregates\PerformanceReview\PerformanceRevie
 interface PerformanceReviewRepositoryInterface
 {
     public function findById(PerformanceReviewId $id): ?PerformanceReview;
+
     public function findByCycleAndEmployee(string $cycleId, string $employeeId): ?PerformanceReview;
+
     public function findByCycleId(string $cycleId): array;
+
     public function save(PerformanceReview $review): void;
 }

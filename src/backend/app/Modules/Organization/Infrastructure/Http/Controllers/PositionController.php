@@ -52,13 +52,15 @@ class PositionController
         );
 
         $model = PositionModel::find($position->id()->value);
+
         return response()->json(['data' => new PositionResource($model)], 201);
     }
 
     public function show(string $id): JsonResponse
     {
         $model = PositionModel::find($id);
-        abort_if(!$model, 404, 'Position not found');
+        abort_if(! $model, 404, 'Position not found');
+
         return response()->json(['data' => new PositionResource($model)]);
     }
 
@@ -75,6 +77,7 @@ class PositionController
         );
 
         $model = PositionModel::find($id);
+
         return response()->json(['data' => new PositionResource($model)]);
     }
 
@@ -84,6 +87,7 @@ class PositionController
             new ActivatePositionCommand(PositionId::fromString($id)),
             (string) $request->user()->id,
         );
+
         return response()->json(['message' => 'Activated']);
     }
 
@@ -93,6 +97,7 @@ class PositionController
             new DeactivatePositionCommand(PositionId::fromString($id)),
             (string) $request->user()->id,
         );
+
         return response()->json(['message' => 'Deactivated']);
     }
 }

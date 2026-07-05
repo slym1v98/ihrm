@@ -3,8 +3,8 @@
 namespace App\Modules\Payroll\Infrastructure\Ports;
 
 use App\Modules\Payroll\Domain\Ports\EmployeeContractReadPort;
-use Illuminate\Support\Facades\DB;
 use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseEmployeeContractReadPort implements EmployeeContractReadPort
 {
@@ -16,7 +16,9 @@ class DatabaseEmployeeContractReadPort implements EmployeeContractReadPort
             ->orderBy('start_date', 'desc')
             ->first();
 
-        if (!$row) return null;
+        if (! $row) {
+            return null;
+        }
 
         return [
             'employee_id' => $row->employee_id,
@@ -31,7 +33,7 @@ class DatabaseEmployeeContractReadPort implements EmployeeContractReadPort
         return DB::table('employees')
             ->where('status', 'active')
             ->pluck('id')
-            ->map(fn($v) => (string)$v)
+            ->map(fn ($v) => (string) $v)
             ->all();
     }
 }

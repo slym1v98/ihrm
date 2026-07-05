@@ -21,12 +21,14 @@ class EloquentRoleRepository implements RoleRepositoryInterface
     public function findById(RoleId $id): ?Role
     {
         $model = RoleModel::with('rolePermissions')->find((string) $id);
+
         return $model ? $this->toDomain($model) : null;
     }
 
     public function findByCode(RoleCode $code): ?Role
     {
         $model = RoleModel::with('rolePermissions')->where('code', (string) $code)->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 

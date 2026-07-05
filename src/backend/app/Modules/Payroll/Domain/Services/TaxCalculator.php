@@ -13,7 +13,9 @@ class TaxCalculator
     public function calculate(Money $taxableGross, array $brackets = []): Money
     {
         $decimal = $taxableGross->toDecimal();
-        if ($decimal <= 0) return Money::zero();
+        if ($decimal <= 0) {
+            return Money::zero();
+        }
 
         if (empty($brackets)) {
             return Money::fromDecimal($decimal * 0.10);
@@ -29,12 +31,14 @@ class TaxCalculator
                 $prev = $limit;
             } else {
                 $tax += ($decimal - $prev) * $rate;
+
                 return Money::fromDecimal($tax);
             }
         }
         // If exceeds all brackets, use last bracket's rate for remainder
         $lastRate = end($brackets)['rate'] / 100;
         $tax += ($decimal - $prev) * $lastRate;
+
         return Money::fromDecimal($tax);
     }
 }

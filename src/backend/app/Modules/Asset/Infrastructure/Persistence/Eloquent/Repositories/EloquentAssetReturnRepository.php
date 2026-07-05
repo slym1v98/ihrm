@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories;
 
 use App\Modules\Asset\Domain\Aggregates\AssetReturn\AssetReturn;
@@ -13,6 +14,7 @@ class EloquentAssetReturnRepository implements AssetReturnRepositoryInterface
     public function findById(AssetReturnId $id): ?AssetReturn
     {
         $model = AssetReturnModel::find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 

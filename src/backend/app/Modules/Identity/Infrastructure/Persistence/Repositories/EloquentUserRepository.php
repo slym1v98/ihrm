@@ -27,12 +27,14 @@ class EloquentUserRepository implements UserRepositoryInterface
     public function findById(UserId $id): ?User
     {
         $model = UserModel::with(['userRoles', 'dataScopeAssignments'])->find((string) $id);
+
         return $model ? $this->toDomain($model) : null;
     }
 
     public function findByEmail(Email $email): ?User
     {
         $model = UserModel::with(['userRoles', 'dataScopeAssignments'])->where('email', (string) $email)->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 

@@ -85,7 +85,7 @@ class OnboardingTask
 
     public function start(): void
     {
-        if (!$this->status->canTransitionTo(OnboardingTaskStatus::InProgress)) {
+        if (! $this->status->canTransitionTo(OnboardingTaskStatus::InProgress)) {
             throw new InvalidStatusTransitionException($this->status->value, OnboardingTaskStatus::InProgress->value);
         }
         $this->status = OnboardingTaskStatus::InProgress;
@@ -94,12 +94,13 @@ class OnboardingTask
 
     public function complete(?string $proofFileObjectId = null): void
     {
-        if (!$this->status->canTransitionTo(OnboardingTaskStatus::Completed)) {
+        if (! $this->status->canTransitionTo(OnboardingTaskStatus::Completed)) {
             throw new InvalidStatusTransitionException($this->status->value, OnboardingTaskStatus::Completed->value);
         }
 
         if ($this->requiresApproval) {
             $this->proofFileObjectId = $proofFileObjectId;
+
             return;
         }
 
@@ -110,7 +111,7 @@ class OnboardingTask
 
     public function waive(?string $reason = null): void
     {
-        if (!$this->status->canTransitionTo(OnboardingTaskStatus::Waived)) {
+        if (! $this->status->canTransitionTo(OnboardingTaskStatus::Waived)) {
             throw new InvalidStatusTransitionException($this->status->value, OnboardingTaskStatus::Waived->value);
         }
         $this->status = OnboardingTaskStatus::Waived;
@@ -122,35 +123,98 @@ class OnboardingTask
         if ($this->status !== OnboardingTaskStatus::InProgress) {
             throw new InvalidStatusTransitionException($this->status->value, OnboardingTaskStatus::Completed->value);
         }
-        if (!$this->requiresApproval) {
+        if (! $this->requiresApproval) {
             throw new \RuntimeException('Task does not require approval');
         }
         $this->status = OnboardingTaskStatus::Completed;
         $this->recordEvent(new OnboardingTaskCompleted($this->id, $this->planId, $this->proofFileObjectId));
     }
 
-    public function setApprovalWorkflowRequestId(string $id): void { $this->approvalWorkflowRequestId = $id; }
+    public function setApprovalWorkflowRequestId(string $id): void
+    {
+        $this->approvalWorkflowRequestId = $id;
+    }
 
-    public function recordEvent(object $event): void { $this->recordedEvents[] = $event; }
+    public function recordEvent(object $event): void
+    {
+        $this->recordedEvents[] = $event;
+    }
+
     public function popRecordedEvents(): array
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 
-    public function getId(): OnboardingTaskId { return $this->id; }
-    public function getPlanId(): string { return $this->planId; }
-    public function getTaskType(): TaskType { return $this->taskType; }
-    public function getOwnerType(): OwnerType { return $this->ownerType; }
-    public function getOwnerId(): string { return $this->ownerId; }
-    public function getTitle(): string { return $this->title; }
-    public function getDescription(): ?string { return $this->description; }
-    public function getDueDate(): ?\DateTimeImmutable { return $this->dueDate; }
-    public function getStatus(): OnboardingTaskStatus { return $this->status; }
-    public function isRequiresApproval(): bool { return $this->requiresApproval; }
-    public function getApprovalWorkflowRequestId(): ?string { return $this->approvalWorkflowRequestId; }
-    public function getProofFileObjectId(): ?string { return $this->proofFileObjectId; }
-    public function getSortOrder(): int { return $this->sortOrder; }
-    public function isPreStart(): bool { return $this->isPreStart; }
+    public function getId(): OnboardingTaskId
+    {
+        return $this->id;
+    }
+
+    public function getPlanId(): string
+    {
+        return $this->planId;
+    }
+
+    public function getTaskType(): TaskType
+    {
+        return $this->taskType;
+    }
+
+    public function getOwnerType(): OwnerType
+    {
+        return $this->ownerType;
+    }
+
+    public function getOwnerId(): string
+    {
+        return $this->ownerId;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function getDueDate(): ?\DateTimeImmutable
+    {
+        return $this->dueDate;
+    }
+
+    public function getStatus(): OnboardingTaskStatus
+    {
+        return $this->status;
+    }
+
+    public function isRequiresApproval(): bool
+    {
+        return $this->requiresApproval;
+    }
+
+    public function getApprovalWorkflowRequestId(): ?string
+    {
+        return $this->approvalWorkflowRequestId;
+    }
+
+    public function getProofFileObjectId(): ?string
+    {
+        return $this->proofFileObjectId;
+    }
+
+    public function getSortOrder(): int
+    {
+        return $this->sortOrder;
+    }
+
+    public function isPreStart(): bool
+    {
+        return $this->isPreStart;
+    }
 }

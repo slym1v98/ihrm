@@ -95,19 +95,67 @@ class AttendanceTimesheet
     {
         $events = $this->events;
         $this->events = [];
+
         return $events;
     }
 
-    public function id(): AttendanceTimesheetId { return $this->id; }
-    public function attendancePeriodId(): string { return $this->attendancePeriodId; }
-    public function employeeId(): string { return $this->employeeId; }
-    public function workDate(): CarbonImmutable { return $this->workDate; }
-    public function shiftAssignmentId(): ?string { return $this->shiftAssignmentId; }
-    public function expectedMinutes(): int { return $this->expectedMinutes; }
-    public function workedMinutes(): int { return $this->workedMinutes; }
-    public function lateMinutes(): int { return $this->lateMinutes; }
-    public function earlyLeaveMinutes(): int { return $this->earlyLeaveMinutes; }
-    public function overtimeMinutes(): int { return $this->overtimeMinutes; }
-    public function resultStatus(): AttendanceStatus { return $this->resultStatus; }
-    public function calculationRunId(): ?string { return $this->calculationRunId; }
+    public function id(): AttendanceTimesheetId
+    {
+        return $this->id;
+    }
+
+    public function attendancePeriodId(): string
+    {
+        return $this->attendancePeriodId;
+    }
+
+    public function employeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    public function workDate(): CarbonImmutable
+    {
+        return $this->workDate;
+    }
+
+    public function shiftAssignmentId(): ?string
+    {
+        return $this->shiftAssignmentId;
+    }
+
+    public function expectedMinutes(): int
+    {
+        return $this->expectedMinutes;
+    }
+
+    public function workedMinutes(): int
+    {
+        return $this->workedMinutes;
+    }
+
+    public function lateMinutes(): int
+    {
+        return $this->lateMinutes;
+    }
+
+    public function earlyLeaveMinutes(): int
+    {
+        return $this->earlyLeaveMinutes;
+    }
+
+    public function overtimeMinutes(): int
+    {
+        return $this->overtimeMinutes;
+    }
+
+    public function resultStatus(): AttendanceStatus
+    {
+        return $this->resultStatus;
+    }
+
+    public function calculationRunId(): ?string
+    {
+        return $this->calculationRunId;
+    }
 }

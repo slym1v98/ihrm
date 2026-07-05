@@ -11,5 +11,8 @@ class NotificationMessageNotFoundException extends AppException
         parent::__construct('NOTIFICATION_MESSAGE_NOT_FOUND', trim('Notification message not found: '.$detail));
     }
 
-    public function getHttpStatus(): int { return 404; }
+    public function getHttpStatus(): int
+    {
+        return 404;
+    }
 }

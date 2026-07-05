@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Modules\Recruitment\Domain;
 
-use App\Modules\Recruitment\Domain\Aggregates\RecruitmentRequisition\RecruitmentRequisition;
-use App\Modules\Recruitment\Domain\Aggregates\RecruitmentRequisition\RecruitmentRequisitionId;
 use App\Modules\Recruitment\Domain\Aggregates\Candidate\Candidate;
 use App\Modules\Recruitment\Domain\Aggregates\Candidate\CandidateId;
 use App\Modules\Recruitment\Domain\Aggregates\Interview\Interview;
 use App\Modules\Recruitment\Domain\Aggregates\Interview\InterviewId;
 use App\Modules\Recruitment\Domain\Aggregates\Offer\Offer;
 use App\Modules\Recruitment\Domain\Aggregates\Offer\OfferId;
+use App\Modules\Recruitment\Domain\Aggregates\RecruitmentRequisition\RecruitmentRequisition;
+use App\Modules\Recruitment\Domain\Aggregates\RecruitmentRequisition\RecruitmentRequisitionId;
 use App\Modules\Recruitment\Domain\ValueObjects\CandidateSource;
 use App\Modules\Recruitment\Domain\ValueObjects\CandidateStatus;
 use App\Modules\Recruitment\Domain\ValueObjects\OfferStatus;

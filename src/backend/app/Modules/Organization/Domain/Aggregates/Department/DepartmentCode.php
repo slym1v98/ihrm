@@ -6,9 +6,7 @@ use App\Modules\Organization\Domain\Exceptions\InvalidOrganizationCodeException;
 
 final readonly class DepartmentCode
 {
-    private function __construct(public string $value)
-    {
-    }
+    private function __construct(public string $value) {}
 
     public static function fromString(string $value): self
     {

@@ -1,19 +1,17 @@
 <?php
 
-use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\{
-    ActivateShiftTemplateController,
-    DeactivateShiftTemplateController,
-    DepartmentShiftsShiftAssignmentController,
-    EmployeeShiftsShiftAssignmentController,
-    EndShiftAssignmentController,
-    ListShiftAssignmentController,
-    ListShiftTemplateController,
-    ShowShiftTemplateController,
-    StoreShiftAssignmentController,
-    StoreShiftTemplateController,
-    UpdateShiftAssignmentController,
-    UpdateShiftTemplateController,
-};
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\ActivateShiftTemplateController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\DeactivateShiftTemplateController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\DepartmentShiftsShiftAssignmentController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\EmployeeShiftsShiftAssignmentController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\EndShiftAssignmentController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\ListShiftAssignmentController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\ListShiftTemplateController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\ShowShiftTemplateController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\StoreShiftAssignmentController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\StoreShiftTemplateController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\UpdateShiftAssignmentController;
+use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\UpdateShiftTemplateController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {

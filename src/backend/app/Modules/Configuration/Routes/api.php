@@ -1,25 +1,21 @@
 <?php
 
-use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\{
-    ListCodeGenerationRuleController,
-    ListHolidayCalendarController,
-    ListLookupController,
-    ListNotificationThresholdController,
-    ListSystemSettingController,
-    NextCodeGenerationRuleController,
-    PreviewCodeGenerationRuleController,
-    ShowLookupController,
-    StoreCodeGenerationRuleController,
-    StoreHolidayCalendarController,
-    StoreHolidayHolidayCalendarController,
-    StoreLookupController,
-    StoreNotificationThresholdController,
-    StoreSystemSettingController,
-    StoreValueLookupController,
-};
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\ListCodeGenerationRuleController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\ListHolidayCalendarController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\ListLookupController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\ListNotificationThresholdController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\ListSystemSettingController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\NextCodeGenerationRuleController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\PreviewCodeGenerationRuleController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\ShowLookupController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\StoreCodeGenerationRuleController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\StoreHolidayCalendarController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\StoreHolidayHolidayCalendarController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\StoreLookupController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\StoreNotificationThresholdController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\StoreSystemSettingController;
+use App\Modules\Configuration\Infrastructure\Http\Controllers\Actions\StoreValueLookupController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::middleware(['auth:sanctum'])->prefix('v1/config')->group(function () {
     Route::get('lookups', ListLookupController::class)->middleware('permission:configuration.lookup.list');

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Modules\Reporting;
 
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,7 +15,7 @@ class ReportingApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $response = $this->postJson('/api/v1/auth/login', [
             'email' => 'admin@ihrm.local',
@@ -57,7 +58,7 @@ class ReportingApiTest extends TestCase
     {
         $response = $this->withToken($this->token)->getJson('/api/v1/reports');
         $data = $response->json('data');
-        $codes = array_map(fn($d) => $d['code'], $data);
+        $codes = array_map(fn ($d) => $d['code'], $data);
         $this->assertContains('attendance.summary', $codes);
         $this->assertContains('leave.balance', $codes);
         $this->assertContains('payroll.summary', $codes);

@@ -8,8 +8,8 @@ use App\Modules\Payroll\Domain\Aggregates\PayrollEntry\PayrollEntryId;
 use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriodId;
 use App\Modules\Payroll\Domain\Aggregates\PayrollRun\PayrollRunId;
 use App\Modules\Payroll\Domain\Ports\AttendanceReadPort;
-use App\Modules\Payroll\Domain\Ports\LeaveReadPort;
 use App\Modules\Payroll\Domain\Ports\EmployeeContractReadPort;
+use App\Modules\Payroll\Domain\Ports\LeaveReadPort;
 use DateTimeImmutable;
 
 class PayrollCalculator
@@ -22,8 +22,8 @@ class PayrollCalculator
     ) {}
 
     /**
-     * @param string[] $employeeIds
-     * @param PayrollComponent[] $components
+     * @param  string[]  $employeeIds
+     * @param  PayrollComponent[]  $components
      * @return PayrollEntry[]
      */
     public function calculateForPeriod(
@@ -43,6 +43,7 @@ class PayrollCalculator
                         PayrollEntryId::generate(), $runId, $periodId, $employeeId,
                         'No active contract found.'
                     );
+
                     continue;
                 }
                 $attendance = $this->attendancePort->getAttendanceForEmployee($employeeId, $startDate, $endDate);
@@ -66,6 +67,7 @@ class PayrollCalculator
                 );
             }
         }
+
         return $entries;
     }
 }

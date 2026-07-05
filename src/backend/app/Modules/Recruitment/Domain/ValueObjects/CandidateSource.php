@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Modules\Recruitment\Domain\ValueObjects;
-enum CandidateSource: string {
+
+enum CandidateSource: string
+{
     case Referral = 'referral';
     case Linkedin = 'linkedin';
     case Website = 'website';

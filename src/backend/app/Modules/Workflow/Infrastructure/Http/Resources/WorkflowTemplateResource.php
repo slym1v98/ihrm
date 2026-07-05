@@ -2,7 +2,6 @@
 
 namespace App\Modules\Workflow\Infrastructure\Http\Resources;
 
-use App\Modules\Workflow\Domain\Aggregates\WorkflowTemplate\WorkflowTemplate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class WorkflowTemplateResource extends JsonResource
@@ -10,6 +9,7 @@ class WorkflowTemplateResource extends JsonResource
     public function toArray($request)
     {
         $template = $this->resource;
+
         return [
             'id' => $template->id()->value(),
             'code' => $template->code(),

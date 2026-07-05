@@ -44,8 +44,8 @@ class ReportRun
 
     public function start(CarbonImmutable $at): void
     {
-        if (!$this->status->canTransitionTo(ReportRunStatus::Running)) {
-            throw new \InvalidArgumentException('Cannot transition from ' . $this->status->value . ' to running');
+        if (! $this->status->canTransitionTo(ReportRunStatus::Running)) {
+            throw new \InvalidArgumentException('Cannot transition from '.$this->status->value.' to running');
         }
         $this->status = ReportRunStatus::Running;
         $this->startedAt = $at;
@@ -53,8 +53,8 @@ class ReportRun
 
     public function complete(array $result, CarbonImmutable $at): void
     {
-        if (!$this->status->canTransitionTo(ReportRunStatus::Completed)) {
-            throw new \InvalidArgumentException('Cannot transition from ' . $this->status->value . ' to completed');
+        if (! $this->status->canTransitionTo(ReportRunStatus::Completed)) {
+            throw new \InvalidArgumentException('Cannot transition from '.$this->status->value.' to completed');
         }
         $this->status = ReportRunStatus::Completed;
         $this->result = $result;
@@ -63,19 +63,56 @@ class ReportRun
 
     public function fail(string $error, CarbonImmutable $at): void
     {
-        if ($this->status === ReportRunStatus::Failed) return;
+        if ($this->status === ReportRunStatus::Failed) {
+            return;
+        }
         $this->status = ReportRunStatus::Failed;
         $this->error = $error;
         $this->completedAt = $at;
     }
 
-    public function getId(): ReportRunId { return $this->id; }
-    public function getReportDefinitionId(): string { return $this->reportDefinitionId; }
-    public function getRequestedBy(): string { return $this->requestedBy; }
-    public function getFilters(): array { return $this->filters; }
-    public function getStatus(): ReportRunStatus { return $this->status; }
-    public function getResult(): ?array { return $this->result; }
-    public function getError(): ?string { return $this->error; }
-    public function getStartedAt(): ?CarbonImmutable { return $this->startedAt; }
-    public function getCompletedAt(): ?CarbonImmutable { return $this->completedAt; }
+    public function getId(): ReportRunId
+    {
+        return $this->id;
+    }
+
+    public function getReportDefinitionId(): string
+    {
+        return $this->reportDefinitionId;
+    }
+
+    public function getRequestedBy(): string
+    {
+        return $this->requestedBy;
+    }
+
+    public function getFilters(): array
+    {
+        return $this->filters;
+    }
+
+    public function getStatus(): ReportRunStatus
+    {
+        return $this->status;
+    }
+
+    public function getResult(): ?array
+    {
+        return $this->result;
+    }
+
+    public function getError(): ?string
+    {
+        return $this->error;
+    }
+
+    public function getStartedAt(): ?CarbonImmutable
+    {
+        return $this->startedAt;
+    }
+
+    public function getCompletedAt(): ?CarbonImmutable
+    {
+        return $this->completedAt;
+    }
 }

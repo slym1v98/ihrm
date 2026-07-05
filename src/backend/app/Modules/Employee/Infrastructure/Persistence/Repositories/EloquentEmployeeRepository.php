@@ -19,18 +19,21 @@ class EloquentEmployeeRepository implements EmployeeRepositoryInterface
     public function findById(EmployeeId $id): ?Employee
     {
         $record = $this->model->find($id->value);
+
         return $record ? $this->toDomain($record) : null;
     }
 
     public function findByCode(string $code): ?Employee
     {
         $record = $this->model->where('employee_code', $code)->first();
+
         return $record ? $this->toDomain($record) : null;
     }
 
     public function findByUserId(string $userId): ?Employee
     {
         $record = $this->model->where('user_id', $userId)->first();
+
         return $record ? $this->toDomain($record) : null;
     }
 

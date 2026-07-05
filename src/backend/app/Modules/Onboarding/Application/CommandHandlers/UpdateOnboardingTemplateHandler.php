@@ -4,9 +4,9 @@ namespace App\Modules\Onboarding\Application\CommandHandlers;
 
 use App\Modules\Onboarding\Application\Commands\UpdateOnboardingTemplateCommand;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingTemplate\OnboardingTemplateId;
+use App\Modules\Onboarding\Domain\Exceptions\OnboardingTemplateNotFoundException;
 use App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface;
 use App\Modules\Onboarding\Domain\ValueObjects\TemplateRules;
-use App\Modules\Onboarding\Domain\Exceptions\OnboardingTemplateNotFoundException;
 
 class UpdateOnboardingTemplateHandler
 {
@@ -18,7 +18,7 @@ class UpdateOnboardingTemplateHandler
     {
         $id = OnboardingTemplateId::fromString($command->id);
         $template = $this->templateRepo->findById($id);
-        if (!$template) {
+        if (! $template) {
             throw new OnboardingTemplateNotFoundException($command->id);
         }
         $template->update($command->code, $command->name, TemplateRules::fromArray($command->rules));

@@ -10,5 +10,9 @@ class ShiftAssignmentNotFoundException extends AppException
     {
         parent::__construct('SHIFT_ASSIGNMENT_NOT_FOUND', "ShiftAssignment not found: {$id}");
     }
-    public function getHttpStatus(): int { return 404; }
+
+    public function getHttpStatus(): int
+    {
+        return 404;
+    }
 }

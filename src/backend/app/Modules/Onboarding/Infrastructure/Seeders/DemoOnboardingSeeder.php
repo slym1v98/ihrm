@@ -3,10 +3,10 @@
 namespace App\Modules\Onboarding\Infrastructure\Seeders;
 
 use App\Modules\Employee\Infrastructure\Persistence\Eloquent\EmployeeModel;
+use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
 use App\Modules\Onboarding\Infrastructure\Persistence\Eloquent\OnboardingPlanModel;
 use App\Modules\Onboarding\Infrastructure\Persistence\Eloquent\OnboardingTaskModel;
 use App\Modules\Onboarding\Infrastructure\Persistence\Eloquent\OnboardingTemplateModel;
-use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
 use Illuminate\Database\Seeder;
 
 class DemoOnboardingSeeder extends Seeder
@@ -22,7 +22,9 @@ class DemoOnboardingSeeder extends Seeder
         $employee = EmployeeModel::where('status', 'active')->first();
 
         $admin = UserModel::where('email', 'admin@ihrm.local')->first();
-        if (!$template || !$employee || !$admin) return;
+        if (! $template || ! $employee || ! $admin) {
+            return;
+        }
 
         $plan = OnboardingPlanModel::firstOrCreate(
             ['employee_id' => $employee->id, 'template_id' => $template->id],

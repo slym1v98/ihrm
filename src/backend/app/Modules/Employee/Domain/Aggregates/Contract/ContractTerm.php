@@ -8,6 +8,5 @@ final readonly class ContractTerm
         public string $type,
         public DateRange $dateRange,
         public ?float $salary = null,
-    ) {
-    }
+    ) {}
 }

@@ -11,9 +11,13 @@ class LookupValueModel extends Model
     use HasUuids;
 
     protected $table = 'lookup_values';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $casts = ['active' => 'boolean', 'metadata' => 'array'];
 
     public function group(): BelongsTo

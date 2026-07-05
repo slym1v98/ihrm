@@ -2,13 +2,14 @@
 
 namespace App\Modules\Payroll\Infrastructure\Persistence\Repositories;
 
-use App\Modules\Payroll\Domain\Aggregates\PayrollEntry\{PayrollEntry, PayrollEntryId};
+use App\Modules\Payroll\Domain\Aggregates\PayrollEntry\PayrollEntry;
+use App\Modules\Payroll\Domain\Aggregates\PayrollEntry\PayrollEntryId;
 use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriodId;
 use App\Modules\Payroll\Domain\Aggregates\PayrollRun\PayrollRunId;
 use App\Modules\Payroll\Domain\Repositories\PayrollEntryRepositoryInterface;
 use App\Modules\Payroll\Domain\ValueObjects\Money;
-use App\Modules\Payroll\Domain\ValueObjects\PayrollFormulaResult;
-use App\Modules\Payroll\Infrastructure\Persistence\Eloquent\{PayrollEntryModel, PayrollEntryLineModel};
+use App\Modules\Payroll\Infrastructure\Persistence\Eloquent\PayrollEntryLineModel;
+use App\Modules\Payroll\Infrastructure\Persistence\Eloquent\PayrollEntryModel;
 use DateTimeImmutable;
 use ReflectionClass;
 
@@ -44,7 +45,7 @@ class EloquentPayrollEntryRepository implements PayrollEntryRepositoryInterface
                     'entry_id' => $entry->getId()->value,
                     'component_id' => $line['component_id'],
                     'category' => $line['category'],
-                    'amount' => $amount instanceof Money ? $amount->toDecimal() : (float)$amount,
+                    'amount' => $amount instanceof Money ? $amount->toDecimal() : (float) $amount,
                     'calculation_note' => $line['note'] ?? null,
                 ]);
             }
@@ -54,6 +55,7 @@ class EloquentPayrollEntryRepository implements PayrollEntryRepositoryInterface
     public function findById(PayrollEntryId $id): ?PayrollEntry
     {
         $m = PayrollEntryModel::with('lines')->find($id->value);
+
         return $m ? $this->toAggregate($m) : null;
     }
 
@@ -61,7 +63,7 @@ class EloquentPayrollEntryRepository implements PayrollEntryRepositoryInterface
     {
         return PayrollEntryModel::with('lines')
             ->where('period_id', $periodId->value)
-            ->get()->map(fn($m) => $this->toAggregate($m))->all();
+            ->get()->map(fn ($m) => $this->toAggregate($m))->all();
     }
 
     private function toAggregate(PayrollEntryModel $m): PayrollEntry
@@ -69,10 +71,10 @@ class EloquentPayrollEntryRepository implements PayrollEntryRepositoryInterface
         $ref = new ReflectionClass(PayrollEntry::class);
         $e = $ref->newInstanceWithoutConstructor();
         $lines = $m->relationLoaded('lines') && $m->lines
-            ? $m->lines->map(fn($l) => [
+            ? $m->lines->map(fn ($l) => [
                 'component_id' => $l->component_id,
                 'category' => $l->category,
-                'amount' => Money::fromDecimal((float)$l->amount),
+                'amount' => Money::fromDecimal((float) $l->amount),
                 'note' => $l->calculation_note,
             ])->all()
             : [];
@@ -84,16 +86,19 @@ class EloquentPayrollEntryRepository implements PayrollEntryRepositoryInterface
             'contractSnapshot' => $m->contract_snapshot ?? [],
             'attendanceSnapshot' => $m->attendance_snapshot ?? [],
             'leaveSnapshot' => $m->leave_snapshot ?? [],
-            'grossAmount' => Money::fromDecimal((float)$m->gross_amount),
-            'deductionAmount' => Money::fromDecimal((float)$m->deduction_amount),
-            'netAmount' => Money::fromDecimal((float)$m->net_amount),
+            'grossAmount' => Money::fromDecimal((float) $m->gross_amount),
+            'deductionAmount' => Money::fromDecimal((float) $m->deduction_amount),
+            'netAmount' => Money::fromDecimal((float) $m->net_amount),
             'lines' => $lines,
             'status' => $m->status,
             'errorMessage' => $m->error_message,
             'reviewedBy' => $m->reviewed_by,
             'reviewedAt' => $m->reviewed_at ? new DateTimeImmutable($m->reviewed_at->format('Y-m-d H:i:s')) : null,
         ];
-        foreach ($props as $n => $v) $ref->getProperty($n)->setValue($e, $v);
+        foreach ($props as $n => $v) {
+            $ref->getProperty($n)->setValue($e, $v);
+        }
+
         return $e;
     }
 }

@@ -10,8 +10,11 @@ class EmployeeModel extends Model
     use HasUuids;
 
     protected $table = 'employees';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
 
     protected function casts(): array

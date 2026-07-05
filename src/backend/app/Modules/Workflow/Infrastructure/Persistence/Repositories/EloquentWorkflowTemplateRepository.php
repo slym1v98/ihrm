@@ -10,17 +10,20 @@ use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface
 use App\Modules\Workflow\Domain\ValueObjects\AssigneeType;
 use App\Modules\Workflow\Infrastructure\Persistence\Eloquent\WorkflowTemplateModel;
 use App\Modules\Workflow\Infrastructure\Persistence\Eloquent\WorkflowTemplateStepModel;
+
 class EloquentWorkflowTemplateRepository implements WorkflowTemplateRepositoryInterface
 {
     public function findById(WorkflowTemplateId $id): ?WorkflowTemplate
     {
         $model = WorkflowTemplateModel::with('steps')->find($id->value());
+
         return $model ? $this->toDomain($model) : null;
     }
 
     public function findByCode(string $code): ?WorkflowTemplate
     {
         $model = WorkflowTemplateModel::with('steps')->where('code', $code)->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -68,6 +71,7 @@ class EloquentWorkflowTemplateRepository implements WorkflowTemplateRepositoryIn
             $s->escalation_target_config,
             $s->form_schema,
         ))->all();
+
         return new WorkflowTemplate(
             new WorkflowTemplateId($model->id),
             $model->code,

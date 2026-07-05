@@ -20,6 +20,7 @@ class EloquentOffboardingPlanRepository implements OffboardingPlanRepositoryInte
     public function findById(OffboardingPlanId $id): ?OffboardingPlan
     {
         $model = OffboardingPlanModel::with('tasks')->find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -27,24 +28,36 @@ class EloquentOffboardingPlanRepository implements OffboardingPlanRepositoryInte
     {
         return OffboardingPlanModel::with('tasks')
             ->where('offboarding_request_id', $requestId)
-            ->get()->map(fn($m) => $this->toDomain($m))->toArray();
+            ->get()->map(fn ($m) => $this->toDomain($m))->toArray();
     }
 
     public function findByWorkflowRequestId(string $workflowRequestId): ?OffboardingPlan
     {
-        // Plan workflow attached to plan itself via clearance workflow
         $model = OffboardingPlanModel::with('tasks')
             ->where('id', 'like', '%')
-            ->get()->first(function($m) use ($workflowRequestId) {
+            ->get()->first(function ($m) {
                 return false; // Stub - would need a column
             });
+
         return $model ? $this->toDomain($model) : null;
     }
 
     public function all(): array
     {
         return OffboardingPlanModel::with('tasks')
-            ->get()->map(fn($m) => $this->toDomain($m))->toArray();
+            ->get()->map(fn ($m) => $this->toDomain($m))->toArray();
+    }
+
+    public function delete(OffboardingPlanId $id): void
+    {
+        OffboardingPlanModel::destroy($id->value);
+    }
+
+    public function findByEmployeeId(string $employeeId): array
+    {
+        return OffboardingPlanModel::where('offboarding_request_id', function ($q) use ($employeeId) {
+            $q->select('id')->from('offboarding_requests')->where('employee_id', $employeeId);
+        })->get()->map(fn ($m) => $this->toDomain($m))->toArray();
     }
 
     public function save(OffboardingPlan $plan): void
@@ -67,8 +80,7 @@ class EloquentOffboardingPlanRepository implements OffboardingPlanRepositoryInte
         $plan = OffboardingPlan::reconstitute(
             OffboardingPlanId::fromString($model->id),
             $model->offboarding_request_id,
-            new \DateTimeImmutable('now'), // employee_id not in plans table — plans are linked via request
-            new \DateTimeImmutable('now'), // start date — not used in offboarding
+            new \DateTimeImmutable('now'), // startDate — not stored on plans table
             OffboardingPlanStatus::from($model->status),
             null,
             $model->completed_at ? new \DateTimeImmutable($model->completed_at) : null,
@@ -76,6 +88,7 @@ class EloquentOffboardingPlanRepository implements OffboardingPlanRepositoryInte
         foreach ($model->tasks ?? [] as $t) {
             $plan->addGeneratedTask($this->taskToDomain($t));
         }
+
         return $plan;
     }
 

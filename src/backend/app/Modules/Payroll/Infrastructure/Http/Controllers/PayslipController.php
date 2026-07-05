@@ -3,8 +3,8 @@
 namespace App\Modules\Payroll\Infrastructure\Http\Controllers;
 
 use App\Modules\Identity\Application\Services\AuthorizationService;
-use App\Modules\Payroll\Application\Commands\Payslip\PublishPayslipsCommand;
 use App\Modules\Payroll\Application\CommandHandlers\Payslip\PublishPayslipsHandler;
+use App\Modules\Payroll\Application\Commands\Payslip\PublishPayslipsCommand;
 use App\Modules\Payroll\Domain\Aggregates\Payslip\PayslipId;
 use App\Modules\Payroll\Domain\Events\PayslipAccessed;
 use App\Modules\Payroll\Domain\Repositories\PayslipRepositoryInterface;
@@ -24,18 +24,21 @@ class PayslipController
     public function index(Request $request): JsonResponse
     {
         $user = $request->user();
-        $userId = (string)$user->id;
+        $userId = (string) $user->id;
         $query = PayslipModel::query();
 
-        if (!$this->authz->userHasPermission($userId, 'payroll.payslip.view')) {
+        if (! $this->authz->userHasPermission($userId, 'payroll.payslip.view')) {
             $employeeId = $user->employee_id ?? null;
-            if (!$employeeId) return response()->json(['data' => []]);
+            if (! $employeeId) {
+                return response()->json(['data' => []]);
+            }
             $query->where('employee_id', $employeeId);
         }
 
         $payslips = $query->where('status', 'published')->orderByDesc('published_at')->paginate(20);
+
         return response()->json([
-            'data' => $payslips->map(fn($m) => (new PayslipResource($m))->toArray($request)),
+            'data' => $payslips->map(fn ($m) => (new PayslipResource($m))->toArray($request)),
             'meta' => ['total' => $payslips->total(), 'per_page' => $payslips->perPage()],
         ]);
     }
@@ -44,9 +47,9 @@ class PayslipController
     {
         $model = PayslipModel::findOrFail($id);
         $user = $request->user();
-        $userId = (string)$user->id;
+        $userId = (string) $user->id;
 
-        if (!$this->authz->userHasPermission($userId, 'payroll.payslip.view')) {
+        if (! $this->authz->userHasPermission($userId, 'payroll.payslip.view')) {
             if (($user->employee_id ?? null) !== $model->employee_id) {
                 return response()->json(['message' => 'Forbidden'], 403);
             }
@@ -69,7 +72,8 @@ class PayslipController
 
     public function publish(Request $request, string $periodId): JsonResponse
     {
-        $this->publishHandler->handle(new PublishPayslipsCommand($periodId, (string)$request->user()->id));
+        $this->publishHandler->handle(new PublishPayslipsCommand($periodId, (string) $request->user()->id));
+
         return response()->json(['message' => 'Payslips published']);
     }
 }

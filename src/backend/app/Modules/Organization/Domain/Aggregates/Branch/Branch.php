@@ -33,7 +33,8 @@ final class Branch
         ?string $email = null,
     ): self {
         $branch = new self($id, $code, $name, $address, $phone, $email, BranchStatus::Active);
-        $branch->record(new BranchCreated($id, $code->value, $name->value, new DateTimeImmutable()));
+        $branch->record(new BranchCreated($id, $code->value, $name->value, new DateTimeImmutable));
+
         return $branch;
     }
 
@@ -55,7 +56,7 @@ final class Branch
         $this->address = $address;
         $this->phone = $phone;
         $this->email = $email;
-        $this->record(new BranchUpdated($this->id, new DateTimeImmutable()));
+        $this->record(new BranchUpdated($this->id, new DateTimeImmutable));
     }
 
     public function activate(): void
@@ -64,7 +65,7 @@ final class Branch
             return;
         }
         $this->status = BranchStatus::Active;
-        $this->record(new BranchActivated($this->id, new DateTimeImmutable()));
+        $this->record(new BranchActivated($this->id, new DateTimeImmutable));
     }
 
     /** @param callable(): bool $hasActiveDepartmentsFn */
@@ -77,7 +78,7 @@ final class Branch
             throw new BranchHasActiveDepartmentsException($this->id->value);
         }
         $this->status = BranchStatus::Inactive;
-        $this->record(new BranchDeactivated($this->id, new DateTimeImmutable()));
+        $this->record(new BranchDeactivated($this->id, new DateTimeImmutable));
     }
 
     private function record(object $event): void
@@ -90,14 +91,42 @@ final class Branch
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 
-    public function id(): BranchId { return $this->id; }
-    public function code(): BranchCode { return $this->code; }
-    public function name(): BranchName { return $this->name; }
-    public function address(): ?string { return $this->address; }
-    public function phone(): ?string { return $this->phone; }
-    public function email(): ?string { return $this->email; }
-    public function status(): BranchStatus { return $this->status; }
+    public function id(): BranchId
+    {
+        return $this->id;
+    }
+
+    public function code(): BranchCode
+    {
+        return $this->code;
+    }
+
+    public function name(): BranchName
+    {
+        return $this->name;
+    }
+
+    public function address(): ?string
+    {
+        return $this->address;
+    }
+
+    public function phone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function email(): ?string
+    {
+        return $this->email;
+    }
+
+    public function status(): BranchStatus
+    {
+        return $this->status;
+    }
 }

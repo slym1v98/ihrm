@@ -10,5 +10,9 @@ class OverlappingShiftAssignmentException extends AppException
     {
         parent::__construct('OVERLAPPING_SHIFT_ASSIGNMENT', "Overlapping assignment for entity: {$entityId}");
     }
-    public function getHttpStatus(): int { return 422; }
+
+    public function getHttpStatus(): int
+    {
+        return 422;
+    }
 }

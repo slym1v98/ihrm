@@ -4,8 +4,8 @@ namespace App\Modules\Payroll\Application\CommandHandlers\PayrollPeriod;
 
 use App\Modules\Payroll\Application\Commands\PayrollPeriod\ClosePayrollPeriodCommand;
 use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriodId;
-use App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface;
 use App\Modules\Payroll\Domain\Exceptions\PayrollPeriodNotFoundException;
+use App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface;
 
 readonly class ClosePayrollPeriodHandler
 {
@@ -15,7 +15,9 @@ readonly class ClosePayrollPeriodHandler
     {
         $id = PayrollPeriodId::fromString($command->periodId);
         $period = $this->periodRepo->findById($id);
-        if ($period === null) throw PayrollPeriodNotFoundException::default();
+        if ($period === null) {
+            throw PayrollPeriodNotFoundException::default();
+        }
 
         $period->lock($command->closedBy);
         $this->periodRepo->save($period);

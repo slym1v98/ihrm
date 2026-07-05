@@ -11,8 +11,11 @@ class ShiftAssignmentModel extends Model
     use HasUuids;
 
     protected $table = 'shift_assignments';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
 
     protected function casts(): array

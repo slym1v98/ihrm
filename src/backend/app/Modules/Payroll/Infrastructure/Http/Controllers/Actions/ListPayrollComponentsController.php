@@ -11,6 +11,6 @@ class ListPayrollComponentsController
 
     public function __invoke(Request $request)
     {
-        return $this->controller->index($request);
+        return $this->controller->index();
     }
 }

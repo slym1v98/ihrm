@@ -65,6 +65,7 @@ class RoleController
         $this->roles->save($role);
 
         $model = RoleModel::with('rolePermissions')->find($id);
+
         return response()->json(['data' => new RoleResource($model)]);
     }
 
@@ -76,6 +77,7 @@ class RoleController
         $this->roles->save($role);
 
         $model = RoleModel::with('rolePermissions')->find($id);
+
         return response()->json(['data' => new RoleResource($model)]);
     }
 
@@ -87,6 +89,7 @@ class RoleController
         $this->roles->save($role);
 
         $model = RoleModel::with('rolePermissions')->find($id);
+
         return response()->json(['data' => new RoleResource($model)]);
     }
 
@@ -98,6 +101,7 @@ class RoleController
         $this->roles->save($role);
 
         $model = RoleModel::with('rolePermissions')->find($id);
+
         return response()->json(['data' => new RoleResource($model)]);
     }
 
@@ -109,6 +113,7 @@ class RoleController
         $this->roles->save($role);
 
         $model = RoleModel::with('rolePermissions')->find($id);
+
         return response()->json(['data' => new RoleResource($model)]);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Infrastructure\Persistence\Eloquent\Repositories;
 
 use App\Modules\Asset\Domain\Aggregates\AssetItem\AssetItem;
@@ -13,12 +14,14 @@ class EloquentAssetItemRepository implements AssetItemRepositoryInterface
     public function findById(AssetItemId $id): ?AssetItem
     {
         $model = AssetItemModel::find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 
     public function findByAssetCode(string $assetCode): ?AssetItem
     {
         $model = AssetItemModel::where('asset_code', $assetCode)->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -46,13 +49,14 @@ class EloquentAssetItemRepository implements AssetItemRepositoryInterface
     public function all(array $filters = []): array
     {
         $query = AssetItemModel::query();
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
-        if (!empty($filters['asset_type'])) {
+        if (! empty($filters['asset_type'])) {
             $query->where('asset_type', $filters['asset_type']);
         }
-        return $query->get()->map(fn(AssetItemModel $m) => $this->toDomain($m))->toArray();
+
+        return $query->get()->map(fn (AssetItemModel $m) => $this->toDomain($m))->toArray();
     }
 
     private function toDomain(AssetItemModel $model): AssetItem

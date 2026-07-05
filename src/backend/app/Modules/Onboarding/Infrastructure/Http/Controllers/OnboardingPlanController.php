@@ -3,19 +3,19 @@
 namespace App\Modules\Onboarding\Infrastructure\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Onboarding\Application\Commands\CreateOnboardingPlanCommand;
-use App\Modules\Onboarding\Application\Commands\ActivateOnboardingPlanCommand;
-use App\Modules\Onboarding\Application\Commands\CancelOnboardingPlanCommand;
-use App\Modules\Onboarding\Application\Commands\CompleteOnboardingPlanCommand;
-use App\Modules\Onboarding\Application\CommandHandlers\CreateOnboardingPlanHandler;
 use App\Modules\Onboarding\Application\CommandHandlers\ActivateOnboardingPlanHandler;
 use App\Modules\Onboarding\Application\CommandHandlers\CancelOnboardingPlanHandler;
 use App\Modules\Onboarding\Application\CommandHandlers\CompleteOnboardingPlanHandler;
+use App\Modules\Onboarding\Application\CommandHandlers\CreateOnboardingPlanHandler;
+use App\Modules\Onboarding\Application\Commands\ActivateOnboardingPlanCommand;
+use App\Modules\Onboarding\Application\Commands\CancelOnboardingPlanCommand;
+use App\Modules\Onboarding\Application\Commands\CompleteOnboardingPlanCommand;
+use App\Modules\Onboarding\Application\Commands\CreateOnboardingPlanCommand;
 use App\Modules\Onboarding\Application\Queries\ListPlansQuery;
 use App\Modules\Onboarding\Application\QueryHandlers\ListPlansHandler;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingPlan\OnboardingPlanId;
-use App\Modules\Onboarding\Domain\Repositories\OnboardingPlanRepositoryInterface;
 use App\Modules\Onboarding\Domain\Exceptions\OnboardingPlanNotFoundException;
+use App\Modules\Onboarding\Domain\Repositories\OnboardingPlanRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -34,12 +34,13 @@ class OnboardingPlanController extends Controller
     {
         $query = new ListPlansQuery($request->input('employee_id'));
         $plans = $this->listHandler->handle($query);
-        $data = array_map(fn($p) => [
+        $data = array_map(fn ($p) => [
             'id' => $p->getId()->value,
             'employee_id' => $p->getEmployeeId(),
             'status' => $p->getStatus()->value,
             'start_date' => $p->getStartDate()->format('Y-m-d'),
         ], $plans);
+
         return response()->json(['data' => $data]);
     }
 
@@ -59,6 +60,7 @@ class OnboardingPlanController extends Controller
             startDate: $request->input('start_date'),
         );
         $plan = $this->createHandler->handle($command);
+
         return response()->json(['data' => [
             'id' => $plan->getId()->value,
             'status' => $plan->getStatus()->value,
@@ -68,13 +70,16 @@ class OnboardingPlanController extends Controller
     public function show(string $id): JsonResponse
     {
         $plan = $this->planRepo->findById(OnboardingPlanId::fromString($id));
-        if (!$plan) { throw new OnboardingPlanNotFoundException($id); }
+        if (! $plan) {
+            throw new OnboardingPlanNotFoundException($id);
+        }
+
         return response()->json(['data' => [
             'id' => $plan->getId()->value,
             'employee_id' => $plan->getEmployeeId(),
             'status' => $plan->getStatus()->value,
             'start_date' => $plan->getStartDate()->format('Y-m-d'),
-            'tasks' => array_map(fn($t) => [
+            'tasks' => array_map(fn ($t) => [
                 'id' => $t->getId()->value,
                 'title' => $t->getTitle(),
                 'status' => $t->getStatus()->value,
@@ -91,6 +96,7 @@ class OnboardingPlanController extends Controller
         } catch (\Throwable $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }
+
         return response()->json(['message' => 'Plan activated']);
     }
 
@@ -101,6 +107,7 @@ class OnboardingPlanController extends Controller
         } catch (\Throwable $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }
+
         return response()->json(['message' => 'Plan cancelled']);
     }
 
@@ -115,6 +122,7 @@ class OnboardingPlanController extends Controller
         } catch (\Throwable $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }
+
         return response()->json(['message' => 'Plan completed']);
     }
 }

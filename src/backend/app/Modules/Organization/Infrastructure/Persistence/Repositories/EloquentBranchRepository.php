@@ -19,13 +19,17 @@ class EloquentBranchRepository implements BranchRepositoryInterface
     public function findById(BranchId $id): Branch
     {
         $record = $this->model->find($id->value);
-        if (!$record) throw new BranchNotFoundException($id->value);
+        if (! $record) {
+            throw new BranchNotFoundException($id->value);
+        }
+
         return $this->toDomain($record);
     }
 
     public function findByCode(BranchCode $code): ?Branch
     {
         $record = $this->model->where('code', $code->value)->first();
+
         return $record ? $this->toDomain($record) : null;
     }
 
@@ -37,6 +41,7 @@ class EloquentBranchRepository implements BranchRepositoryInterface
     public function hasActiveDepartments(BranchId $id): bool
     {
         $record = $this->model->find($id->value);
+
         return $record && $record->activeDepartments()->exists();
     }
 

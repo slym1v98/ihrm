@@ -1,30 +1,26 @@
 <?php
 
-use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\{
-    ActivateBranchController,
-    ActivateDepartmentController,
-    ActivatePositionController,
-    DeactivateBranchController,
-    DeactivateDepartmentController,
-    DeactivatePositionController,
-    ListBranchController,
-    ListDepartmentController,
-    ListPositionController,
-    MoveDepartmentController,
-    ShowBranchController,
-    ShowDepartmentController,
-    ShowPositionController,
-    StoreBranchController,
-    StoreDepartmentController,
-    StorePositionController,
-    UpdateBranchController,
-    UpdateDepartmentController,
-    UpdatePositionController,
-};
-use Illuminate\Support\Facades\Route;
-
-
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\ActivateBranchController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\ActivateDepartmentController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\ActivatePositionController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\DeactivateBranchController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\DeactivateDepartmentController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\DeactivatePositionController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\ListBranchController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\ListDepartmentController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\ListPositionController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\MoveDepartmentController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\ShowBranchController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\ShowDepartmentController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\ShowPositionController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\StoreBranchController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\StoreDepartmentController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\StorePositionController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\UpdateBranchController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\UpdateDepartmentController;
+use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\UpdatePositionController;
 use App\Modules\Organization\Infrastructure\Http\Controllers\OrgTreeController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/branches', ListBranchController::class)->middleware('permission:organization.branch.list');

@@ -41,6 +41,14 @@ jobs:
         working-directory: src/backend
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      - name: Check code style
+        working-directory: src/backend
+        run: php vendor/bin/pint --test
+
+      - name: Static analysis
+        working-directory: src/backend
+        run: php vendor/bin/phpstan analyse -c phpstan.neon --no-progress --error-format=github --memory-limit=2G
+
       - name: Prepare test env
         working-directory: src/backend
         env:

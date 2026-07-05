@@ -1,1 +1,18 @@
-<?php namespace App\Modules\Leave\Domain\Exceptions; use App\Modules\Shared\Exceptions\AppException; class LeaveBalanceNotFoundException extends AppException { public function __construct(string $detail = '') { parent::__construct('LEAVE_BALANCE_NOT_FOUND', trim('Leave balance not found: '.$detail)); } public function getHttpStatus(): int { return 404; } }
+<?php
+
+namespace App\Modules\Leave\Domain\Exceptions;
+
+use App\Modules\Shared\Exceptions\AppException;
+
+class LeaveBalanceNotFoundException extends AppException
+{
+    public function __construct(string $detail = '')
+    {
+        parent::__construct('LEAVE_BALANCE_NOT_FOUND', trim('Leave balance not found: '.$detail));
+    }
+
+    public function getHttpStatus(): int
+    {
+        return 404;
+    }
+}

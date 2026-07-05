@@ -7,8 +7,8 @@ use App\Modules\Workflow\Application\Services\SubjectDataProviderRegistry;
 use App\Modules\Workflow\Application\Services\WorkflowEngine;
 use App\Modules\Workflow\Domain\Aggregates\WorkflowRequest\WorkflowRequest;
 use App\Modules\Workflow\Domain\Aggregates\WorkflowRequest\WorkflowRequestId;
-use App\Modules\Workflow\Domain\Exceptions\WorkflowSubjectProviderNotFoundException;
 use App\Modules\Workflow\Domain\Aggregates\WorkflowTemplate\WorkflowTemplateId;
+use App\Modules\Workflow\Domain\Exceptions\WorkflowSubjectProviderNotFoundException;
 use App\Modules\Workflow\Domain\Exceptions\WorkflowTemplateNotFoundException;
 use App\Modules\Workflow\Domain\Repositories\WorkflowRequestRepositoryInterface;
 use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface;
@@ -37,10 +37,15 @@ class SubmitWorkflowRequestHandler
         $first = $this->engine->firstStep($template, $context);
         if ($first['step'] !== null) {
             $request->start($first['step']->stepOrder(), $first['approvers'], $first['delegation_map']);
-            if (isset($first['sla_deadline_at'])) $request->setSlaDeadlineAt($first['sla_deadline_at']);
-            if (isset($first['parallel_required_count'])) $request->setParallelRequiredCount($first['parallel_required_count']);
+            if (isset($first['sla_deadline_at'])) {
+                $request->setSlaDeadlineAt($first['sla_deadline_at']);
+            }
+            if (isset($first['parallel_required_count'])) {
+                $request->setParallelRequiredCount($first['parallel_required_count']);
+            }
         }
         $this->requests->save($request);
+
         return $request;
     }
 }
