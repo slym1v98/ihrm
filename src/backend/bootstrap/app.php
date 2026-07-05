@@ -34,7 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'permission' => PermissionMiddleware::class,
-            'cache' => CacheResponse::class,
+            'response_cache' => CacheResponse::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
