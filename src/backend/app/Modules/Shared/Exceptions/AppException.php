@@ -15,5 +15,5 @@ abstract class AppException extends Exception
         parent::__construct($message, 0, $previous);
     }
 
-    abstract public function getHttpStatus(): int; final public function render(): \Illuminate\Http\JsonResponse { return response()->json(["message" => $this->getMessage(), "code" => $this->errorCode, "errors" => (object) $this->details], $this->getHttpStatus()); }
+    abstract public function getHttpStatus(): int;
 }
