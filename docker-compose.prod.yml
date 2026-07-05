@@ -1,0 +1,70 @@
+services:
+  app:
+    image: ghcr.io/slym1v98/ihrm-backend:latest
+    restart: unless-stopped
+    env_file: .env.production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    expose:
+      - "8000"
+
+  frontend:
+    image: ghcr.io/slym1v98/ihrm-frontend:latest
+    restart: unless-stopped
+    expose:
+      - "3000"
+
+  nginx:
+    image: ghcr.io/slym1v98/ihrm-nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+      - frontend
+
+  queue:
+    image: ghcr.io/slym1v98/ihrm-backend:latest
+    restart: unless-stopped
+    command: php artisan queue:work redis --sleep=3 --tries=3
+    env_file: .env.production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: 300
+      WATCHTOWER_INCLUDE_RESTARTING: "true"
+      REPO_USER: slym1v98
+      REPO_PASS: ${GHCR_PAT}
+    command: --interval 300 --cleanup --include-restarting
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file: .env.production
+    healthcheck:
+      test: pg_isready -U ihrm
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+volumes:
+  pgdata:
