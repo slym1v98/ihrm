@@ -16,7 +16,9 @@ class ChangeEmployeeManagerHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.update');
         $employee = $this->employees->findById(EmployeeId::fromString($command->employeeId));
-        if (! $employee) throw new EmployeeNotFoundException($command->employeeId);
+        if (! $employee) {
+            throw new EmployeeNotFoundException($command->employeeId);
+        }
         $employee->changeManager($command->managerId ? EmployeeId::fromString($command->managerId) : null);
         $this->employees->saveAndDispatch($employee);
     }

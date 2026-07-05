@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Asset\Application\CommandHandlers;
 
 use App\Modules\Asset\Application\Commands\UpdateAssetItemCommand;
@@ -17,7 +18,7 @@ class UpdateAssetItemHandler
     {
         $id = AssetItemId::fromString($command->id);
         $item = $this->repo->findById($id);
-        if (!$item) {
+        if (! $item) {
             throw new AssetItemNotFoundException($command->id);
         }
         $item->updateDetails(
@@ -29,6 +30,7 @@ class UpdateAssetItemHandler
             $command->notes,
         );
         $this->repo->save($item);
+
         return $item;
     }
 }

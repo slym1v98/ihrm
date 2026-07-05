@@ -10,8 +10,7 @@ final readonly class Address
         public ?string $province = null,
         public ?string $postalCode = null,
         public ?string $country = null,
-    ) {
-    }
+    ) {}
 
     public function isEmpty(): bool
     {

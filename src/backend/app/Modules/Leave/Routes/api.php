@@ -1,20 +1,16 @@
 <?php
 
-use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\{
-    ApproveLeaveRequestController,
-    CancelLeaveRequestController,
-    ListLeaveBalanceController,
-    ListLeavePolicyController,
-    ListLeaveRequestController,
-    ListLeaveTypeController,
-    RejectLeaveRequestController,
-    ShowLeaveRequestController,
-    StoreLeaveRequestController,
-    SummaryLeaveBalanceController,
-};
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\ApproveLeaveRequestController;
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\CancelLeaveRequestController;
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\ListLeaveBalanceController;
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\ListLeavePolicyController;
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\ListLeaveRequestController;
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\ListLeaveTypeController;
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\RejectLeaveRequestController;
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\ShowLeaveRequestController;
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\StoreLeaveRequestController;
+use App\Modules\Leave\Infrastructure\Http\Controllers\Actions\SummaryLeaveBalanceController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 

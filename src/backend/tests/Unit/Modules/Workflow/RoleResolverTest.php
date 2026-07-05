@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Modules\Workflow;
 
 use App\Modules\Workflow\Application\Resolvers\RoleResolver;

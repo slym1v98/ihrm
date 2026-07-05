@@ -31,6 +31,7 @@ class CreateEmployeeHandler
 
         $employee = Employee::create(EmployeeId::generate(), EmployeeCode::fromString($code), PersonalName::of($command->firstName, $command->lastName));
         $this->employees->saveAndDispatch($employee);
+
         return $employee;
     }
 }

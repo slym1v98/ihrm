@@ -4,6 +4,7 @@ namespace Tests\Unit\Modules\Recruitment\Application;
 
 use App\Modules\Recruitment\Application\CommandHandlers\AddCandidateHandler;
 use App\Modules\Recruitment\Application\Commands\AddCandidateCommand;
+use App\Modules\Recruitment\Domain\Aggregates\Candidate\Candidate;
 use App\Modules\Recruitment\Domain\Exceptions\DuplicateCandidateException;
 use App\Modules\Recruitment\Domain\Repositories\CandidateRepositoryInterface;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +27,7 @@ class AddCandidateHandlerTest extends TestCase
     public function test_duplicate_email_rejected(): void
     {
         $repo = $this->createMock(CandidateRepositoryInterface::class);
-        $repo->method('findByEmail')->willReturn($this->createStub(\App\Modules\Recruitment\Domain\Aggregates\Candidate\Candidate::class));
+        $repo->method('findByEmail')->willReturn($this->createStub(Candidate::class));
         $handler = new AddCandidateHandler($repo);
 
         $this->expectException(DuplicateCandidateException::class);

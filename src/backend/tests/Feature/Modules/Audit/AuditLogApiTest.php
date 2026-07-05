@@ -19,6 +19,7 @@ class AuditLogApiTest extends TestCase
         $this->seed(PermissionSeeder::class);
         $this->seed(RoleSeeder::class);
         $this->seed(AdminUserSeeder::class);
+
         return UserModel::where('email', 'admin@ihrm.local')->firstOrFail();
     }
 

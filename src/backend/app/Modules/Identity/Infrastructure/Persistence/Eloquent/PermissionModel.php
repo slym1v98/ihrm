@@ -10,8 +10,12 @@ class PermissionModel extends Model
     use HasUuids;
 
     protected $table = 'permissions';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $casts = ['active' => 'boolean'];
 }

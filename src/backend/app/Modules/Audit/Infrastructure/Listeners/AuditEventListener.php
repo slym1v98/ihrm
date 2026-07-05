@@ -3,6 +3,23 @@
 namespace App\Modules\Audit\Infrastructure\Listeners;
 
 use App\Modules\Audit\Application\Services\AuditLogger;
+use App\Modules\Configuration\Domain\Events\CodeGenerationRuleChanged;
+use App\Modules\Configuration\Domain\Events\LookupValueChanged;
+use App\Modules\Configuration\Domain\Events\SystemSettingChanged;
+use App\Modules\Employee\Domain\Events\ContractActivated;
+use App\Modules\Employee\Domain\Events\ContractCreated;
+use App\Modules\Employee\Domain\Events\ContractExpired;
+use App\Modules\Employee\Domain\Events\ContractRenewed;
+use App\Modules\Employee\Domain\Events\ContractTerminated;
+use App\Modules\Employee\Domain\Events\EmployeeCreated;
+use App\Modules\Employee\Domain\Events\EmployeeDocumentArchived;
+use App\Modules\Employee\Domain\Events\EmployeeDocumentExpired;
+use App\Modules\Employee\Domain\Events\EmployeeDocumentReplaced;
+use App\Modules\Employee\Domain\Events\EmployeeDocumentUploaded;
+use App\Modules\Employee\Domain\Events\EmployeeEmploymentChanged;
+use App\Modules\Employee\Domain\Events\EmployeeManagerChanged;
+use App\Modules\Employee\Domain\Events\EmployeePersonalInfoUpdated;
+use App\Modules\Employee\Domain\Events\EmployeeStatusChanged;
 use App\Modules\Identity\Domain\Events\RoleCreated;
 use App\Modules\Identity\Domain\Events\RolePermissionGranted;
 use App\Modules\Identity\Domain\Events\RolePermissionRevoked;
@@ -29,23 +46,6 @@ use App\Modules\Organization\Domain\Events\PositionActivated;
 use App\Modules\Organization\Domain\Events\PositionCreated;
 use App\Modules\Organization\Domain\Events\PositionDeactivated;
 use App\Modules\Organization\Domain\Events\PositionUpdated;
-use App\Modules\Employee\Domain\Events\ContractActivated;
-use App\Modules\Employee\Domain\Events\ContractCreated;
-use App\Modules\Employee\Domain\Events\ContractExpired;
-use App\Modules\Employee\Domain\Events\ContractRenewed;
-use App\Modules\Employee\Domain\Events\ContractTerminated;
-use App\Modules\Employee\Domain\Events\EmployeeCreated;
-use App\Modules\Employee\Domain\Events\EmployeeDocumentArchived;
-use App\Modules\Employee\Domain\Events\EmployeeDocumentExpired;
-use App\Modules\Employee\Domain\Events\EmployeeDocumentReplaced;
-use App\Modules\Employee\Domain\Events\EmployeeDocumentUploaded;
-use App\Modules\Employee\Domain\Events\EmployeeEmploymentChanged;
-use App\Modules\Employee\Domain\Events\EmployeeManagerChanged;
-use App\Modules\Employee\Domain\Events\EmployeePersonalInfoUpdated;
-use App\Modules\Employee\Domain\Events\EmployeeStatusChanged;
-use App\Modules\Configuration\Domain\Events\LookupValueChanged;
-use App\Modules\Configuration\Domain\Events\CodeGenerationRuleChanged;
-use App\Modules\Configuration\Domain\Events\SystemSettingChanged;
 use Illuminate\Support\Facades\Log;
 
 class AuditEventListener

@@ -19,6 +19,7 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
     public function findById(WorkflowRequestId $id): ?WorkflowRequest
     {
         $model = WorkflowRequestModel::with('actions')->find($id->value());
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -86,6 +87,7 @@ class EloquentWorkflowRequestRepository implements WorkflowRequestRepositoryInte
             $a->step_execution_type ?? 'sequential',
             $a->form_data,
         ))->all();
+
         return new WorkflowRequest(
             new WorkflowRequestId($model->id),
             new WorkflowTemplateId($model->workflow_template_id),

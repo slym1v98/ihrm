@@ -17,7 +17,9 @@ class ReplaceEmployeeDocumentHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.document.replace');
         $current = $this->documents->findById(EmployeeDocumentId::fromString($command->documentId));
-        if (! $current) throw new EmployeeDocumentNotFoundException($command->documentId);
+        if (! $current) {
+            throw new EmployeeDocumentNotFoundException($command->documentId);
+        }
 
         $replacement = $current->replace(
             EmployeeDocumentId::generate(),

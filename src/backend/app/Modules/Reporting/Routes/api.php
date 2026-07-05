@@ -1,14 +1,10 @@
 <?php
 
-use App\Modules\Reporting\Infrastructure\Http\Controllers\Actions\{
-    DefinitionsReportController,
-    ListRunsReportController,
-    RunReportController,
-    ShowRunReportController,
-};
+use App\Modules\Reporting\Infrastructure\Http\Controllers\Actions\DefinitionsReportController;
+use App\Modules\Reporting\Infrastructure\Http\Controllers\Actions\ListRunsReportController;
+use App\Modules\Reporting\Infrastructure\Http\Controllers\Actions\RunReportController;
+use App\Modules\Reporting\Infrastructure\Http\Controllers\Actions\ShowRunReportController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/reports', DefinitionsReportController::class)->middleware('permission:report.definition.view');

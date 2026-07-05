@@ -12,8 +12,11 @@ class DepartmentModel extends Model
     use HasUuids;
 
     protected $table = 'departments';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
 
     public function branch(): BelongsTo

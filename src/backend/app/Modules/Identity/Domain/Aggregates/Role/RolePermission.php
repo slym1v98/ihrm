@@ -9,6 +9,5 @@ final readonly class RolePermission
     public function __construct(
         public PermissionCode $permissionCode,
         public DateTimeImmutable $createdAt,
-    ) {
-    }
+    ) {}
 }

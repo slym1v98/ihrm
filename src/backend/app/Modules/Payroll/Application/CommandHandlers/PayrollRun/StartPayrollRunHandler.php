@@ -4,10 +4,13 @@ namespace App\Modules\Payroll\Application\CommandHandlers\PayrollRun;
 
 use App\Modules\Payroll\Application\Commands\PayrollRun\StartPayrollRunCommand;
 use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriodId;
-use App\Modules\Payroll\Domain\Aggregates\PayrollRun\{PayrollRun, PayrollRunId};
-use App\Modules\Payroll\Domain\Repositories\{PayrollPeriodRepositoryInterface, PayrollRunRepositoryInterface};
-use App\Modules\Payroll\Domain\Exceptions\{PayrollPeriodNotFoundException, DuplicatePayrollRunException};
+use App\Modules\Payroll\Domain\Aggregates\PayrollRun\PayrollRun;
+use App\Modules\Payroll\Domain\Aggregates\PayrollRun\PayrollRunId;
+use App\Modules\Payroll\Domain\Exceptions\DuplicatePayrollRunException;
+use App\Modules\Payroll\Domain\Exceptions\PayrollPeriodNotFoundException;
 use App\Modules\Payroll\Domain\Ports\EmployeeContractReadPort;
+use App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollRunRepositoryInterface;
 
 readonly class StartPayrollRunHandler
 {
@@ -21,7 +24,9 @@ readonly class StartPayrollRunHandler
     {
         $periodId = PayrollPeriodId::fromString($command->periodId);
         $period = $this->periodRepo->findById($periodId);
-        if ($period === null) throw PayrollPeriodNotFoundException::default();
+        if ($period === null) {
+            throw PayrollPeriodNotFoundException::default();
+        }
 
         // Check no running run
         if ($this->runRepo->hasRunningRun($periodId)) {

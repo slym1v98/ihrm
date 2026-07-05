@@ -8,11 +8,13 @@ use App\Modules\Employee\Domain\Aggregates\Employee\EmployeeCode;
 use App\Modules\Employee\Domain\Aggregates\Employee\EmployeeId;
 use App\Modules\Employee\Domain\Aggregates\Employee\PersonalName;
 use App\Modules\Employee\Domain\Repositories\EmployeeRepositoryInterface;
-use App\Modules\Onboarding\Application\Commands\CreateOnboardingPlanCommand;
 use App\Modules\Onboarding\Application\CommandHandlers\CreateOnboardingPlanHandler;
+use App\Modules\Onboarding\Application\Commands\CreateOnboardingPlanCommand;
 use App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface;
-use App\Modules\Recruitment\Domain\Repositories\CandidateRepositoryInterface;
+use App\Modules\Recruitment\Domain\Aggregates\Candidate\CandidateId;
 use App\Modules\Recruitment\Domain\Events\CandidateHired;
+use App\Modules\Recruitment\Domain\Events\OfferAccepted;
+use App\Modules\Recruitment\Domain\Repositories\CandidateRepositoryInterface;
 use Carbon\CarbonImmutable;
 use Exception;
 use Illuminate\Support\Facades\Event;
@@ -31,10 +33,14 @@ class CreateEmployeeOnOfferAccepted
     {
         $payload = $event->payload ?? [];
         $candidateId = $payload['candidate_id'] ?? null;
-        if ($candidateId === null) return;
+        if ($candidateId === null) {
+            return;
+        }
 
-        $candidate = $this->candidates->findById(new \App\Modules\Recruitment\Domain\Aggregates\Candidate\CandidateId($candidateId));
-        if ($candidate === null || $candidate->getEmployeeId() !== null) return;
+        $candidate = $this->candidates->findById(new CandidateId($candidateId));
+        if ($candidate === null || $candidate->getEmployeeId() !== null) {
+            return;
+        }
 
         $fullName = $candidate->getFullName();
         $parts = explode(' ', $fullName);
@@ -44,7 +50,7 @@ class CreateEmployeeOnOfferAccepted
         try {
             $employeeCode = EmployeeCode::fromString($this->codeGen->next('employee'));
         } catch (Exception) {
-            $employeeCode = EmployeeCode::fromString('NV' . str_pad((string) random_int(1, 99999), 5, '0', STR_PAD_LEFT));
+            $employeeCode = EmployeeCode::fromString('NV'.str_pad((string) random_int(1, 99999), 5, '0', STR_PAD_LEFT));
         }
 
         $employee = Employee::create(
@@ -62,8 +68,8 @@ class CreateEmployeeOnOfferAccepted
         // Create OnboardingPlan
         try {
             $templates = $this->templates->findMatching(null, null, null, null);
-            $templateId = !empty($templates) ? $templates[0]->getId()->value : null;
-            $startDate = $event instanceof \App\Modules\Recruitment\Domain\Events\OfferAccepted
+            $templateId = ! empty($templates) ? $templates[0]->getId()->value : null;
+            $startDate = $event instanceof OfferAccepted
                 ? CarbonImmutable::parse($payload['accepted_at'] ?? 'now')->toDateString()
                 : date('Y-m-d');
             $this->onboardingPlan->handle(new CreateOnboardingPlanCommand(

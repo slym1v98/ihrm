@@ -2,7 +2,6 @@
 
 namespace App\Modules\Employee\Application\Listeners;
 
-use App\Modules\Employee\Domain\Aggregates\Employee\EmployeeId;
 use App\Modules\Employee\Domain\Events\EmployeeStatusChanged;
 use App\Modules\Employee\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Modules\Offboarding\Domain\Aggregates\OffboardingRequest\OffboardingRequest;
@@ -24,7 +23,9 @@ class CreateOffboardingOnResign
         }
 
         $employee = $this->employees->findById($event->employeeId);
-        if ($employee === null) return;
+        if ($employee === null) {
+            return;
+        }
 
         $offboarding = OffboardingRequest::create(
             OffboardingRequestId::generate(),

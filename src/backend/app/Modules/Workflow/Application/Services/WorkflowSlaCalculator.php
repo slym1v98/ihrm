@@ -7,7 +7,7 @@ use Carbon\CarbonImmutable;
 final class WorkflowSlaCalculator
 {
     /**
-     * @param array<string, array{start: int, end: int}|null> $workingHours
+     * @param  array<string, array{start: int, end: int}|null>  $workingHours
      */
     public function calculateDeadline(CarbonImmutable $from, float $businessHours, array $workingHours): CarbonImmutable
     {
@@ -19,6 +19,7 @@ final class WorkflowSlaCalculator
             $wh = $workingHours[$dayKey] ?? null;
             if ($wh === null) {
                 $current = $current->addDay()->startOfDay();
+
                 continue;
             }
             $dayStart = $current->startOfDay()->addHours($wh['start']);
@@ -32,6 +33,7 @@ final class WorkflowSlaCalculator
             // If after working hours, skip to next day
             if ($current->gte($dayEnd)) {
                 $current = $current->addDay()->startOfDay();
+
                 continue;
             }
 

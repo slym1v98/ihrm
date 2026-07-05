@@ -13,6 +13,7 @@ class AttendanceBasisCalculator
     public function getBasis(string $employeeId, DateTimeImmutable $start, DateTimeImmutable $end): array
     {
         $data = $this->attendancePort->getAttendanceForEmployee($employeeId, $start, $end);
+
         return [
             'worked_minutes' => $data['worked_minutes'] ?? 0,
             'overtime_minutes' => $data['overtime_minutes'] ?? 0,

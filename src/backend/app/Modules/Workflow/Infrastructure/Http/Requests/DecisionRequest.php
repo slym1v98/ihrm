@@ -10,6 +10,7 @@ class DecisionRequest extends FormRequest
     {
         $action = $this->route()->getActionMethod();
         $required = in_array($action, ['reject', 'returnForEdit']) ? 'required' : 'nullable';
+
         return ['comment' => "$required|string|max:2000"];
     }
 }

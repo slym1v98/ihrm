@@ -8,5 +8,9 @@ use App\Modules\Attendance\Domain\Repositories\AttendanceTimesheetRepositoryInte
 class GetAttendanceTimesheetHandler
 {
     public function __construct(private AttendanceTimesheetRepositoryInterface $repo) {}
-    public function handle(GetAttendanceTimesheetQuery $query): array { return $this->repo->findByEmployeeAndRange($query->employeeId, $query->from, $query->to); }
+
+    public function handle(GetAttendanceTimesheetQuery $query): array
+    {
+        return $this->repo->findByEmployeeAndRange($query->employeeId, $query->from, $query->to);
+    }
 }

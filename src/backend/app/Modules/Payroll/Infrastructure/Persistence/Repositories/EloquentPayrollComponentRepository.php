@@ -2,9 +2,12 @@
 
 namespace App\Modules\Payroll\Infrastructure\Persistence\Repositories;
 
-use App\Modules\Payroll\Domain\Aggregates\PayrollComponent\{PayrollComponent, PayrollComponentId};
+use App\Modules\Payroll\Domain\Aggregates\PayrollComponent\PayrollComponent;
+use App\Modules\Payroll\Domain\Aggregates\PayrollComponent\PayrollComponentId;
 use App\Modules\Payroll\Domain\Repositories\PayrollComponentRepositoryInterface;
-use App\Modules\Payroll\Domain\ValueObjects\{CalculationType, ComponentCategory, Money};
+use App\Modules\Payroll\Domain\ValueObjects\CalculationType;
+use App\Modules\Payroll\Domain\ValueObjects\ComponentCategory;
+use App\Modules\Payroll\Domain\ValueObjects\Money;
 use App\Modules\Payroll\Infrastructure\Persistence\Eloquent\PayrollComponentModel;
 use ReflectionClass;
 
@@ -31,19 +34,21 @@ class EloquentPayrollComponentRepository implements PayrollComponentRepositoryIn
     public function findById(PayrollComponentId $id): ?PayrollComponent
     {
         $m = PayrollComponentModel::find($id->value);
+
         return $m ? $this->toAggregate($m) : null;
     }
 
     public function findByCode(string $code): ?PayrollComponent
     {
         $m = PayrollComponentModel::where('code', $code)->first();
+
         return $m ? $this->toAggregate($m) : null;
     }
 
     public function findActive(): array
     {
         return PayrollComponentModel::where('active', true)->get()
-            ->map(fn($m) => $this->toAggregate($m))->all();
+            ->map(fn ($m) => $this->toAggregate($m))->all();
     }
 
     private function toAggregate(PayrollComponentModel $m): PayrollComponent
@@ -57,14 +62,15 @@ class EloquentPayrollComponentRepository implements PayrollComponentRepositoryIn
             'category' => ComponentCategory::from($m->category),
             'calculationType' => CalculationType::from($m->calculation_type),
             'percentBaseComponentId' => $m->percent_base_component_id,
-            'defaultAmount' => $m->default_amount !== null ? Money::fromDecimal((float)$m->default_amount) : null,
-            'defaultPercent' => $m->default_percent !== null ? (float)$m->default_percent : null,
-            'taxable' => (bool)$m->taxable,
-            'active' => (bool)$m->active,
+            'defaultAmount' => $m->default_amount !== null ? Money::fromDecimal((float) $m->default_amount) : null,
+            'defaultPercent' => $m->default_percent !== null ? (float) $m->default_percent : null,
+            'taxable' => (bool) $m->taxable,
+            'active' => (bool) $m->active,
         ];
         foreach ($props as $name => $val) {
             $ref->getProperty($name)->setValue($c, $val);
         }
+
         return $c;
     }
 }

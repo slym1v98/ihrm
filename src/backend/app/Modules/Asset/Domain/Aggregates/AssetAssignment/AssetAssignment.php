@@ -29,6 +29,7 @@ class AssetAssignment
     {
         $assignment = new self($id, $assetItemId, $employeeId, $issuedAt, $expectedReturnAt, $conditionOnIssue, AssetAssignmentStatus::Active, null, null);
         $assignment->recordedEvents[] = new AssetAssigned($id, $assetItemId, $employeeId);
+
         return $assignment;
     }
 
@@ -46,16 +47,50 @@ class AssetAssignment
         $this->status = AssetAssignmentStatus::Returned;
     }
 
-    public function getId(): AssetAssignmentId { return $this->id; }
-    public function getAssetItemId(): AssetItemId { return $this->assetItemId; }
-    public function getEmployeeId(): string { return $this->employeeId; }
-    public function getIssuedAt(): \DateTimeImmutable { return $this->issuedAt; }
-    public function getExpectedReturnAt(): ?\DateTimeImmutable { return $this->expectedReturnAt; }
-    public function getConditionOnIssue(): AssetCondition { return $this->conditionOnIssue; }
-    public function getStatus(): AssetAssignmentStatus { return $this->status; }
-    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): AssetAssignmentId
+    {
+        return $this->id;
+    }
 
+    public function getAssetItemId(): AssetItemId
+    {
+        return $this->assetItemId;
+    }
+
+    public function getEmployeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    public function getIssuedAt(): \DateTimeImmutable
+    {
+        return $this->issuedAt;
+    }
+
+    public function getExpectedReturnAt(): ?\DateTimeImmutable
+    {
+        return $this->expectedReturnAt;
+    }
+
+    public function getConditionOnIssue(): AssetCondition
+    {
+        return $this->conditionOnIssue;
+    }
+
+    public function getStatus(): AssetAssignmentStatus
+    {
+        return $this->status;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function toArray(): array
     {
@@ -72,6 +107,16 @@ class AssetAssignment
         ];
     }
 
-    public function recordEvent(object $event): void { $this->recordedEvents[] = $event; }
-    public function popRecordedEvents(): array { $events = $this->recordedEvents; $this->recordedEvents = []; return $events; }
+    public function recordEvent(object $event): void
+    {
+        $this->recordedEvents[] = $event;
+    }
+
+    public function popRecordedEvents(): array
+    {
+        $events = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $events;
+    }
 }

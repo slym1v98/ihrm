@@ -9,6 +9,7 @@ class WorkflowRequestResource extends JsonResource
     public function toArray($request)
     {
         $r = $this->resource;
+
         return [
             'id' => $r->id()->value(),
             'workflow_template_id' => $r->workflowTemplateId()->value(),

@@ -15,6 +15,7 @@ class EloquentOnboardingTaskRepository implements OnboardingTaskRepositoryInterf
     public function findById(OnboardingTaskId $id): ?OnboardingTask
     {
         $model = OnboardingTaskModel::find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -23,7 +24,7 @@ class EloquentOnboardingTaskRepository implements OnboardingTaskRepositoryInterf
         return OnboardingTaskModel::where('onboarding_plan_id', $planId)
             ->orderBy('sort_order')
             ->get()
-            ->map(fn($m) => $this->toDomain($m))
+            ->map(fn ($m) => $this->toDomain($m))
             ->toArray();
     }
 
@@ -32,13 +33,14 @@ class EloquentOnboardingTaskRepository implements OnboardingTaskRepositoryInterf
         return OnboardingTaskModel::where('owner_type', $ownerType)
             ->where('owner_id', $ownerId)
             ->get()
-            ->map(fn($m) => $this->toDomain($m))
+            ->map(fn ($m) => $this->toDomain($m))
             ->toArray();
     }
 
     public function findByApprovalWorkflowRequestId(string $requestId): ?OnboardingTask
     {
         $model = OnboardingTaskModel::where('approval_workflow_request_id', $requestId)->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 

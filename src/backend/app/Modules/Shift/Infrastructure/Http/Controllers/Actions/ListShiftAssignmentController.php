@@ -2,8 +2,8 @@
 
 namespace App\Modules\Shift\Infrastructure\Http\Controllers\Actions;
 
-use App\Modules\Shift\Infrastructure\Persistence\Eloquent\ShiftAssignmentModel;
 use App\Modules\Shift\Infrastructure\Http\Resources\ShiftAssignmentResource;
+use App\Modules\Shift\Infrastructure\Persistence\Eloquent\ShiftAssignmentModel;
 use Illuminate\Http\JsonResponse;
 
 class ListShiftAssignmentController

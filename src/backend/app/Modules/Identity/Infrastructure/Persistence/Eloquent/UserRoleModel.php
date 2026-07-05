@@ -11,9 +11,13 @@ class UserRoleModel extends Model
     use HasUuids;
 
     protected $table = 'user_roles';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $casts = [
         'assigned_at' => 'datetime',
         'revoked_at' => 'datetime',

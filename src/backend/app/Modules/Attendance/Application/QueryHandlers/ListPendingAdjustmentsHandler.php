@@ -8,5 +8,9 @@ use App\Modules\Attendance\Domain\Repositories\AttendanceAdjustmentRequestReposi
 class ListPendingAdjustmentsHandler
 {
     public function __construct(private AttendanceAdjustmentRequestRepositoryInterface $repo) {}
-    public function handle(ListPendingAdjustmentsQuery $query): array { return $this->repo->findPendingPaginated($query->perPage, $query->page); }
+
+    public function handle(ListPendingAdjustmentsQuery $query): array
+    {
+        return $this->repo->findPendingPaginated($query->perPage, $query->page);
+    }
 }

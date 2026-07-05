@@ -10,10 +10,12 @@ use App\Modules\Performance\Domain\Repositories\PerformanceReviewRepositoryInter
 class CreateReviewHandler
 {
     public function __construct(private readonly PerformanceReviewRepositoryInterface $repo) {}
+
     public function handle(CreateReviewCommand $cmd): PerformanceReview
     {
         $review = PerformanceReview::create(PerformanceReviewId::generate(), $cmd->cycleId, $cmd->employeeId);
         $this->repo->save($review);
+
         return $review;
     }
 }

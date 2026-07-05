@@ -1,28 +1,24 @@
 <?php
 
-use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\{
-    ActivateOnboardingPlanController,
-    CancelOnboardingPlanController,
-    CompleteOnboardingPlanController,
-    CompleteOnboardingTaskController,
-    DeleteOnboardingTemplateController,
-    ListOnboardingPlanController,
-    ListOnboardingTaskController,
-    ListOnboardingTemplateController,
-    ShowOnboardingPlanController,
-    ShowOnboardingTaskController,
-    ShowOnboardingTemplateController,
-    StartOnboardingTaskController,
-    StoreOnboardingPlanController,
-    StoreOnboardingTaskController,
-    StoreOnboardingTemplateController,
-    UpdateOnboardingTaskController,
-    UpdateOnboardingTemplateController,
-    WaiveOnboardingTaskController,
-};
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\ActivateOnboardingPlanController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\CancelOnboardingPlanController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\CompleteOnboardingPlanController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\CompleteOnboardingTaskController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\DeleteOnboardingTemplateController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\ListOnboardingPlanController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\ListOnboardingTaskController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\ListOnboardingTemplateController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\ShowOnboardingPlanController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\ShowOnboardingTaskController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\ShowOnboardingTemplateController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\StartOnboardingTaskController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\StoreOnboardingPlanController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\StoreOnboardingTaskController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\StoreOnboardingTemplateController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\UpdateOnboardingTaskController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\UpdateOnboardingTemplateController;
+use App\Modules\Onboarding\Infrastructure\Http\Controllers\Actions\WaiveOnboardingTaskController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1/onboarding')
     ->middleware(['auth:sanctum'])

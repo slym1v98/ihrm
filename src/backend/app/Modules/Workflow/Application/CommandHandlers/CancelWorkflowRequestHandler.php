@@ -14,7 +14,9 @@ class CancelWorkflowRequestHandler
     public function handle(CancelWorkflowRequestCommand $command): void
     {
         $request = $this->requests->findById(new WorkflowRequestId($command->workflowRequestId));
-        if (! $request) throw new WorkflowRequestNotFoundException();
+        if (! $request) {
+            throw new WorkflowRequestNotFoundException;
+        }
         $request->cancel($command->actorId, $command->comment);
         $this->requests->save($request);
     }

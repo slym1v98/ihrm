@@ -18,6 +18,7 @@ class EloquentEmployeeDocumentRepository implements EmployeeDocumentRepositoryIn
     public function findById(EmployeeDocumentId $id): ?EmployeeDocument
     {
         $record = $this->model->find($id->value);
+
         return $record ? $this->toDomain($record) : null;
     }
 
@@ -26,7 +27,7 @@ class EloquentEmployeeDocumentRepository implements EmployeeDocumentRepositoryIn
     {
         return $this->model->where('employee_id', $employeeId->value)
             ->get()
-            ->map(fn($r) => $this->toDomain($r))
+            ->map(fn ($r) => $this->toDomain($r))
             ->all();
     }
 
@@ -36,6 +37,7 @@ class EloquentEmployeeDocumentRepository implements EmployeeDocumentRepositoryIn
         if ($employeeId) {
             $q->where('employee_id', $employeeId->value);
         }
+
         return $q->paginate($perPage, ['*'], 'page', $page)->items();
     }
 

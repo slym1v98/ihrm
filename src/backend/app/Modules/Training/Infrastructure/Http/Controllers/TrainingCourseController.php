@@ -31,6 +31,7 @@ class TrainingCourseController extends Controller
     public function index(Request $request): JsonResponse
     {
         $items = $this->listHandler->handle(new ListCoursesQuery($request->has('active') ? $request->boolean('active') : null));
+
         return response()->json(['data' => array_map(fn (TrainingCourse $course) => $this->toArray($course), $items)]);
     }
 
@@ -51,6 +52,7 @@ class TrainingCourseController extends Controller
     public function show(string $id): JsonResponse
     {
         $course = $this->courseRepo->findById(TrainingCourseId::fromString($id)) ?? throw new TrainingCourseNotFoundException($id);
+
         return response()->json(['data' => $this->toArray($course)]);
     }
 
@@ -73,6 +75,7 @@ class TrainingCourseController extends Controller
     {
         try {
             $this->deactivateHandler->handle(new DeactivateCourseCommand($id));
+
             return response()->json(['data' => null]);
         } catch (\Exception $e) {
             return response()->json(['error' => ['message' => $e->getMessage()]], 422);

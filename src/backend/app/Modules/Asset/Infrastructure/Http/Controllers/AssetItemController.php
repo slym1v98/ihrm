@@ -1,21 +1,22 @@
 <?php
+
 namespace App\Modules\Asset\Infrastructure\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Asset\Application\Commands\CreateAssetItemCommand;
-use App\Modules\Asset\Application\Commands\UpdateAssetItemCommand;
-use App\Modules\Asset\Application\Commands\MarkAssetItemStatusCommand;
 use App\Modules\Asset\Application\CommandHandlers\CreateAssetItemHandler;
-use App\Modules\Asset\Application\CommandHandlers\UpdateAssetItemHandler;
 use App\Modules\Asset\Application\CommandHandlers\MarkAssetItemStatusHandler;
+use App\Modules\Asset\Application\CommandHandlers\UpdateAssetItemHandler;
+use App\Modules\Asset\Application\Commands\CreateAssetItemCommand;
+use App\Modules\Asset\Application\Commands\MarkAssetItemStatusCommand;
+use App\Modules\Asset\Application\Commands\UpdateAssetItemCommand;
 use App\Modules\Asset\Application\Queries\ListAssetItemsQuery;
 use App\Modules\Asset\Application\QueryHandlers\ListAssetItemsHandler;
+use App\Modules\Asset\Domain\Exceptions\AssetHasAssignmentHistoryException;
+use App\Modules\Asset\Domain\Exceptions\AssetItemNotFoundException;
+use App\Modules\Asset\Domain\Repositories\AssetAssignmentRepositoryInterface;
 use App\Modules\Asset\Domain\Repositories\AssetItemRepositoryInterface;
 use App\Modules\Asset\Domain\ValueObjects\AssetItemId;
 use App\Modules\Asset\Domain\ValueObjects\AssetItemStatus;
-use App\Modules\Asset\Domain\Exceptions\AssetItemNotFoundException;
-use App\Modules\Asset\Domain\Exceptions\AssetHasAssignmentHistoryException;
-use App\Modules\Asset\Domain\Repositories\AssetAssignmentRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -38,7 +39,8 @@ class AssetItemController extends Controller
                 assetType: $request->query('asset_type'),
             )
         );
-        return response()->json(['data' => array_map(fn($i) => $i->toArray(), $items)]);
+
+        return response()->json(['data' => array_map(fn ($i) => $i->toArray(), $items)]);
     }
 
     public function store(Request $request): JsonResponse
@@ -61,15 +63,17 @@ class AssetItemController extends Controller
                 notes: $validated['notes'] ?? null,
             )
         );
-        return response()->json(['data' => $item->toArray()] , 201);
+
+        return response()->json(['data' => $item->toArray()], 201);
     }
 
     public function show(string $id): JsonResponse
     {
         $item = $this->itemRepo->findById(AssetItemId::fromString($id));
-        if (!$item) {
+        if (! $item) {
             throw new AssetItemNotFoundException($id);
         }
+
         return response()->json(['data' => $item->toArray()]);
     }
 
@@ -92,6 +96,7 @@ class AssetItemController extends Controller
                 notes: $validated['notes'] ?? null,
             )
         );
+
         return response()->json(['message' => 'Updated']);
     }
 
@@ -99,14 +104,15 @@ class AssetItemController extends Controller
     {
         $itemId = AssetItemId::fromString($id);
         $item = $this->itemRepo->findById($itemId);
-        if (!$item) {
+        if (! $item) {
             throw new AssetItemNotFoundException($id);
         }
         $assignments = $this->assignmentRepo->all(['asset_item_id' => $id]);
         if (count($assignments) > 0) {
-            return response()->json(['message' => (new AssetHasAssignmentHistoryException())->getMessage()], 422);
+            return response()->json(['message' => (new AssetHasAssignmentHistoryException)->getMessage()], 422);
         }
         $this->itemRepo->delete($item);
+
         return response()->json(['message' => 'Asset item deleted']);
     }
 
@@ -136,6 +142,7 @@ class AssetItemController extends Controller
             $this->markStatusHandler->handle(
                 new MarkAssetItemStatusCommand(id: $id, newStatus: $status)
             );
+
             return response()->json(['message' => 'Status updated']);
         } catch (\Throwable $e) {
             return response()->json(['message' => $e->getMessage()], 422);

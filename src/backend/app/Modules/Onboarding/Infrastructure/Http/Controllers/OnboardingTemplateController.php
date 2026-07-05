@@ -3,15 +3,15 @@
 namespace App\Modules\Onboarding\Infrastructure\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Onboarding\Application\Commands\CreateOnboardingTemplateCommand;
-use App\Modules\Onboarding\Application\Commands\UpdateOnboardingTemplateCommand;
 use App\Modules\Onboarding\Application\CommandHandlers\CreateOnboardingTemplateHandler;
 use App\Modules\Onboarding\Application\CommandHandlers\UpdateOnboardingTemplateHandler;
+use App\Modules\Onboarding\Application\Commands\CreateOnboardingTemplateCommand;
+use App\Modules\Onboarding\Application\Commands\UpdateOnboardingTemplateCommand;
 use App\Modules\Onboarding\Application\Queries\ListTemplatesQuery;
 use App\Modules\Onboarding\Application\QueryHandlers\ListTemplatesHandler;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingTemplate\OnboardingTemplateId;
-use App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface;
 use App\Modules\Onboarding\Domain\Exceptions\OnboardingTemplateNotFoundException;
+use App\Modules\Onboarding\Domain\Repositories\OnboardingTemplateRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -33,12 +33,13 @@ class OnboardingTemplateController extends Controller
             $request->input('employment_type'),
         );
         $templates = $this->listHandler->handle($query);
-        $data = array_map(fn($t) => [
+        $data = array_map(fn ($t) => [
             'id' => $t->getId()->value,
             'code' => $t->getCode(),
             'name' => $t->getName(),
             'active' => $t->isActive(),
         ], $templates);
+
         return response()->json(['data' => $data]);
     }
 
@@ -56,6 +57,7 @@ class OnboardingTemplateController extends Controller
             rules: $request->input('rules', []),
         );
         $template = $this->createHandler->handle($command);
+
         return response()->json(['data' => [
             'id' => $template->getId()->value,
             'code' => $template->getCode(),
@@ -68,7 +70,10 @@ class OnboardingTemplateController extends Controller
     {
         $templateId = OnboardingTemplateId::fromString($id);
         $template = $this->templateRepo->findById($templateId);
-        if (!$template) { throw new OnboardingTemplateNotFoundException($id); }
+        if (! $template) {
+            throw new OnboardingTemplateNotFoundException($id);
+        }
+
         return response()->json(['data' => [
             'id' => $template->getId()->value,
             'code' => $template->getCode(),
@@ -91,6 +96,7 @@ class OnboardingTemplateController extends Controller
             name: $request->input('name'), rules: $request->input('rules', []),
         );
         $this->updateHandler->handle($command);
+
         return response()->json(['message' => 'Updated']);
     }
 
@@ -98,9 +104,12 @@ class OnboardingTemplateController extends Controller
     {
         $templateId = OnboardingTemplateId::fromString($id);
         $template = $this->templateRepo->findById($templateId);
-        if (!$template) { throw new OnboardingTemplateNotFoundException($id); }
+        if (! $template) {
+            throw new OnboardingTemplateNotFoundException($id);
+        }
         $template->disable();
         $this->templateRepo->save($template);
+
         return response()->json(null, 204);
     }
 }

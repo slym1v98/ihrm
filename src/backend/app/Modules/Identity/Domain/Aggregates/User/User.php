@@ -13,6 +13,7 @@ use App\Modules\Identity\Domain\Events\UserRoleAssigned;
 use App\Modules\Identity\Domain\Events\UserRoleRevoked;
 use App\Modules\Identity\Domain\Exceptions\RoleAlreadyAssignedException;
 use DateTimeImmutable;
+use Ramsey\Uuid\Uuid;
 
 final class User
 {
@@ -34,13 +35,13 @@ final class User
         private HashedPassword $passwordHash,
         private UserName $name,
         private UserStatus $status,
-    ) {
-    }
+    ) {}
 
     public static function create(UserId $id, Email $email, HashedPassword $passwordHash, UserName $name, ?EmployeeId $employeeId = null): self
     {
         $user = new self($id, $employeeId, $email, $passwordHash, $name, UserStatus::Active);
-        $user->record(new UserCreated($id, $email, new DateTimeImmutable()));
+        $user->record(new UserCreated($id, $email, new DateTimeImmutable));
+
         return $user;
     }
 
@@ -59,44 +60,87 @@ final class User
         $user->lastLoginAt = $lastLoginAt;
         $user->roleBindings = $roleBindings;
         $user->dataScopeAssignments = $dataScopeAssignments;
+
         return $user;
     }
 
-    public function id(): UserId { return $this->id; }
-    public function employeeId(): ?EmployeeId { return $this->employeeId; }
-    public function email(): Email { return $this->email; }
-    public function passwordHash(): HashedPassword { return $this->passwordHash; }
-    public function name(): UserName { return $this->name; }
-    public function status(): UserStatus { return $this->status; }
-    public function lastLoginAt(): ?DateTimeImmutable { return $this->lastLoginAt; }
-    public function roleBindings(): array { return $this->roleBindings; }
-    public function dataScopeAssignments(): array { return $this->dataScopeAssignments; }
+    public function id(): UserId
+    {
+        return $this->id;
+    }
 
-    public function isActive(): bool { return $this->status === UserStatus::Active; }
+    public function employeeId(): ?EmployeeId
+    {
+        return $this->employeeId;
+    }
+
+    public function email(): Email
+    {
+        return $this->email;
+    }
+
+    public function passwordHash(): HashedPassword
+    {
+        return $this->passwordHash;
+    }
+
+    public function name(): UserName
+    {
+        return $this->name;
+    }
+
+    public function status(): UserStatus
+    {
+        return $this->status;
+    }
+
+    public function lastLoginAt(): ?DateTimeImmutable
+    {
+        return $this->lastLoginAt;
+    }
+
+    public function roleBindings(): array
+    {
+        return $this->roleBindings;
+    }
+
+    public function dataScopeAssignments(): array
+    {
+        return $this->dataScopeAssignments;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === UserStatus::Active;
+    }
 
     public function disable(): void
     {
-        if ($this->status === UserStatus::Disabled) return;
+        if ($this->status === UserStatus::Disabled) {
+            return;
+        }
         $this->status = UserStatus::Disabled;
-        $this->record(new UserDisabled($this->id, new DateTimeImmutable()));
+        $this->record(new UserDisabled($this->id, new DateTimeImmutable));
     }
 
     public function reactivate(): void
     {
-        if ($this->status === UserStatus::Active) return;
+        if ($this->status === UserStatus::Active) {
+            return;
+        }
         $this->status = UserStatus::Active;
-        $this->record(new UserReactivated($this->id, new DateTimeImmutable()));
+        $this->record(new UserReactivated($this->id, new DateTimeImmutable));
     }
 
     public function changePassword(HashedPassword $new): void
     {
         $this->passwordHash = $new;
-        $this->record(new UserPasswordChanged($this->id, new DateTimeImmutable()));
+        $this->record(new UserPasswordChanged($this->id, new DateTimeImmutable));
     }
 
     public function recordLogin(): void
     {
-        $this->lastLoginAt = new DateTimeImmutable();
+        $this->lastLoginAt = new DateTimeImmutable;
         $this->record(new UserLoggedIn($this->id, $this->lastLoginAt));
     }
 
@@ -105,18 +149,19 @@ final class User
         if ($this->hasActiveRole($roleId)) {
             throw new RoleAlreadyAssignedException("Role {$roleId} already assigned");
         }
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable;
         $this->roleBindings[] = new RoleBinding($roleId, $assignedBy, $now);
         $this->record(new UserRoleAssigned($this->id, $roleId, $assignedBy, $now));
     }
 
     public function revokeRole(RoleId $roleId): void
     {
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable;
         foreach ($this->roleBindings as $binding) {
             if ($binding->roleId->equals($roleId) && $binding->isActive()) {
                 $binding->revoke($now);
                 $this->record(new UserRoleRevoked($this->id, $roleId, $now));
+
                 return;
             }
         }
@@ -129,14 +174,15 @@ final class User
                 return true;
             }
         }
+
         return false;
     }
 
     public function grantDataScope(DataScope $scope): void
     {
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable;
         $assignment = new DataScopeAssignment(
-            id: \Ramsey\Uuid\Uuid::uuid4()->toString(),
+            id: Uuid::uuid4()->toString(),
             scope: $scope,
             createdAt: $now,
         );
@@ -154,6 +200,7 @@ final class User
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 }

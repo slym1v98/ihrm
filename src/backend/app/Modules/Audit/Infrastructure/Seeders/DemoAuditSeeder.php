@@ -11,7 +11,9 @@ class DemoAuditSeeder extends Seeder
     public function run(): void
     {
         $admin = UserModel::where('email', 'admin@ihrm.local')->first();
-        if (!$admin) return;
+        if (! $admin) {
+            return;
+        }
 
         $logs = [
             [

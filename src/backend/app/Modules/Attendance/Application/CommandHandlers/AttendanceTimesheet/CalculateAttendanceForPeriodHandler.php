@@ -56,6 +56,7 @@ class CalculateAttendanceForPeriodHandler
     {
         return array_values(array_filter($rawLogs, function ($log) use ($date) {
             $time = property_exists($log, 'eventTime') ? $log->eventTime : ($log->event_time ?? null);
+
             return $time && CarbonImmutable::instance($time)->isSameDay($date);
         }));
     }

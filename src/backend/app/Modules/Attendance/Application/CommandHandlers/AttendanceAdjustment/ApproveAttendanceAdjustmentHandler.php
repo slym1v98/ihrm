@@ -49,7 +49,7 @@ class ApproveAttendanceAdjustmentHandler
             holidays: [],
         );
 
-        $timesheet->replaceWith($data, 'adj-' . $adjustment->id()->toString());
+        $timesheet->replaceWith($data, 'adj-'.$adjustment->id()->toString());
         $this->timesheetRepo->saveAndDispatch($timesheet);
     }
 }

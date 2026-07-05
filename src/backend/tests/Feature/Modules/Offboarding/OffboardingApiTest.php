@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Modules\Offboarding;
 
+use App\Modules\Offboarding\Infrastructure\Persistence\Eloquent\OffboardingRequestModel;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Modules\Offboarding\Infrastructure\Persistence\Eloquent\OffboardingRequestModel;
 
 class OffboardingApiTest extends TestCase
 {
@@ -15,7 +16,7 @@ class OffboardingApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
         $response = $this->postJson('/api/v1/auth/login', ['email' => 'admin@ihrm.local', 'password' => 'password']);
         $this->token = $response->json('data.access_token');
     }
@@ -36,7 +37,7 @@ class OffboardingApiTest extends TestCase
         ]);
         $response->assertCreated();
         $id = $response->json('data.id');
-        $this->assertNotNull($id, 'Response: ' . $response->content());
+        $this->assertNotNull($id, 'Response: '.$response->content());
 
         $this->withToken($this->token)->getJson('/api/v1/offboarding/requests')->assertOk();
 
@@ -57,14 +58,14 @@ class OffboardingApiTest extends TestCase
 
         $submitResp = $this->withToken($this->token)->postJson("/api/v1/offboarding/requests/{$id}/submit");
         if ($submitResp->status() !== 200) {
-            $this->fail('Submit failed: ' . $submitResp->content());
+            $this->fail('Submit failed: '.$submitResp->content());
         }
 
         $approveResp = $this->withToken($this->token)->postJson("/api/v1/offboarding/requests/{$id}/approve", [
             'approved_last_working_date' => '2026-08-01',
         ]);
         if ($approveResp->status() !== 200) {
-            $this->fail('Approve failed: ' . $approveResp->content());
+            $this->fail('Approve failed: '.$approveResp->content());
         }
         $approveResp->assertOk();
     }

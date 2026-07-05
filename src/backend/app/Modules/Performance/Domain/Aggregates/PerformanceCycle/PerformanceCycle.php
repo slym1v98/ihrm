@@ -26,9 +26,12 @@ class PerformanceCycle
 
     public static function create(PerformanceCycleId $id, string $code, string $name, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $scoringRules): self
     {
-        if ($startDate >= $endDate) { throw new \InvalidArgumentException('Start date must be before end date'); }
+        if ($startDate >= $endDate) {
+            throw new \InvalidArgumentException('Start date must be before end date');
+        }
         $c = new self($id, $code, $name, $description, $startDate, $endDate, CycleStatus::Draft, $scoringRules, null);
         $c->recordedEvents[] = new CycleCreated($c->id->value);
+
         return $c;
     }
 
@@ -39,8 +42,12 @@ class PerformanceCycle
 
     public function update(string $code, string $name, ?string $description, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate, array $scoringRules): void
     {
-        if ($this->status !== CycleStatus::Draft) { throw new \RuntimeException('Cannot update non-draft cycle'); }
-        if ($startDate >= $endDate) { throw new \InvalidArgumentException('Start date must be before end date'); }
+        if ($this->status !== CycleStatus::Draft) {
+            throw new \RuntimeException('Cannot update non-draft cycle');
+        }
+        if ($startDate >= $endDate) {
+            throw new \InvalidArgumentException('Start date must be before end date');
+        }
         $this->code = $code;
         $this->name = $name;
         $this->description = $description;
@@ -51,7 +58,7 @@ class PerformanceCycle
 
     public function activate(): void
     {
-        if (!$this->status->canTransitionTo(CycleStatus::Active)) {
+        if (! $this->status->canTransitionTo(CycleStatus::Active)) {
             throw new InvalidStatusTransitionException($this->status->value, CycleStatus::Active->value);
         }
         $this->status = CycleStatus::Active;
@@ -60,7 +67,7 @@ class PerformanceCycle
 
     public function complete(): void
     {
-        if (!$this->status->canTransitionTo(CycleStatus::Completed)) {
+        if (! $this->status->canTransitionTo(CycleStatus::Completed)) {
             throw new InvalidStatusTransitionException($this->status->value, CycleStatus::Completed->value);
         }
         $this->status = CycleStatus::Completed;
@@ -69,21 +76,67 @@ class PerformanceCycle
 
     public function cancel(): void
     {
-        if (!$this->status->canTransitionTo(CycleStatus::Cancelled)) {
+        if (! $this->status->canTransitionTo(CycleStatus::Cancelled)) {
             throw new InvalidStatusTransitionException($this->status->value, CycleStatus::Cancelled->value);
         }
         $this->status = CycleStatus::Cancelled;
     }
 
-    public function popRecordedEvents(): array { $e=$this->recordedEvents; $this->recordedEvents=[]; return $e; }
-    public function getId(): PerformanceCycleId { return $this->id; }
-    public function getCode(): string { return $this->code; }
-    public function getName(): string { return $this->name; }
-    public function getDescription(): ?string { return $this->description; }
-    public function getStartDate(): \DateTimeImmutable { return $this->startDate; }
-    public function getEndDate(): \DateTimeImmutable { return $this->endDate; }
-    public function getStatus(): CycleStatus { return $this->status; }
-    public function getScoringRules(): array { return $this->scoringRules; }
-    public function getWorkflowRequestId(): ?string { return $this->workflowRequestId; }
-    public function setWorkflowRequestId(string $id): void { $this->workflowRequestId = $id; }
+    public function popRecordedEvents(): array
+    {
+        $e = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $e;
+    }
+
+    public function getId(): PerformanceCycleId
+    {
+        return $this->id;
+    }
+
+    public function getCode(): string
+    {
+        return $this->code;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function getStartDate(): \DateTimeImmutable
+    {
+        return $this->startDate;
+    }
+
+    public function getEndDate(): \DateTimeImmutable
+    {
+        return $this->endDate;
+    }
+
+    public function getStatus(): CycleStatus
+    {
+        return $this->status;
+    }
+
+    public function getScoringRules(): array
+    {
+        return $this->scoringRules;
+    }
+
+    public function getWorkflowRequestId(): ?string
+    {
+        return $this->workflowRequestId;
+    }
+
+    public function setWorkflowRequestId(string $id): void
+    {
+        $this->workflowRequestId = $id;
+    }
 }

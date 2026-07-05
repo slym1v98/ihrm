@@ -16,6 +16,7 @@ class EloquentAttendanceAdjustmentRequestRepository implements AttendanceAdjustm
     public function findById(string $id): ?AttendanceAdjustmentRequest
     {
         $model = AttendanceAdjustmentRequestModel::find($id);
+
         return $model ? $this->toAggregate($model) : null;
     }
 

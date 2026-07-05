@@ -72,12 +72,32 @@ class AttendancePeriod
     {
         $events = $this->events;
         $this->events = [];
+
         return $events;
     }
 
-    public function id(): AttendancePeriodId { return $this->id; }
-    public function periodCode(): string { return $this->periodCode; }
-    public function startDate(): CarbonImmutable { return $this->startDate; }
-    public function endDate(): CarbonImmutable { return $this->endDate; }
-    public function status(): PeriodStatus { return $this->status; }
+    public function id(): AttendancePeriodId
+    {
+        return $this->id;
+    }
+
+    public function periodCode(): string
+    {
+        return $this->periodCode;
+    }
+
+    public function startDate(): CarbonImmutable
+    {
+        return $this->startDate;
+    }
+
+    public function endDate(): CarbonImmutable
+    {
+        return $this->endDate;
+    }
+
+    public function status(): PeriodStatus
+    {
+        return $this->status;
+    }
 }

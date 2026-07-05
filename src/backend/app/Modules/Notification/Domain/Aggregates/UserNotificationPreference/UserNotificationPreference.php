@@ -26,7 +26,7 @@ class UserNotificationPreference
 
     public function toggle(): void
     {
-        $this->enabled = !$this->enabled;
+        $this->enabled = ! $this->enabled;
     }
 
     public function matches(Channel $channel, string $templateCode): bool
@@ -37,12 +37,32 @@ class UserNotificationPreference
         if ($this->templateCode !== null && $this->templateCode !== $templateCode) {
             return false;
         }
+
         return true;
     }
 
-    public function getId(): UserNotificationPreferenceId { return $this->id; }
-    public function getUserId(): string { return $this->userId; }
-    public function getChannel(): Channel { return $this->channel; }
-    public function getTemplateCode(): ?string { return $this->templateCode; }
-    public function isEnabled(): bool { return $this->enabled; }
+    public function getId(): UserNotificationPreferenceId
+    {
+        return $this->id;
+    }
+
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    public function getChannel(): Channel
+    {
+        return $this->channel;
+    }
+
+    public function getTemplateCode(): ?string
+    {
+        return $this->templateCode;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
 }

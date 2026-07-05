@@ -13,7 +13,7 @@ class ConditionEvaluatorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->evaluator = new ConditionEvaluator();
+        $this->evaluator = new ConditionEvaluator;
     }
 
     // --- Passthrough ---

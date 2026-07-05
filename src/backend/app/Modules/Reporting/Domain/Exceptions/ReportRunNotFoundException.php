@@ -10,5 +10,9 @@ class ReportRunNotFoundException extends AppException
     {
         parent::__construct('REPORT_RUN_NOT_FOUND', trim('Report run not found: '.$detail));
     }
-    public function getHttpStatus(): int { return 404; }
+
+    public function getHttpStatus(): int
+    {
+        return 404;
+    }
 }

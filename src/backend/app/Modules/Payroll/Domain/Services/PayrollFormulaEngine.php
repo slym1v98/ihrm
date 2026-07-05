@@ -3,10 +3,9 @@
 namespace App\Modules\Payroll\Domain\Services;
 
 use App\Modules\Payroll\Domain\Aggregates\PayrollComponent\PayrollComponent;
+use App\Modules\Payroll\Domain\ValueObjects\CalculationType;
 use App\Modules\Payroll\Domain\ValueObjects\Money;
 use App\Modules\Payroll\Domain\ValueObjects\PayrollFormulaResult;
-use App\Modules\Payroll\Domain\ValueObjects\CalculationType;
-use App\Modules\Payroll\Domain\ValueObjects\ComponentCategory;
 
 class PayrollFormulaEngine
 {
@@ -16,13 +15,15 @@ class PayrollFormulaEngine
     ];
 
     private const GROSS_CATEGORIES = ['base', 'allowance', 'bonus', 'overtime'];
+
     private const NEGATIVE_GROSS = ['penalty'];
+
     private const DEDUCTION_CATEGORIES = ['deduction', 'insurance', 'tax'];
 
     /**
-     * @param PayrollComponent[] $components
-     * @param float $baseSalary Base salary from contract snapshot (in decimal)
-     * @param array $manualAmounts Optional map of component code => decimal amount (for manual_entry / overrides)
+     * @param  PayrollComponent[]  $components
+     * @param  float  $baseSalary  Base salary from contract snapshot (in decimal)
+     * @param  array  $manualAmounts  Optional map of component code => decimal amount (for manual_entry / overrides)
      */
     public function calculate(
         array $components,
@@ -39,13 +40,18 @@ class PayrollFormulaEngine
         usort($components, function (PayrollComponent $a, PayrollComponent $b) {
             $ai = array_search($a->getCategory()->value, self::CATEGORY_ORDER, true);
             $bi = array_search($b->getCategory()->value, self::CATEGORY_ORDER, true);
+
             return $ai <=> $bi;
         });
 
         foreach ($components as $c) {
-            if (!$c->isActive()) continue;
+            if (! $c->isActive()) {
+                continue;
+            }
             $cat = $c->getCategory()->value;
-            if ($cat === 'net') continue; // net is computed, not summed
+            if ($cat === 'net') {
+                continue;
+            } // net is computed, not summed
 
             $amount = $this->resolveComponentAmount($c, $baseSalary, $resolved, $manualAmounts);
             $resolved[$c->getCode()] = $amount;
@@ -122,6 +128,7 @@ class PayrollFormulaEngine
         }
 
         $amt = $baseAmount->toDecimal() * $percent / 100;
+
         return Money::fromDecimal($amt);
     }
 
@@ -130,6 +137,7 @@ class PayrollFormulaEngine
         if ($component->getCalculationType() === CalculationType::PercentOfComponent) {
             return $component->getDefaultPercent().'% of base';
         }
+
         return null;
     }
 }

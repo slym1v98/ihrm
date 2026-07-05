@@ -40,6 +40,7 @@ class CreateShiftTemplateHandler
         );
 
         $this->templates->saveAndDispatch($template);
+
         return $template;
     }
 }

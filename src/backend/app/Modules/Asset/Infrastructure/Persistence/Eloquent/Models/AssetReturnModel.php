@@ -1,15 +1,18 @@
 <?php
+
 namespace App\Modules\Asset\Infrastructure\Persistence\Eloquent\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class AssetReturnModel extends Model
 {
     use HasUuids;
 
     protected $table = 'asset_returns';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [

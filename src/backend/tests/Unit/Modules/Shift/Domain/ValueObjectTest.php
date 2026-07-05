@@ -33,6 +33,6 @@ class ValueObjectTest extends TestCase
     public function test_invalid_recurrence_frequency_rejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new RecurrenceRule('yearly', 1, [1,2,3], null);
+        new RecurrenceRule('yearly', 1, [1, 2, 3], null);
     }
 }

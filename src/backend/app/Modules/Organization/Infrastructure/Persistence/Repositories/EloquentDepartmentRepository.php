@@ -20,13 +20,17 @@ class EloquentDepartmentRepository implements DepartmentRepositoryInterface
     public function findById(DepartmentId $id): Department
     {
         $record = $this->model->with('branch')->find($id->value);
-        if (!$record) throw new DepartmentNotFoundException($id->value);
+        if (! $record) {
+            throw new DepartmentNotFoundException($id->value);
+        }
+
         return $this->toDomain($record);
     }
 
     public function findByCodeAndBranch(DepartmentCode $code, BranchId $branchId): ?Department
     {
         $record = $this->model->where('code', $code->value)->where('branch_id', $branchId->value)->first();
+
         return $record ? $this->toDomain($record) : null;
     }
 
@@ -37,7 +41,7 @@ class EloquentDepartmentRepository implements DepartmentRepositoryInterface
 
     public function findChildrenOf(DepartmentId $id): array
     {
-        return $this->model->where('parent_id', $id->value)->get()->map(fn($r) => $this->toDomain($r))->all();
+        return $this->model->where('parent_id', $id->value)->get()->map(fn ($r) => $this->toDomain($r))->all();
     }
 
     public function hasActiveChildren(DepartmentId $id): bool
@@ -49,6 +53,7 @@ class EloquentDepartmentRepository implements DepartmentRepositoryInterface
     {
         $ids = [];
         $this->collectDescendantIds($id->value, $ids);
+
         return $ids;
     }
 
@@ -63,7 +68,10 @@ class EloquentDepartmentRepository implements DepartmentRepositoryInterface
     public function findBranchIdOf(DepartmentId $id): BranchId
     {
         $record = $this->model->find($id->value);
-        if (!$record) throw new DepartmentNotFoundException($id->value);
+        if (! $record) {
+            throw new DepartmentNotFoundException($id->value);
+        }
+
         return BranchId::fromString($record->branch_id);
     }
 

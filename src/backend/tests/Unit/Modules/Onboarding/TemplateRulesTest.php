@@ -11,7 +11,7 @@ class TemplateRulesTest extends TestCase
     #[Test]
     public function matches_with_no_filters(): void
     {
-        $rules = new TemplateRules();
+        $rules = new TemplateRules;
         $this->assertTrue($rules->matches('dept-1', 'pos-1', 'loc-1', 'full-time'));
     }
 
@@ -39,7 +39,7 @@ class TemplateRulesTest extends TestCase
     #[Test]
     public function add_and_remove_task(): void
     {
-        $rules = new TemplateRules();
+        $rules = new TemplateRules;
         $rules->addTask('Test task', null, 'department', 'it', -3, false, true, 1);
         $this->assertCount(1, $rules->getTasks());
 

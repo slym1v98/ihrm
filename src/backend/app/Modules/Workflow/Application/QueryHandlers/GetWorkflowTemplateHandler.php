@@ -10,10 +10,14 @@ use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface
 class GetWorkflowTemplateHandler
 {
     public function __construct(private WorkflowTemplateRepositoryInterface $templates) {}
+
     public function handle(GetWorkflowTemplateQuery $query)
     {
         $template = $this->templates->findById(new WorkflowTemplateId($query->id));
-        if (! $template) throw new WorkflowTemplateNotFoundException();
+        if (! $template) {
+            throw new WorkflowTemplateNotFoundException;
+        }
+
         return $template;
     }
 }

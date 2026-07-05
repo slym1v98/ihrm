@@ -14,7 +14,10 @@ class GetShiftTemplateHandler
     public function handle(GetShiftTemplateQuery $query): mixed
     {
         $template = $this->templates->findById(ShiftTemplateId::fromString($query->id));
-        if (!$template) throw new ShiftTemplateNotFoundException($query->id);
+        if (! $template) {
+            throw new ShiftTemplateNotFoundException($query->id);
+        }
+
         return $template;
     }
 }

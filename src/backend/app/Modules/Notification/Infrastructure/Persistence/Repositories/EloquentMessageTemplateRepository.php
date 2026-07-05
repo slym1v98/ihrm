@@ -15,12 +15,14 @@ class EloquentMessageTemplateRepository implements MessageTemplateRepositoryInte
     public function findById(MessageTemplateId $id): ?MessageTemplate
     {
         $record = $this->model->find($id->value());
+
         return $record ? self::toDomain($record) : null;
     }
 
     public function findByCode(string $code): ?MessageTemplate
     {
         $record = $this->model->where('code', $code)->first();
+
         return $record ? self::toDomain($record) : null;
     }
 
@@ -33,7 +35,8 @@ class EloquentMessageTemplateRepository implements MessageTemplateRepositoryInte
         if ($active !== null) {
             $query->where('is_active', $active);
         }
-        return $query->get()->map(fn($r) => self::toDomain($r))->all();
+
+        return $query->get()->map(fn ($r) => self::toDomain($r))->all();
     }
 
     public function save(MessageTemplate $template): void

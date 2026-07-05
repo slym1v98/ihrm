@@ -7,7 +7,6 @@ use App\Modules\Notification\Domain\Aggregates\MessageTemplate\MessageTemplateId
 use App\Modules\Notification\Domain\Repositories\MessageTemplateRepositoryInterface;
 use App\Modules\Notification\Domain\ValueObjects\Channel;
 use App\Modules\Notification\Infrastructure\Http\Resources\MessageTemplateResource;
-use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -30,7 +29,7 @@ class MessageTemplateController
         $paginated = array_slice($templates, $offset, $perPage);
 
         return response()->json([
-            'data' => array_map(fn($t) => new MessageTemplateResource($t), $paginated),
+            'data' => array_map(fn ($t) => new MessageTemplateResource($t), $paginated),
             'meta' => ['current_page' => $page, 'per_page' => $perPage, 'total' => count($templates)],
         ]);
     }
@@ -92,18 +91,24 @@ class MessageTemplateController
     public function activate(string $id): JsonResponse
     {
         $template = $this->templates->findById(new MessageTemplateId($id));
-        if ($template === null) return response()->json(['error' => 'Not found'], 404);
+        if ($template === null) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
         $template->activate();
         $this->templates->save($template);
+
         return response()->json(['data' => new MessageTemplateResource($template)]);
     }
 
     public function deactivate(string $id): JsonResponse
     {
         $template = $this->templates->findById(new MessageTemplateId($id));
-        if ($template === null) return response()->json(['error' => 'Not found'], 404);
+        if ($template === null) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
         $template->deactivate();
         $this->templates->save($template);
+
         return response()->json(['data' => new MessageTemplateResource($template)]);
     }
 }

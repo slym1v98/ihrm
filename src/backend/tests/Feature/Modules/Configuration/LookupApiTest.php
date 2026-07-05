@@ -19,6 +19,7 @@ class LookupApiTest extends TestCase
         $this->seed(PermissionSeeder::class);
         $this->seed(RoleSeeder::class);
         $this->seed(AdminUserSeeder::class);
+
         return UserModel::where('email', 'admin@ihrm.local')->firstOrFail();
     }
 
@@ -70,7 +71,7 @@ class LookupApiTest extends TestCase
         $group = LookupGroupModel::create(['code' => 'gender', 'name' => 'Gender', 'active' => true]);
 
         $this->actingAs($admin, 'sanctum')
-            ->getJson('/api/v1/config/lookups/' . $group->id)
+            ->getJson('/api/v1/config/lookups/'.$group->id)
             ->assertOk()
             ->assertJsonPath('data.code', 'gender');
     }

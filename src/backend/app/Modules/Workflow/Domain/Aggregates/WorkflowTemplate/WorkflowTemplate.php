@@ -19,15 +19,52 @@ class WorkflowTemplate
         usort($this->steps, fn (WorkflowStep $a, WorkflowStep $b) => $a->stepOrder() <=> $b->stepOrder());
     }
 
-    public function id(): WorkflowTemplateId { return $this->id; }
-    public function code(): string { return $this->code; }
-    public function name(): string { return $this->name; }
-    public function description(): ?string { return $this->description; }
-    public function isActive(): bool { return $this->active; }
-    /** @return WorkflowStep[] */ public function steps(): array { return $this->steps; }
-    public function activate(): void { $this->active = true; }
-    public function deactivate(): void { $this->active = false; }
-    public function firstStep(): WorkflowStep { return $this->steps[0]; }
+    public function id(): WorkflowTemplateId
+    {
+        return $this->id;
+    }
+
+    public function code(): string
+    {
+        return $this->code;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function description(): ?string
+    {
+        return $this->description;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    /** @return WorkflowStep[] */
+    public function steps(): array
+    {
+        return $this->steps;
+    }
+
+    public function activate(): void
+    {
+        $this->active = true;
+    }
+
+    public function deactivate(): void
+    {
+        $this->active = false;
+    }
+
+    public function firstStep(): WorkflowStep
+    {
+        return $this->steps[0];
+    }
+
     public function nextStepAfter(int $stepOrder): ?WorkflowStep
     {
         foreach ($this->steps as $step) {
@@ -35,9 +72,14 @@ class WorkflowTemplate
                 return $step;
             }
         }
+
         return null;
     }
-    public function isFinalStep(int $stepOrder): bool { return $this->nextStepAfter($stepOrder) === null; }
+
+    public function isFinalStep(int $stepOrder): bool
+    {
+        return $this->nextStepAfter($stepOrder) === null;
+    }
 
     private function assertValidSteps(array $steps): void
     {

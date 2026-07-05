@@ -2,9 +2,9 @@
 
 namespace App\Modules\Organization\Application\CommandHandlers\Department;
 
+use App\Modules\Identity\Application\Services\AuthorizationService;
 use App\Modules\Organization\Application\Commands\Department\UpdateDepartmentCommand;
 use App\Modules\Organization\Domain\Repositories\DepartmentRepositoryInterface;
-use App\Modules\Identity\Application\Services\AuthorizationService;
 
 class UpdateDepartmentHandler
 {

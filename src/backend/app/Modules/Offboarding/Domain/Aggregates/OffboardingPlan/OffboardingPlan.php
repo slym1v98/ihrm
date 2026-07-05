@@ -23,7 +23,7 @@ class OffboardingPlan
     private function __construct(
         private readonly OffboardingPlanId $id,
         private readonly string $requestId,
-    private readonly string $employeeId,
+        private readonly string $employeeId,
         private readonly \DateTimeImmutable $startDate,
         private OffboardingPlanStatus $status,
         private ?string $workflowRequestId,
@@ -39,6 +39,7 @@ class OffboardingPlan
     ): self {
         $plan = new self($id, $requestId, $dummy, $dummy2, $startDate, OffboardingPlanStatus::Draft, null, null);
         $plan->recordEvent(new OffboardingPlanCreated($id, $requestId, $startDate));
+
         return $plan;
     }
 
@@ -57,7 +58,7 @@ class OffboardingPlan
 
     public function activate(): void
     {
-        if (!$this->status->canTransitionTo(OffboardingPlanStatus::Active)) {
+        if (! $this->status->canTransitionTo(OffboardingPlanStatus::Active)) {
             throw new InvalidStatusTransitionException($this->status->value, OffboardingPlanStatus::Active->value);
         }
         if (count($this->tasks) === 0) {
@@ -69,7 +70,7 @@ class OffboardingPlan
 
     public function cancel(): void
     {
-        if (!$this->status->canTransitionTo(OffboardingPlanStatus::Cancelled)) {
+        if (! $this->status->canTransitionTo(OffboardingPlanStatus::Cancelled)) {
             throw new InvalidStatusTransitionException($this->status->value, OffboardingPlanStatus::Cancelled->value);
         }
         $this->status = OffboardingPlanStatus::Cancelled;
@@ -77,17 +78,17 @@ class OffboardingPlan
 
     public function complete(): void
     {
-        if (!$this->status->canTransitionTo(OffboardingPlanStatus::Completed)) {
+        if (! $this->status->canTransitionTo(OffboardingPlanStatus::Completed)) {
             throw new InvalidStatusTransitionException($this->status->value, OffboardingPlanStatus::Completed->value);
         }
 
         $pendingTasks = array_filter(
             $this->tasks,
-            fn(OffboardingTask $t) => !$t->getStatus()->isTerminal()
+            fn (OffboardingTask $t) => ! $t->getStatus()->isTerminal()
         );
 
-        if (!empty($pendingTasks)) {
-            throw new MandatoryTaskIncompleteException();
+        if (! empty($pendingTasks)) {
+            throw new MandatoryTaskIncompleteException;
         }
 
         if ($this->workflowRequestId !== null) {
@@ -95,7 +96,7 @@ class OffboardingPlan
         }
 
         $this->status = OffboardingPlanStatus::Completed;
-        $this->completedAt = new \DateTimeImmutable();
+        $this->completedAt = new \DateTimeImmutable;
         $this->recordEvent(new OffboardingPlanCompleted($this->id, $this->requestId));
     }
 
@@ -105,13 +106,13 @@ class OffboardingPlan
             throw new InvalidStatusTransitionException($this->status->value, OffboardingPlanStatus::Completed->value);
         }
         $this->status = OffboardingPlanStatus::Completed;
-        $this->completedAt = new \DateTimeImmutable();
+        $this->completedAt = new \DateTimeImmutable;
         $this->recordEvent(new OffboardingPlanCompleted($this->id, $this->requestId));
     }
 
     public function addTask(OffboardingTask $task): void
     {
-        if (!in_array($this->status, [OffboardingPlanStatus::Draft, OffboardingPlanStatus::Active], true)) {
+        if (! in_array($this->status, [OffboardingPlanStatus::Draft, OffboardingPlanStatus::Active], true)) {
             throw new \RuntimeException('Can only add tasks to draft or active plans');
         }
         if ($task->getTaskType() !== TaskType::Custom) {
@@ -140,6 +141,7 @@ class OffboardingPlan
                 }
                 unset($this->tasks[$i]);
                 $this->tasks = array_values($this->tasks);
+
                 return;
             }
         }
@@ -160,16 +162,52 @@ class OffboardingPlan
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 
-    public function getId(): OffboardingPlanId { return $this->id; }
-    public function getEmployeeId(): string { return $this->requestId; }
-    public function getCandidateId(): ?string { return $this->dummy; }
-    public function getTemplateId(): ?string { return $this->dummy2; }
-    public function getStartDate(): \DateTimeImmutable { return $this->startDate; }
-    public function getStatus(): OffboardingPlanStatus { return $this->status; }
-    public function getWorkflowRequestId(): ?string { return $this->workflowRequestId; }
-    public function getCompletedAt(): ?\DateTimeImmutable { return $this->completedAt; }
-    public function getTasks(): array { return $this->tasks; }
+    public function getId(): OffboardingPlanId
+    {
+        return $this->id;
+    }
+
+    public function getEmployeeId(): string
+    {
+        return $this->requestId;
+    }
+
+    public function getCandidateId(): ?string
+    {
+        return $this->dummy;
+    }
+
+    public function getTemplateId(): ?string
+    {
+        return $this->dummy2;
+    }
+
+    public function getStartDate(): \DateTimeImmutable
+    {
+        return $this->startDate;
+    }
+
+    public function getStatus(): OffboardingPlanStatus
+    {
+        return $this->status;
+    }
+
+    public function getWorkflowRequestId(): ?string
+    {
+        return $this->workflowRequestId;
+    }
+
+    public function getCompletedAt(): ?\DateTimeImmutable
+    {
+        return $this->completedAt;
+    }
+
+    public function getTasks(): array
+    {
+        return $this->tasks;
+    }
 }

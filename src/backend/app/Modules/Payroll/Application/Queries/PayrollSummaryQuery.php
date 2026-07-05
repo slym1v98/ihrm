@@ -13,12 +13,17 @@ readonly class PayrollSummaryQuery
     public function getSummary(string $periodId): array
     {
         $entries = $this->entryRepo->findByPeriod(PayrollPeriodId::fromString($periodId));
-        $totalGross = 0.0; $totalNet = 0.0; $errors = 0;
+        $totalGross = 0.0;
+        $totalNet = 0.0;
+        $errors = 0;
         foreach ($entries as $e) {
             $totalGross += $e->getGrossAmount()->toDecimal();
             $totalNet += $e->getNetAmount()->toDecimal();
-            if ($e->getStatus() === 'error') $errors++;
+            if ($e->getStatus() === 'error') {
+                $errors++;
+            }
         }
+
         return [
             'total_entries' => count($entries),
             'total_gross' => $totalGross,

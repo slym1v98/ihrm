@@ -34,7 +34,8 @@ final class Contract
         }
 
         $contract = new self($id, $employeeId, $contractNumber, $term, ContractStatus::Draft, null, null, $positionId);
-        $contract->record(new ContractCreated($id, $employeeId, $term->type, $contractNumber, new DateTimeImmutable()));
+        $contract->record(new ContractCreated($id, $employeeId, $term->type, $contractNumber, new DateTimeImmutable));
+
         return $contract;
     }
 
@@ -57,32 +58,33 @@ final class Contract
             return;
         }
         $this->status = ContractStatus::Active;
-        $this->record(new ContractActivated($this->id, $this->employeeId, new DateTimeImmutable()));
+        $this->record(new ContractActivated($this->id, $this->employeeId, new DateTimeImmutable));
     }
 
     public function renew(ContractId $newId, string $newNumber, ContractTerm $term): self
     {
         $contract = new self($newId, $this->employeeId, $newNumber, $term, ContractStatus::Draft, $this->id, null, $this->positionId);
-        $contract->record(new ContractRenewed($newId, $this->id, $this->employeeId, new DateTimeImmutable()));
+        $contract->record(new ContractRenewed($newId, $this->id, $this->employeeId, new DateTimeImmutable));
+
         return $contract;
     }
 
     public function terminate(): void
     {
         $this->status = ContractStatus::Terminated;
-        $this->record(new ContractTerminated($this->id, $this->employeeId, new DateTimeImmutable()));
+        $this->record(new ContractTerminated($this->id, $this->employeeId, new DateTimeImmutable));
     }
 
     public function cancel(): void
     {
         $this->status = ContractStatus::Cancelled;
-        $this->record(new ContractTerminated($this->id, $this->employeeId, new DateTimeImmutable()));
+        $this->record(new ContractTerminated($this->id, $this->employeeId, new DateTimeImmutable));
     }
 
     public function markExpired(): void
     {
         $this->status = ContractStatus::Expired;
-        $this->record(new ContractExpired($this->id, $this->employeeId, new DateTimeImmutable()));
+        $this->record(new ContractExpired($this->id, $this->employeeId, new DateTimeImmutable));
     }
 
     public function term(): DateRange
@@ -90,20 +92,56 @@ final class Contract
         return $this->term->dateRange;
     }
 
-    public function id(): ContractId { return $this->id; }
-    public function employeeId(): EmployeeId { return $this->employeeId; }
-    public function contractNumber(): string { return $this->contractNumber; }
-    public function contractType(): string { return $this->term->type; }
-    public function status(): ContractStatus { return $this->status; }
-    public function predecessorContractId(): ?ContractId { return $this->predecessorContractId; }
-    public function signDate(): ?DateTimeImmutable { return $this->signDate; }
-    public function positionId(): ?string { return $this->positionId; }
-    public function baseSalary(): ?float { return $this->term->salary; }
+    public function id(): ContractId
+    {
+        return $this->id;
+    }
+
+    public function employeeId(): EmployeeId
+    {
+        return $this->employeeId;
+    }
+
+    public function contractNumber(): string
+    {
+        return $this->contractNumber;
+    }
+
+    public function contractType(): string
+    {
+        return $this->term->type;
+    }
+
+    public function status(): ContractStatus
+    {
+        return $this->status;
+    }
+
+    public function predecessorContractId(): ?ContractId
+    {
+        return $this->predecessorContractId;
+    }
+
+    public function signDate(): ?DateTimeImmutable
+    {
+        return $this->signDate;
+    }
+
+    public function positionId(): ?string
+    {
+        return $this->positionId;
+    }
+
+    public function baseSalary(): ?float
+    {
+        return $this->term->salary;
+    }
 
     public function releaseEvents(): array
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 

@@ -14,8 +14,12 @@ class AuthorizationService
             return;
         }
 
-        throw new class('PERMISSION_DENIED', "Missing permission: {$permissionCode}") extends AppException {
-            public function getHttpStatus(): int { return 403; }
+        throw new class('PERMISSION_DENIED', "Missing permission: {$permissionCode}") extends AppException
+        {
+            public function getHttpStatus(): int
+            {
+                return 403;
+            }
         };
     }
 

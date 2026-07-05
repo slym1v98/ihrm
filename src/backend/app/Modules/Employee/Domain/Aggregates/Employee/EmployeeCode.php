@@ -6,9 +6,7 @@ use InvalidArgumentException;
 
 final readonly class EmployeeCode
 {
-    private function __construct(public string $value)
-    {
-    }
+    private function __construct(public string $value) {}
 
     public static function fromString(string $value): self
     {
@@ -16,6 +14,7 @@ final readonly class EmployeeCode
         if ($trimmed === '' || strlen($trimmed) > 50) {
             throw new InvalidArgumentException('Employee code must be 1-50 chars.');
         }
+
         return new self($trimmed);
     }
 

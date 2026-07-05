@@ -14,7 +14,9 @@ class ReturnWorkflowForEditHandler
     public function handle(ReturnWorkflowForEditCommand $command): void
     {
         $request = $this->requests->findById(new WorkflowRequestId($command->workflowRequestId));
-        if (! $request) throw new WorkflowRequestNotFoundException();
+        if (! $request) {
+            throw new WorkflowRequestNotFoundException;
+        }
         $request->returnForEdit($command->actorId, $request->currentStep() ?? 0, $command->comment);
         $this->requests->save($request);
     }

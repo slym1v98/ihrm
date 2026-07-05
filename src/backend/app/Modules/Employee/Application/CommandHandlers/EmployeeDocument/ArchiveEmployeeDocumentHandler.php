@@ -16,7 +16,9 @@ class ArchiveEmployeeDocumentHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.document.archive');
         $document = $this->documents->findById(EmployeeDocumentId::fromString($command->documentId));
-        if (! $document) throw new EmployeeDocumentNotFoundException($command->documentId);
+        if (! $document) {
+            throw new EmployeeDocumentNotFoundException($command->documentId);
+        }
         $document->archive();
         $this->documents->saveAndDispatch($document);
     }

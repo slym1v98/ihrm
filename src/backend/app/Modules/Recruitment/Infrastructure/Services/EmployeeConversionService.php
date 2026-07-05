@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Recruitment\Infrastructure\Services;
 
 use App\Modules\Recruitment\Domain\Aggregates\Candidate\Candidate;

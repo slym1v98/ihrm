@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Modules\Training;
 
-use PHPUnit\Framework\TestCase;
 use App\Modules\Training\Domain\Aggregates\TrainingSession\TrainingSession;
 use App\Modules\Training\Domain\Aggregates\TrainingSession\TrainingSessionId;
-use App\Modules\Training\Domain\ValueObjects\SessionStatus;
 use App\Modules\Training\Domain\Exceptions\SessionFullException;
+use App\Modules\Training\Domain\ValueObjects\SessionStatus;
+use PHPUnit\Framework\TestCase;
 
 class TrainingSessionTest extends TestCase
 {

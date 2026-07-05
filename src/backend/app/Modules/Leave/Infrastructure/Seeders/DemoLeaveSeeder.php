@@ -21,23 +21,25 @@ class DemoLeaveSeeder extends Seeder
         // ── Leave policies ─────────────────────────────────────────────
         $policies = [
             ['annual',    '2026-01-01', null,         null, false, 5,  6,  true,  false],
-            ['sick',      '2026-01-01', null,         10,   true,  null,null, true, false],
-            ['maternity', '2026-01-01', null,         null, true,  null,null, false,false],
-            ['unpaid',    '2026-01-01', null,         null, false, null,null, true, false],
+            ['sick',      '2026-01-01', null,         10,   true,  null, null, true, false],
+            ['maternity', '2026-01-01', null,         null, true,  null, null, false, false],
+            ['unpaid',    '2026-01-01', null,         null, false, null, null, true, false],
         ];
         foreach ($policies as [$code, $from, $until, $maxConsec, $attach, $carry, $carryExp, $half, $hourly]) {
             $tid = $types[$code] ?? null;
-            if (!$tid) continue;
+            if (! $tid) {
+                continue;
+            }
             LeavePolicyModel::updateOrCreate(
                 ['leave_type_id' => $tid, 'valid_from' => $from],
                 [
-                    'valid_until'              => $until,
-                    'max_consecutive_days'     => $maxConsec,
-                    'requires_attachment'      => $attach,
-                    'carry_over_limit'         => $carry,
+                    'valid_until' => $until,
+                    'max_consecutive_days' => $maxConsec,
+                    'requires_attachment' => $attach,
+                    'carry_over_limit' => $carry,
                     'carry_over_expiry_months' => $carryExp,
-                    'half_day_allowed'         => $half,
-                    'hourly_allowed'           => $hourly,
+                    'half_day_allowed' => $half,
+                    'hourly_allowed' => $hourly,
                 ],
             );
         }
@@ -46,21 +48,25 @@ class DemoLeaveSeeder extends Seeder
         foreach ($employees as $empId) {
             foreach (['annual' => 12, 'sick' => 10] as $code => $days) {
                 $tid = $types[$code] ?? null;
-                if (!$tid) continue;
+                if (! $tid) {
+                    continue;
+                }
                 LeaveBalanceModel::updateOrCreate(
                     ['employee_id' => $empId, 'leave_type_id' => $tid, 'year' => $year],
                     [
-                        'opening'      => 0,
-                        'accrued'      => $days,
-                        'used'         => 0,
+                        'opening' => 0,
+                        'accrued' => $days,
+                        'used' => 0,
                         'carried_over' => 0,
-                        'expired'      => 0,
+                        'expired' => 0,
                     ],
                 );
             }
         }
 
-        if (empty($employees)) return;
+        if (empty($employees)) {
+            return;
+        }
 
         $adminId = $employees[0];
 
@@ -78,22 +84,26 @@ class DemoLeaveSeeder extends Seeder
         ];
 
         foreach ($samples as [$empId, $typeCode, $start, $end, $unit, $minutes, $status, $approver]) {
-            if (!$empId) continue;
+            if (! $empId) {
+                continue;
+            }
             $tid = $types[$typeCode] ?? null;
-            if (!$tid) continue;
+            if (! $tid) {
+                continue;
+            }
             LeaveRequestModel::create([
-                'id'               => (string) Uuid::uuid4(),
-                'employee_id'      => $empId,
-                'leave_type_id'    => $tid,
-                'start_at'         => $start,
-                'end_at'           => $end,
-                'duration_unit'    => $unit,
+                'id' => (string) Uuid::uuid4(),
+                'employee_id' => $empId,
+                'leave_type_id' => $tid,
+                'start_at' => $start,
+                'end_at' => $end,
+                'duration_unit' => $unit,
                 'duration_minutes' => $minutes,
-                'reason'           => 'Lý do cá nhân',
-                'status'           => $status,
-                'approved_by'      => $approver,
-                'approved_at'      => $approver ? now() : null,
-                'balance_before'   => 12,
+                'reason' => 'Lý do cá nhân',
+                'status' => $status,
+                'approved_by' => $approver,
+                'approved_at' => $approver ? now() : null,
+                'balance_before' => 12,
             ]);
         }
     }

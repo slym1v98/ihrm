@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shift\Infrastructure\Http\Controllers;
 
+use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use App\Modules\Shift\Application\CommandHandlers\ShiftTemplate\ActivateShiftTemplateHandler;
 use App\Modules\Shift\Application\CommandHandlers\ShiftTemplate\CreateShiftTemplateHandler;
 use App\Modules\Shift\Application\CommandHandlers\ShiftTemplate\DeactivateShiftTemplateHandler;
@@ -12,7 +13,6 @@ use App\Modules\Shift\Application\Commands\ShiftTemplate\DeactivateShiftTemplate
 use App\Modules\Shift\Application\Commands\ShiftTemplate\UpdateShiftTemplateCommand;
 use App\Modules\Shift\Infrastructure\Http\Resources\ShiftTemplateResource;
 use App\Modules\Shift\Infrastructure\Persistence\Eloquent\ShiftTemplateModel;
-use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -29,6 +29,7 @@ class ShiftTemplateController
     {
         $paginator = ShiftTemplateModel::query()->orderBy('name')
             ->paginate((int) $request->input('per_page', 20), ['*'], 'page', (int) $request->input('page', 1));
+
         return response()->json(new PaginatedCollection($paginator->through(fn ($m) => new ShiftTemplateResource($m))));
     }
 
@@ -52,6 +53,7 @@ class ShiftTemplateController
     public function show(string $id): JsonResponse
     {
         $model = ShiftTemplateModel::findOrFail($id);
+
         return response()->json(['data' => new ShiftTemplateResource($model)]);
     }
 
@@ -75,12 +77,14 @@ class ShiftTemplateController
     public function activate(Request $request, string $id): JsonResponse
     {
         $this->activateHandler->handle(new ActivateShiftTemplateCommand($id), (string) $request->user()->id);
+
         return response()->json(['data' => new ShiftTemplateResource(ShiftTemplateModel::find($id))]);
     }
 
     public function deactivate(Request $request, string $id): JsonResponse
     {
         $this->deactivateHandler->handle(new DeactivateShiftTemplateCommand($id), (string) $request->user()->id);
+
         return response()->json(['data' => new ShiftTemplateResource(ShiftTemplateModel::find($id))]);
     }
 }

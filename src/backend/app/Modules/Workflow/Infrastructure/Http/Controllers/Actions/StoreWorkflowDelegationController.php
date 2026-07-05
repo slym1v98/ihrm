@@ -9,5 +9,9 @@ use App\Modules\Workflow\Infrastructure\Http\Requests\CreateWorkflowDelegationRe
 class StoreWorkflowDelegationController
 {
     public function __construct(private WorkflowDelegationController $controller) {}
-    public function __invoke(CreateWorkflowDelegationRequest $request, CreateWorkflowDelegationHandler $handler) { return $this->controller->store($request, $handler); }
+
+    public function __invoke(CreateWorkflowDelegationRequest $request, CreateWorkflowDelegationHandler $handler)
+    {
+        return $this->controller->store($request, $handler);
+    }
 }

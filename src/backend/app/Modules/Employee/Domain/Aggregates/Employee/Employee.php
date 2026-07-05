@@ -38,7 +38,8 @@ final class Employee
     public static function create(EmployeeId $id, EmployeeCode $code, PersonalName $name): self
     {
         $employee = new self($id, $code, $name, null, null, null, null, null, EmployeeStatus::Draft);
-        $employee->record(new EmployeeCreated($id, $code->value, $name->full(), EmployeeStatus::Draft->value, new DateTimeImmutable()));
+        $employee->record(new EmployeeCreated($id, $code->value, $name->full(), EmployeeStatus::Draft->value, new DateTimeImmutable));
+
         return $employee;
     }
 
@@ -75,7 +76,7 @@ final class Employee
         $this->personalEmail = $personalEmail;
         $this->phone = $phone;
         $this->address = $address;
-        $this->record(new EmployeePersonalInfoUpdated($this->id, $changed, new DateTimeImmutable()));
+        $this->record(new EmployeePersonalInfoUpdated($this->id, $changed, new DateTimeImmutable));
     }
 
     public function changeEmployment(?string $branchId, ?string $departmentId, ?string $positionId, ?DateTimeImmutable $effectiveAt = null): void
@@ -83,16 +84,16 @@ final class Employee
         $this->branchId = $branchId;
         $this->departmentId = $departmentId;
         $this->positionId = $positionId;
-        $snapshot = new EmploymentSnapshot($branchId, $departmentId, $positionId, $effectiveAt ?? new DateTimeImmutable());
+        $snapshot = new EmploymentSnapshot($branchId, $departmentId, $positionId, $effectiveAt ?? new DateTimeImmutable);
         $this->history[] = $snapshot;
-        $this->record(new EmployeeEmploymentChanged($this->id, $branchId, $departmentId, $positionId, new DateTimeImmutable()));
+        $this->record(new EmployeeEmploymentChanged($this->id, $branchId, $departmentId, $positionId, new DateTimeImmutable));
     }
 
     public function changeManager(?EmployeeId $managerId): void
     {
         $old = $this->managerId;
         $this->managerId = $managerId;
-        $this->record(new EmployeeManagerChanged($this->id, $old, $managerId, new DateTimeImmutable()));
+        $this->record(new EmployeeManagerChanged($this->id, $old, $managerId, new DateTimeImmutable));
     }
 
     public function changeStatus(EmployeeStatus $newStatus, EmployeeLifecyclePolicy $policy, ?string $reason = null): void
@@ -102,7 +103,7 @@ final class Employee
         }
         $old = $this->status;
         $this->status = $newStatus;
-        $this->record(new EmployeeStatusChanged($this->id, $old->value, $newStatus->value, $reason, new DateTimeImmutable()));
+        $this->record(new EmployeeStatusChanged($this->id, $old->value, $newStatus->value, $reason, new DateTimeImmutable));
     }
 
     public function linkUserAccount(string $userId): void
@@ -110,26 +111,86 @@ final class Employee
         $this->userId = $userId;
     }
 
-    public function id(): EmployeeId { return $this->id; }
-    public function code(): EmployeeCode { return $this->code; }
-    public function name(): PersonalName { return $this->name; }
-    public function dob(): ?DateTimeImmutable { return $this->dob; }
-    public function gender(): ?string { return $this->gender; }
-    public function personalEmail(): ?string { return $this->personalEmail; }
-    public function phone(): ?string { return $this->phone; }
-    public function address(): ?Address { return $this->address; }
-    public function status(): EmployeeStatus { return $this->status; }
-    public function managerId(): ?EmployeeId { return $this->managerId; }
-    public function branchId(): ?string { return $this->branchId; }
-    public function departmentId(): ?string { return $this->departmentId; }
-    public function positionId(): ?string { return $this->positionId; }
-    public function userId(): ?string { return $this->userId; }
-    public function history(): array { return $this->history; }
+    public function id(): EmployeeId
+    {
+        return $this->id;
+    }
+
+    public function code(): EmployeeCode
+    {
+        return $this->code;
+    }
+
+    public function name(): PersonalName
+    {
+        return $this->name;
+    }
+
+    public function dob(): ?DateTimeImmutable
+    {
+        return $this->dob;
+    }
+
+    public function gender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function personalEmail(): ?string
+    {
+        return $this->personalEmail;
+    }
+
+    public function phone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function address(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function status(): EmployeeStatus
+    {
+        return $this->status;
+    }
+
+    public function managerId(): ?EmployeeId
+    {
+        return $this->managerId;
+    }
+
+    public function branchId(): ?string
+    {
+        return $this->branchId;
+    }
+
+    public function departmentId(): ?string
+    {
+        return $this->departmentId;
+    }
+
+    public function positionId(): ?string
+    {
+        return $this->positionId;
+    }
+
+    public function userId(): ?string
+    {
+        return $this->userId;
+    }
+
+    public function history(): array
+    {
+        return $this->history;
+    }
 
     public function releaseEvents(): array
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 

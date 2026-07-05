@@ -2,14 +2,17 @@
 
 namespace App\Modules\Notification\Infrastructure\Persistence\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class NotificationMessageModel extends Model
 {
     use HasUuids;
+
     protected $table = 'notification_messages';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [

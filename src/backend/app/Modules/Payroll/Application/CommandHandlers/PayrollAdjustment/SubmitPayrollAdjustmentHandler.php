@@ -3,10 +3,13 @@
 namespace App\Modules\Payroll\Application\CommandHandlers\PayrollAdjustment;
 
 use App\Modules\Payroll\Application\Commands\PayrollAdjustment\SubmitPayrollAdjustmentCommand;
-use App\Modules\Payroll\Domain\Aggregates\PayrollAdjustment\{PayrollAdjustment, PayrollAdjustmentId};
+use App\Modules\Payroll\Domain\Aggregates\PayrollAdjustment\PayrollAdjustment;
+use App\Modules\Payroll\Domain\Aggregates\PayrollAdjustment\PayrollAdjustmentId;
 use App\Modules\Payroll\Domain\Aggregates\PayrollEntry\PayrollEntryId;
-use App\Modules\Payroll\Domain\Repositories\{PayrollAdjustmentRepositoryInterface, PayrollEntryRepositoryInterface};
-use App\Modules\Payroll\Domain\Exceptions\{PayrollEntryNotFoundException, DuplicatePendingAdjustmentException};
+use App\Modules\Payroll\Domain\Exceptions\DuplicatePendingAdjustmentException;
+use App\Modules\Payroll\Domain\Exceptions\PayrollEntryNotFoundException;
+use App\Modules\Payroll\Domain\Repositories\PayrollAdjustmentRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollEntryRepositoryInterface;
 use App\Modules\Payroll\Domain\ValueObjects\AdjustmentStatus;
 use App\Modules\Payroll\Domain\ValueObjects\Money;
 
@@ -21,7 +24,9 @@ readonly class SubmitPayrollAdjustmentHandler
     {
         $entryId = PayrollEntryId::fromString($command->entryId);
         $entry = $this->entryRepo->findById($entryId);
-        if ($entry === null) throw PayrollEntryNotFoundException::default();
+        if ($entry === null) {
+            throw PayrollEntryNotFoundException::default();
+        }
 
         // Check no pending adjustment exists
         $existing = $this->adjustmentRepo->findByEntry($entryId);
@@ -42,6 +47,7 @@ readonly class SubmitPayrollAdjustmentHandler
         );
 
         $this->adjustmentRepo->save($adjustment);
+
         return $adjustment;
     }
 }

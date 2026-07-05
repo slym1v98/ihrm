@@ -1,23 +1,19 @@
 <?php
 
-use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\{
-    ApproveAttendanceAdjustmentController,
-    CalculateAttendanceTimesheetController,
-    CloseAttendancePeriodController,
-    EmployeeAttendanceAttendanceTimesheetController,
-    ListAttendanceAdjustmentController,
-    ListAttendancePeriodController,
-    ListAttendanceRawLogController,
-    ListAttendanceTimesheetController,
-    RejectAttendanceAdjustmentController,
-    ReopenAttendancePeriodController,
-    StoreAttendanceAdjustmentController,
-    StoreAttendancePeriodController,
-    StoreAttendanceRawLogController,
-};
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\ApproveAttendanceAdjustmentController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\CalculateAttendanceTimesheetController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\CloseAttendancePeriodController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\EmployeeAttendanceAttendanceTimesheetController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\ListAttendanceAdjustmentController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\ListAttendancePeriodController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\ListAttendanceRawLogController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\ListAttendanceTimesheetController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\RejectAttendanceAdjustmentController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\ReopenAttendancePeriodController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\StoreAttendanceAdjustmentController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\StoreAttendancePeriodController;
+use App\Modules\Attendance\Infrastructure\Http\Controllers\Actions\StoreAttendanceRawLogController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/attendance/raw-logs', ListAttendanceRawLogController::class)->middleware('permission:attendance.raw-log.view');

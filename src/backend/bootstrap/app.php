@@ -1,8 +1,8 @@
 <?php
 
+use App\Modules\Identity\Infrastructure\Http\Middleware\PermissionMiddleware;
 use App\Modules\Shared\Exceptions\AppException;
 use App\Modules\Shared\Exceptions\ValidationException as SharedValidationException;
-use App\Modules\Identity\Infrastructure\Http\Middleware\PermissionMiddleware;
 use App\Modules\Shared\Http\Middleware\ForceJsonMiddleware;
 use App\Modules\Shared\Http\Resources\ErrorResource;
 use Illuminate\Auth\AuthenticationException;
@@ -51,8 +51,12 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(function (AuthenticationException $exception, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
-                $appException = new class('UNAUTHENTICATED', 'Unauthenticated.') extends AppException {
-                    public function getHttpStatus(): int { return 401; }
+                $appException = new class('UNAUTHENTICATED', 'Unauthenticated.') extends AppException
+                {
+                    public function getHttpStatus(): int
+                    {
+                        return 401;
+                    }
                 };
 
                 return response()->json(

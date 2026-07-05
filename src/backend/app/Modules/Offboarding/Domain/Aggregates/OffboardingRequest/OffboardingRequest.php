@@ -29,6 +29,7 @@ class OffboardingRequest
     {
         $request = new self($id, $employeeId, $type, $reason, $requestedLastWorkingDate, null, OffboardingRequestStatus::Draft, null);
         $request->recordEvent(new OffboardingRequestCreated($id, $employeeId));
+
         return $request;
     }
 
@@ -54,7 +55,9 @@ class OffboardingRequest
     public function reject(?string $reason = null): void
     {
         $this->transition(OffboardingRequestStatus::Rejected);
-        if ($reason) { $this->reason = $reason; }
+        if ($reason) {
+            $this->reason = $reason;
+        }
         $this->recordEvent(new OffboardingRequestRejected($this->id, $reason));
     }
 
@@ -65,21 +68,62 @@ class OffboardingRequest
 
     private function transition(OffboardingRequestStatus $target): void
     {
-        if (!$this->status->canTransitionTo($target)) {
+        if (! $this->status->canTransitionTo($target)) {
             throw new InvalidStatusTransitionException($this->status->value, $target->value);
         }
         $this->status = $target;
     }
 
-    private function recordEvent(object $event): void { $this->recordedEvents[] = $event; }
-    public function popRecordedEvents(): array { $events = $this->recordedEvents; $this->recordedEvents = []; return $events; }
+    private function recordEvent(object $event): void
+    {
+        $this->recordedEvents[] = $event;
+    }
 
-    public function getId(): OffboardingRequestId { return $this->id; }
-    public function getEmployeeId(): string { return $this->employeeId; }
-    public function getType(): OffboardingRequestType { return $this->type; }
-    public function getReason(): string { return $this->reason; }
-    public function getRequestedLastWorkingDate(): \DateTimeImmutable { return $this->requestedLastWorkingDate; }
-    public function getApprovedLastWorkingDate(): ?\DateTimeImmutable { return $this->approvedLastWorkingDate; }
-    public function getStatus(): OffboardingRequestStatus { return $this->status; }
-    public function getWorkflowRequestId(): ?string { return $this->workflowRequestId; }
+    public function popRecordedEvents(): array
+    {
+        $events = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $events;
+    }
+
+    public function getId(): OffboardingRequestId
+    {
+        return $this->id;
+    }
+
+    public function getEmployeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    public function getType(): OffboardingRequestType
+    {
+        return $this->type;
+    }
+
+    public function getReason(): string
+    {
+        return $this->reason;
+    }
+
+    public function getRequestedLastWorkingDate(): \DateTimeImmutable
+    {
+        return $this->requestedLastWorkingDate;
+    }
+
+    public function getApprovedLastWorkingDate(): ?\DateTimeImmutable
+    {
+        return $this->approvedLastWorkingDate;
+    }
+
+    public function getStatus(): OffboardingRequestStatus
+    {
+        return $this->status;
+    }
+
+    public function getWorkflowRequestId(): ?string
+    {
+        return $this->workflowRequestId;
+    }
 }

@@ -35,6 +35,7 @@ class WorkflowRequestController extends Controller
             $request->input('subject_id'),
             $actorId,
         ));
+
         return new WorkflowRequestResource($wr);
     }
 
@@ -55,24 +56,28 @@ class WorkflowRequestController extends Controller
     public function approve(string $id, DecisionRequest $request, ApproveWorkflowStepHandler $handler)
     {
         $handler->handle(new ApproveWorkflowStepCommand($id, $request->user()->getAuthIdentifier(), $request->input('comment')));
+
         return response()->noContent();
     }
 
     public function reject(string $id, DecisionRequest $request, RejectWorkflowStepHandler $handler)
     {
         $handler->handle(new RejectWorkflowStepCommand($id, $request->user()->getAuthIdentifier(), $request->input('comment')));
+
         return response()->noContent();
     }
 
     public function returnForEdit(string $id, DecisionRequest $request, ReturnWorkflowForEditHandler $handler)
     {
         $handler->handle(new ReturnWorkflowForEditCommand($id, $request->user()->getAuthIdentifier(), $request->input('comment')));
+
         return response()->noContent();
     }
 
     public function cancel(string $id, DecisionRequest $request, CancelWorkflowRequestHandler $handler)
     {
         $handler->handle(new CancelWorkflowRequestCommand($id, $request->user()->getAuthIdentifier(), $request->input('comment')));
+
         return response()->noContent();
     }
 }

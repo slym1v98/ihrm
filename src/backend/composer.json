@@ -74,7 +74,9 @@
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ],
         "analyse": "phpstan analyse --memory-limit=2G",
-        "analyse:ci": "phpstan analyse --no-progress --error-format=github"
+        "analyse:ci": "phpstan analyse --no-progress --error-format=github",
+        "lint": "pint",
+        "lint:test": "pint --test"
     },
     "extra": {
         "laravel": {

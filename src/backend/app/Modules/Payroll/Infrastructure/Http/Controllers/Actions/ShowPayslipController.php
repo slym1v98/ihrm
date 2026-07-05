@@ -3,12 +3,13 @@
 namespace App\Modules\Payroll\Infrastructure\Http\Controllers\Actions;
 
 use App\Modules\Payroll\Infrastructure\Http\Controllers\PayslipController;
+use Illuminate\Http\Request;
 
 class ShowPayslipController
 {
     public function __construct(private PayslipController $controller) {}
 
-    public function __invoke(\Illuminate\Http\Request $request, string $id)
+    public function __invoke(Request $request, string $id)
     {
         return $this->controller->show($request, $id);
     }

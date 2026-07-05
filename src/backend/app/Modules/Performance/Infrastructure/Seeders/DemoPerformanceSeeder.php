@@ -2,8 +2,8 @@
 
 namespace App\Modules\Performance\Infrastructure\Seeders;
 
-use App\Modules\Performance\Infrastructure\Persistence\Eloquent\PerformanceCycleModel;
 use App\Modules\Performance\Infrastructure\Persistence\Eloquent\CompetencyTemplateModel;
+use App\Modules\Performance\Infrastructure\Persistence\Eloquent\PerformanceCycleModel;
 use Illuminate\Database\Seeder;
 
 class DemoPerformanceSeeder extends Seeder
@@ -23,9 +23,9 @@ class DemoPerformanceSeeder extends Seeder
         );
 
         $competencies = [
-            ['code' => 'COMP-TECH', 'name' => 'Năng lực chuyên môn', 'rules' => ['levels' => [1,2,3,4,5], 'weight' => 40], 'active' => true],
-            ['code' => 'COMP-SOFT', 'name' => 'Kỹ năng mềm', 'rules' => ['levels' => [1,2,3,4,5], 'weight' => 30], 'active' => true],
-            ['code' => 'COMP-MGMT', 'name' => 'Quản lý', 'rules' => ['levels' => [1,2,3,4,5], 'weight' => 30], 'active' => true],
+            ['code' => 'COMP-TECH', 'name' => 'Năng lực chuyên môn', 'rules' => ['levels' => [1, 2, 3, 4, 5], 'weight' => 40], 'active' => true],
+            ['code' => 'COMP-SOFT', 'name' => 'Kỹ năng mềm', 'rules' => ['levels' => [1, 2, 3, 4, 5], 'weight' => 30], 'active' => true],
+            ['code' => 'COMP-MGMT', 'name' => 'Quản lý', 'rules' => ['levels' => [1, 2, 3, 4, 5], 'weight' => 30], 'active' => true],
         ];
 
         foreach ($competencies as $c) {

@@ -18,14 +18,16 @@ class UpdateEmployeePersonalInfoHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.update');
         $employee = $this->employees->findById(EmployeeId::fromString($command->employeeId));
-        if (! $employee) throw new EmployeeNotFoundException($command->employeeId);
+        if (! $employee) {
+            throw new EmployeeNotFoundException($command->employeeId);
+        }
         $employee->updatePersonalInfo(
             PersonalName::of($command->firstName, $command->lastName),
             $command->dob ? new \DateTimeImmutable($command->dob) : null,
             $command->gender,
             $command->personalEmail,
             $command->phone,
-            new Address(),
+            new Address,
         );
         $this->employees->saveAndDispatch($employee);
     }

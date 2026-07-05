@@ -25,6 +25,7 @@ class EloquentUserNotificationPreferenceRepository implements UserNotificationPr
         }
 
         $record = $query->first();
+
         return $record ? self::toDomain($record) : null;
     }
 
@@ -33,7 +34,7 @@ class EloquentUserNotificationPreferenceRepository implements UserNotificationPr
         return $this->model
             ->where('user_id', $userId)
             ->get()
-            ->map(fn($r) => self::toDomain($r))
+            ->map(fn ($r) => self::toDomain($r))
             ->all();
     }
 

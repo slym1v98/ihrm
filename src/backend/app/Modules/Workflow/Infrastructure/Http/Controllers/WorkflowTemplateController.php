@@ -16,12 +16,13 @@ class WorkflowTemplateController extends Controller
 {
     public function index(ListWorkflowTemplatesHandler $handler)
     {
-        return WorkflowTemplateResource::collection($handler->handle(new ListWorkflowTemplatesQuery()));
+        return WorkflowTemplateResource::collection($handler->handle(new ListWorkflowTemplatesQuery));
     }
 
     public function show(string $id, GetWorkflowTemplateHandler $handler)
     {
         $template = $handler->handle(new GetWorkflowTemplateQuery($id));
+
         return new WorkflowTemplateResource($template);
     }
 
@@ -33,6 +34,7 @@ class WorkflowTemplateController extends Controller
             $request->input('description'),
             $request->input('steps'),
         ));
+
         return new WorkflowTemplateResource($template);
     }
 }

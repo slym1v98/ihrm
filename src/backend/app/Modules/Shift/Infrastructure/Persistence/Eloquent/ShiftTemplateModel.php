@@ -10,8 +10,11 @@ class ShiftTemplateModel extends Model
     use HasUuids;
 
     protected $table = 'shift_templates';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
 
     protected function casts(): array

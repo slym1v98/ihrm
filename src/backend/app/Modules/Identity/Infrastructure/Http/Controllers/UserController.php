@@ -84,6 +84,7 @@ class UserController
         $this->users->save($user);
 
         $model = UserModel::with(['userRoles.role', 'dataScopeAssignments'])->find($id);
+
         return response()->json(['data' => new UserResource($model)]);
     }
 
@@ -96,6 +97,7 @@ class UserController
         $this->users->save($user);
 
         $model = UserModel::with(['userRoles.role', 'dataScopeAssignments'])->find($id);
+
         return response()->json(['data' => new UserResource($model)]);
     }
 
@@ -119,6 +121,7 @@ class UserController
         $this->users->save($user);
 
         $model = UserModel::with(['userRoles.role', 'dataScopeAssignments'])->find($id);
+
         return response()->json(['data' => new UserResource($model)]);
     }
 
@@ -131,6 +134,7 @@ class UserController
         $this->users->save($user);
 
         $model = UserModel::with(['userRoles.role', 'dataScopeAssignments'])->find($id);
+
         return response()->json(['data' => new UserResource($model)]);
     }
 }

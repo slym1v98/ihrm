@@ -15,6 +15,7 @@ final class ContractRenewalPolicy
                 return true;
             }
         }
+
         return false;
     }
 }

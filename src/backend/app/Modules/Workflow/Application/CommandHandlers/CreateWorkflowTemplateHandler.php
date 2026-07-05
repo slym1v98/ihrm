@@ -27,6 +27,7 @@ class CreateWorkflowTemplateHandler
 
         $template = new WorkflowTemplate(WorkflowTemplateId::new(), $command->code, $command->name, $command->description, true, $steps);
         $this->templates->save($template);
+
         return $template;
     }
 }

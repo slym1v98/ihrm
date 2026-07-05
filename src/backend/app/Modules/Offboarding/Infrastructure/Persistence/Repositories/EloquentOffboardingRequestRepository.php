@@ -14,24 +14,26 @@ class EloquentOffboardingRequestRepository implements OffboardingRequestReposito
     public function findById(OffboardingRequestId $id): ?OffboardingRequest
     {
         $m = OffboardingRequestModel::find($id->value);
+
         return $m ? $this->toDomain($m) : null;
     }
 
     public function findByEmployeeId(string $employeeId): array
     {
         return OffboardingRequestModel::where('employee_id', $employeeId)
-            ->get()->map(fn($m) => $this->toDomain($m))->toArray();
+            ->get()->map(fn ($m) => $this->toDomain($m))->toArray();
     }
 
     public function findByWorkflowRequestId(string $workflowRequestId): ?OffboardingRequest
     {
         $m = OffboardingRequestModel::where('workflow_request_id', $workflowRequestId)->first();
+
         return $m ? $this->toDomain($m) : null;
     }
 
     public function all(): array
     {
-        return OffboardingRequestModel::all()->map(fn($m) => $this->toDomain($m))->toArray();
+        return OffboardingRequestModel::all()->map(fn ($m) => $this->toDomain($m))->toArray();
     }
 
     public function save(OffboardingRequest $request): void

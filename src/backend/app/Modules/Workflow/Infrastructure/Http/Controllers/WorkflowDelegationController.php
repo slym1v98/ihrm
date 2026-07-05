@@ -30,12 +30,14 @@ class WorkflowDelegationController extends Controller
             $request->input('end_at'),
             $request->user()?->getAuthIdentifier(),
         ));
+
         return (new WorkflowDelegationResource($delegation))->response()->setStatusCode(201);
     }
 
     public function destroy(string $id, RevokeWorkflowDelegationHandler $handler)
     {
         $handler->handle(new RevokeWorkflowDelegationCommand($id));
+
         return response()->noContent();
     }
 }

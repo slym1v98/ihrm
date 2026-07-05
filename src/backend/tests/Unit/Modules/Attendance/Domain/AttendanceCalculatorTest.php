@@ -14,7 +14,7 @@ class AttendanceCalculatorTest extends TestCase
     private function rawLog(string $time, string $type, string $source = 'web'): object
     {
         return (object) [
-            'eventTime' => str_contains($time,'+1day') ? CarbonImmutable::parse('2026-07-03 '.str_replace('+1day','',$time)) : CarbonImmutable::parse("2026-07-02 {$time}"),
+            'eventTime' => str_contains($time, '+1day') ? CarbonImmutable::parse('2026-07-03 '.str_replace('+1day', '', $time)) : CarbonImmutable::parse("2026-07-02 {$time}"),
             'eventType' => EventType::from($type),
             'source' => Source::from($source),
         ];
@@ -35,6 +35,7 @@ class AttendanceCalculatorTest extends TestCase
             'maxEarlyArrival' => 0,
             'maxLateDeparture' => 0,
         ];
+
         return (object) [
             'shiftTemplate' => (object) [
                 'startTime' => $start,
@@ -193,7 +194,6 @@ class AttendanceCalculatorTest extends TestCase
         $this->assertSame(240, $result->expectedMinutes);
         $this->assertSame(AttendanceStatus::Late, $result->status);
     }
-
 
     public function test_flexitime_skips_late_when_min_met(): void
     {

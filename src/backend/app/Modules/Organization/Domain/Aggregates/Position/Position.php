@@ -30,7 +30,8 @@ final class Position
         ?string $description = null,
     ): self {
         $position = new self($id, $code, $name, $level, $description, PositionStatus::Active);
-        $position->record(new PositionCreated($id, $code->value, $name->value, new DateTimeImmutable()));
+        $position->record(new PositionCreated($id, $code->value, $name->value, new DateTimeImmutable));
+
         return $position;
     }
 
@@ -50,7 +51,7 @@ final class Position
         $this->name = $name;
         $this->level = $level;
         $this->description = $description;
-        $this->record(new PositionUpdated($this->id, new DateTimeImmutable()));
+        $this->record(new PositionUpdated($this->id, new DateTimeImmutable));
     }
 
     public function activate(): void
@@ -59,7 +60,7 @@ final class Position
             return;
         }
         $this->status = PositionStatus::Active;
-        $this->record(new PositionActivated($this->id, new DateTimeImmutable()));
+        $this->record(new PositionActivated($this->id, new DateTimeImmutable));
     }
 
     public function deactivate(): void
@@ -68,7 +69,7 @@ final class Position
             return;
         }
         $this->status = PositionStatus::Inactive;
-        $this->record(new PositionDeactivated($this->id, new DateTimeImmutable()));
+        $this->record(new PositionDeactivated($this->id, new DateTimeImmutable));
     }
 
     private function record(object $event): void
@@ -81,13 +82,37 @@ final class Position
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 
-    public function id(): PositionId { return $this->id; }
-    public function code(): PositionCode { return $this->code; }
-    public function name(): PositionName { return $this->name; }
-    public function level(): ?int { return $this->level; }
-    public function description(): ?string { return $this->description; }
-    public function status(): PositionStatus { return $this->status; }
+    public function id(): PositionId
+    {
+        return $this->id;
+    }
+
+    public function code(): PositionCode
+    {
+        return $this->code;
+    }
+
+    public function name(): PositionName
+    {
+        return $this->name;
+    }
+
+    public function level(): ?int
+    {
+        return $this->level;
+    }
+
+    public function description(): ?string
+    {
+        return $this->description;
+    }
+
+    public function status(): PositionStatus
+    {
+        return $this->status;
+    }
 }

@@ -31,7 +31,9 @@ class NotificationTemplateSeeder extends Seeder
     {
         foreach ($this->templates as $t) {
             $existing = $repo->findByCode($t['code']);
-            if ($existing !== null) continue;
+            if ($existing !== null) {
+                continue;
+            }
 
             $template = MessageTemplate::create(
                 MessageTemplateId::generate(),

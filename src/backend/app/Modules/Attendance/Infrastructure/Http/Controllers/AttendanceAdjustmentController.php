@@ -52,12 +52,14 @@ class AttendanceAdjustmentController
     public function approve(string $id, Request $request): JsonResponse
     {
         $this->approveHandler->handle(new ApproveAttendanceAdjustmentCommand($id, (string) $request->user()->id));
+
         return response()->json(['message' => 'Approved']);
     }
 
     public function reject(string $id, Request $request): JsonResponse
     {
         $this->rejectHandler->handle(new RejectAttendanceAdjustmentCommand($id, (string) $request->user()->id));
+
         return response()->json(['message' => 'Rejected']);
     }
 }

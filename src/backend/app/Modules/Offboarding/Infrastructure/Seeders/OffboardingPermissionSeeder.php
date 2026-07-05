@@ -2,10 +2,10 @@
 
 namespace App\Modules\Offboarding\Infrastructure\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\PermissionModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RoleModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\RolePermissionModel;
+use Illuminate\Database\Seeder;
 
 class OffboardingPermissionSeeder extends Seeder
 {
@@ -27,6 +27,6 @@ class OffboardingPermissionSeeder extends Seeder
             $p = PermissionModel::firstOrCreate(['code' => $code], ['module' => $module, 'action' => $action, 'description' => "{$module}.{$action}"]);
             $codes[] = $p->code;
         }
-        RoleModel::where('code', 'SUPER_ADMIN')->each(fn($r) => array_map(fn($c) => RolePermissionModel::firstOrCreate(['role_id' => $r->id, 'permission_code' => $c]), $codes));
+        RoleModel::where('code', 'SUPER_ADMIN')->each(fn ($r) => array_map(fn ($c) => RolePermissionModel::firstOrCreate(['role_id' => $r->id, 'permission_code' => $c]), $codes));
     }
 }

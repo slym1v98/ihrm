@@ -8,5 +8,9 @@ use App\Modules\Attendance\Domain\Repositories\AttendancePeriodRepositoryInterfa
 class ListAttendancePeriodsHandler
 {
     public function __construct(private AttendancePeriodRepositoryInterface $repo) {}
-    public function handle(ListAttendancePeriodsQuery $query): array { return $this->repo->findPaginated($query->perPage, $query->page); }
+
+    public function handle(ListAttendancePeriodsQuery $query): array
+    {
+        return $this->repo->findPaginated($query->perPage, $query->page);
+    }
 }

@@ -20,8 +20,9 @@ class FinalClearance
 
     public static function create(FinalClearanceId $id, string $planId, string $employeeId, string $clearedBy, bool $assetObligationsMet, ?string $payrollNotes): self
     {
-        $c = new self($id, $planId, $employeeId, new \DateTimeImmutable(), $clearedBy, $assetObligationsMet, $payrollNotes);
+        $c = new self($id, $planId, $employeeId, new \DateTimeImmutable, $clearedBy, $assetObligationsMet, $payrollNotes);
         $c->recordedEvents[] = new FinalClearanceCompleted($id, $employeeId);
+
         return $c;
     }
 
@@ -30,12 +31,46 @@ class FinalClearance
         return new self($id, $planId, $employeeId, $clearedAt, $clearedBy, $assetObligationsMet, $payrollNotes);
     }
 
-    public function popRecordedEvents(): array { $e=$this->recordedEvents; $this->recordedEvents=[]; return $e; }
-    public function getId(): FinalClearanceId { return $this->id; }
-    public function getPlanId(): string { return $this->planId; }
-    public function getEmployeeId(): string { return $this->employeeId; }
-    public function getClearedAt(): \DateTimeImmutable { return $this->clearedAt; }
-    public function getClearedBy(): string { return $this->clearedBy; }
-    public function isAssetObligationsMet(): bool { return $this->assetObligationsMet; }
-    public function getPayrollNotes(): ?string { return $this->payrollNotes; }
+    public function popRecordedEvents(): array
+    {
+        $e = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $e;
+    }
+
+    public function getId(): FinalClearanceId
+    {
+        return $this->id;
+    }
+
+    public function getPlanId(): string
+    {
+        return $this->planId;
+    }
+
+    public function getEmployeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    public function getClearedAt(): \DateTimeImmutable
+    {
+        return $this->clearedAt;
+    }
+
+    public function getClearedBy(): string
+    {
+        return $this->clearedBy;
+    }
+
+    public function isAssetObligationsMet(): bool
+    {
+        return $this->assetObligationsMet;
+    }
+
+    public function getPayrollNotes(): ?string
+    {
+        return $this->payrollNotes;
+    }
 }

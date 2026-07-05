@@ -2,11 +2,11 @@
 
 namespace App\Modules\Performance\Domain\Aggregates\PerformanceReview;
 
+use App\Modules\Performance\Domain\Events\HrReviewSubmitted;
+use App\Modules\Performance\Domain\Events\ManagerReviewSubmitted;
 use App\Modules\Performance\Domain\Events\ReviewCreated;
 use App\Modules\Performance\Domain\Events\ReviewFinalized;
 use App\Modules\Performance\Domain\Events\SelfAssessmentSubmitted;
-use App\Modules\Performance\Domain\Events\ManagerReviewSubmitted;
-use App\Modules\Performance\Domain\Events\HrReviewSubmitted;
 use App\Modules\Performance\Domain\Exceptions\InvalidStatusTransitionException;
 use App\Modules\Performance\Domain\ValueObjects\ReviewStatus;
 
@@ -30,6 +30,7 @@ class PerformanceReview
     {
         $r = new self($id, $cycleId, $employeeId, null, null, null, null, ReviewStatus::PendingSelf, null);
         $r->recordedEvents[] = new ReviewCreated($id->value, $employeeId);
+
         return $r;
     }
 
@@ -40,7 +41,7 @@ class PerformanceReview
 
     public function submitSelf(array $assessment): void
     {
-        if (!$this->status->canTransitionTo(ReviewStatus::SelfCompleted)) {
+        if (! $this->status->canTransitionTo(ReviewStatus::SelfCompleted)) {
             throw new InvalidStatusTransitionException($this->status->value, ReviewStatus::SelfCompleted->value);
         }
         $this->selfAssessment = $assessment;
@@ -50,7 +51,7 @@ class PerformanceReview
 
     public function submitManager(array $assessment): void
     {
-        if (!$this->status->canTransitionTo(ReviewStatus::ManagerCompleted)) {
+        if (! $this->status->canTransitionTo(ReviewStatus::ManagerCompleted)) {
             throw new InvalidStatusTransitionException($this->status->value, ReviewStatus::ManagerCompleted->value);
         }
         $this->managerAssessment = $assessment;
@@ -60,7 +61,7 @@ class PerformanceReview
 
     public function submitHr(array $assessment): void
     {
-        if (!$this->status->canTransitionTo(ReviewStatus::HrCompleted)) {
+        if (! $this->status->canTransitionTo(ReviewStatus::HrCompleted)) {
             throw new InvalidStatusTransitionException($this->status->value, ReviewStatus::HrCompleted->value);
         }
         $this->hrAssessment = $assessment;
@@ -70,23 +71,65 @@ class PerformanceReview
 
     public function finalize(?float $finalScore = null): void
     {
-        if (!$this->status->canTransitionTo(ReviewStatus::Finalized)) {
+        if (! $this->status->canTransitionTo(ReviewStatus::Finalized)) {
             throw new InvalidStatusTransitionException($this->status->value, ReviewStatus::Finalized->value);
         }
         $this->status = ReviewStatus::Finalized;
-        $this->finalizedAt = new \DateTimeImmutable();
+        $this->finalizedAt = new \DateTimeImmutable;
         $this->finalScore = $finalScore;
         $this->recordedEvents[] = new ReviewFinalized($this->id->value, $this->employeeId);
     }
 
-    public function popRecordedEvents(): array { $e=$this->recordedEvents; $this->recordedEvents=[]; return $e; }
-    public function getId(): PerformanceReviewId { return $this->id; }
-    public function getCycleId(): string { return $this->cycleId; }
-    public function getEmployeeId(): string { return $this->employeeId; }
-    public function getSelfAssessment(): ?array { return $this->selfAssessment; }
-    public function getManagerAssessment(): ?array { return $this->managerAssessment; }
-    public function getHrAssessment(): ?array { return $this->hrAssessment; }
-    public function getFinalScore(): ?float { return $this->finalScore; }
-    public function getStatus(): ReviewStatus { return $this->status; }
-    public function getFinalizedAt(): ?\DateTimeImmutable { return $this->finalizedAt; }
+    public function popRecordedEvents(): array
+    {
+        $e = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $e;
+    }
+
+    public function getId(): PerformanceReviewId
+    {
+        return $this->id;
+    }
+
+    public function getCycleId(): string
+    {
+        return $this->cycleId;
+    }
+
+    public function getEmployeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    public function getSelfAssessment(): ?array
+    {
+        return $this->selfAssessment;
+    }
+
+    public function getManagerAssessment(): ?array
+    {
+        return $this->managerAssessment;
+    }
+
+    public function getHrAssessment(): ?array
+    {
+        return $this->hrAssessment;
+    }
+
+    public function getFinalScore(): ?float
+    {
+        return $this->finalScore;
+    }
+
+    public function getStatus(): ReviewStatus
+    {
+        return $this->status;
+    }
+
+    public function getFinalizedAt(): ?\DateTimeImmutable
+    {
+        return $this->finalizedAt;
+    }
 }

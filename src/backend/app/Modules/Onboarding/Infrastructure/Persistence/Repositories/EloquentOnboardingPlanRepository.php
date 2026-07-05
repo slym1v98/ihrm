@@ -20,6 +20,7 @@ class EloquentOnboardingPlanRepository implements OnboardingPlanRepositoryInterf
     public function findById(OnboardingPlanId $id): ?OnboardingPlan
     {
         $model = OnboardingPlanModel::with('tasks')->find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -28,7 +29,7 @@ class EloquentOnboardingPlanRepository implements OnboardingPlanRepositoryInterf
         return OnboardingPlanModel::with('tasks')
             ->where('employee_id', $employeeId)
             ->get()
-            ->map(fn($m) => $this->toDomain($m))
+            ->map(fn ($m) => $this->toDomain($m))
             ->toArray();
     }
 
@@ -37,6 +38,7 @@ class EloquentOnboardingPlanRepository implements OnboardingPlanRepositoryInterf
         $model = OnboardingPlanModel::with('tasks')
             ->where('workflow_request_id', $workflowRequestId)
             ->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -44,7 +46,7 @@ class EloquentOnboardingPlanRepository implements OnboardingPlanRepositoryInterf
     {
         return OnboardingPlanModel::with('tasks')
             ->get()
-            ->map(fn($m) => $this->toDomain($m))
+            ->map(fn ($m) => $this->toDomain($m))
             ->toArray();
     }
 

@@ -4,6 +4,4 @@ namespace App\Modules\Workflow\Domain\Exceptions;
 
 use DomainException;
 
-class WorkflowStepNotFoundException extends DomainException
-{
-}
+class WorkflowStepNotFoundException extends DomainException {}

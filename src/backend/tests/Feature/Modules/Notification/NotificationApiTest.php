@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Modules\Notification;
 
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,7 +15,7 @@ class NotificationApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $response = $this->postJson('/api/v1/auth/login', [
             'email' => 'admin@ihrm.local',
@@ -89,11 +90,11 @@ class NotificationApiTest extends TestCase
         $this->withToken($this->token)->postJson("/api/v1/notification-templates/{$id}/deactivate")->assertStatus(200);
         $this->withToken($this->token)->postJson("/api/v1/notification-templates/{$id}/activate")->assertStatus(200);
     }
+
     public function test_admin_can_process_outbox(): void
     {
         $this->withToken($this->token)->postJson('/api/v1/notification-outbox/process', [
             'limit' => 5,
         ])->assertStatus(200);
     }
-
 }

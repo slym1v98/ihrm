@@ -53,7 +53,7 @@ final class ShiftTemplate
             true,
         );
 
-        $template->record(new ShiftTemplateCreated($id, $template->code, $template->name, new DateTimeImmutable()));
+        $template->record(new ShiftTemplateCreated($id, $template->code, $template->name, new DateTimeImmutable));
 
         return $template;
     }
@@ -91,38 +91,82 @@ final class ShiftTemplate
         $this->overtimeRules = $overtimeRules;
         $this->flexibilityRules = $flexibilityRules;
         $this->payrollAttributionRule = $payrollAttributionRule;
-        $this->record(new ShiftTemplateUpdated($this->id, new DateTimeImmutable()));
+        $this->record(new ShiftTemplateUpdated($this->id, new DateTimeImmutable));
     }
 
     public function activate(): void
     {
-        if ($this->active) return;
+        if ($this->active) {
+            return;
+        }
         $this->active = true;
-        $this->record(new ShiftTemplateActivated($this->id, new DateTimeImmutable()));
+        $this->record(new ShiftTemplateActivated($this->id, new DateTimeImmutable));
     }
 
     public function deactivate(): void
     {
-        if (! $this->active) return;
+        if (! $this->active) {
+            return;
+        }
         $this->active = false;
-        $this->record(new ShiftTemplateDeactivated($this->id, new DateTimeImmutable()));
+        $this->record(new ShiftTemplateDeactivated($this->id, new DateTimeImmutable));
     }
 
-    public function id(): ShiftTemplateId { return $this->id; }
-    public function code(): string { return $this->code; }
-    public function name(): string { return $this->name; }
-    public function shiftWindow(): ShiftWindow { return $this->shiftWindow; }
-    public function breakMinutes(): int { return $this->breakMinutes; }
-    public function lateToleranceMinutes(): int { return $this->lateToleranceMinutes; }
-    public function overtimeRules(): OvertimeRules { return $this->overtimeRules; }
-    public function flexibilityRules(): FlexibilityRules { return $this->flexibilityRules; }
-    public function payrollAttributionRule(): ?string { return $this->payrollAttributionRule; }
-    public function active(): bool { return $this->active; }
+    public function id(): ShiftTemplateId
+    {
+        return $this->id;
+    }
+
+    public function code(): string
+    {
+        return $this->code;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function shiftWindow(): ShiftWindow
+    {
+        return $this->shiftWindow;
+    }
+
+    public function breakMinutes(): int
+    {
+        return $this->breakMinutes;
+    }
+
+    public function lateToleranceMinutes(): int
+    {
+        return $this->lateToleranceMinutes;
+    }
+
+    public function overtimeRules(): OvertimeRules
+    {
+        return $this->overtimeRules;
+    }
+
+    public function flexibilityRules(): FlexibilityRules
+    {
+        return $this->flexibilityRules;
+    }
+
+    public function payrollAttributionRule(): ?string
+    {
+        return $this->payrollAttributionRule;
+    }
+
+    public function active(): bool
+    {
+        return $this->active;
+    }
 
     public function releaseEvents(): array
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 

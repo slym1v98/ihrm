@@ -3,10 +3,10 @@
 namespace App\Modules\Offboarding\Infrastructure\Seeders;
 
 use App\Modules\Employee\Infrastructure\Persistence\Eloquent\EmployeeModel;
-use App\Modules\Offboarding\Infrastructure\Persistence\Eloquent\OffboardingPlanModel;
-use App\Modules\Offboarding\Infrastructure\Persistence\Eloquent\OffboardingTaskModel;
-use App\Modules\Offboarding\Infrastructure\Persistence\Eloquent\OffboardingRequestModel;
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
+use App\Modules\Offboarding\Infrastructure\Persistence\Eloquent\OffboardingPlanModel;
+use App\Modules\Offboarding\Infrastructure\Persistence\Eloquent\OffboardingRequestModel;
+use App\Modules\Offboarding\Infrastructure\Persistence\Eloquent\OffboardingTaskModel;
 use Illuminate\Database\Seeder;
 
 class DemoOffboardingSeeder extends Seeder
@@ -16,7 +16,9 @@ class DemoOffboardingSeeder extends Seeder
         $employee = EmployeeModel::where('status', 'active')->skip(5)->first();
         $admin = UserModel::where('email', 'admin@ihrm.local')->first();
 
-        if (!$employee || !$admin) return;
+        if (! $employee || ! $admin) {
+            return;
+        }
 
         $request = OffboardingRequestModel::firstOrCreate(
             ['employee_id' => $employee->id],

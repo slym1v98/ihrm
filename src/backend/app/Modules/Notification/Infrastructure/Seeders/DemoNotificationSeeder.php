@@ -2,9 +2,9 @@
 
 namespace App\Modules\Notification\Infrastructure\Seeders;
 
+use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
 use App\Modules\Notification\Infrastructure\Persistence\Eloquent\NotificationMessageModel;
 use App\Modules\Notification\Infrastructure\Persistence\Eloquent\NotificationOutboxModel;
-use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
 use Illuminate\Database\Seeder;
 
 class DemoNotificationSeeder extends Seeder
@@ -12,7 +12,9 @@ class DemoNotificationSeeder extends Seeder
     public function run(): void
     {
         $admin = UserModel::where('email', 'admin@ihrm.local')->first();
-        if (!$admin) return;
+        if (! $admin) {
+            return;
+        }
 
         $msg = NotificationMessageModel::firstOrCreate(
             ['template_code' => 'ATTENDANCE_REMINDER', 'recipient_user_id' => $admin->id],

@@ -1,22 +1,20 @@
 <?php
 
-use App\Modules\Training\Infrastructure\Http\Controllers\Actions\{
-    AttendanceTrainingEnrollmentController,
-    CancelTrainingEnrollmentController,
-    CompleteTrainingEnrollmentController,
-    DeleteTrainingCourseController,
-    ListTrainingCourseController,
-    ListTrainingSessionController,
-    ShowTrainingCourseController,
-    ShowTrainingResultController,
-    ShowTrainingSessionController,
-    StoreTrainingCourseController,
-    StoreTrainingEnrollmentController,
-    StoreTrainingResultController,
-    StoreTrainingSessionController,
-    UpdateTrainingCourseController,
-    UpdateTrainingSessionController,
-};
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\AttendanceTrainingEnrollmentController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\CancelTrainingEnrollmentController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\CompleteTrainingEnrollmentController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\DeleteTrainingCourseController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\ListTrainingCourseController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\ListTrainingSessionController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\ShowTrainingCourseController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\ShowTrainingResultController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\ShowTrainingSessionController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\StoreTrainingCourseController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\StoreTrainingEnrollmentController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\StoreTrainingResultController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\StoreTrainingSessionController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\UpdateTrainingCourseController;
+use App\Modules\Training\Infrastructure\Http\Controllers\Actions\UpdateTrainingSessionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1/training')->middleware(['auth:sanctum'])->group(function () {

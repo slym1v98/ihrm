@@ -10,8 +10,12 @@ class CodeGenerationRuleModel extends Model
     use HasUuids;
 
     protected $table = 'code_generation_rules';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $casts = ['active' => 'boolean', 'next_number' => 'integer', 'sequence_padding' => 'integer'];
 }

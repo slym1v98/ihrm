@@ -2,10 +2,12 @@
 
 namespace Tests\Unit\Modules\Payroll\Domain;
 
-use App\Modules\Payroll\Domain\Aggregates\PayrollAdjustment\{PayrollAdjustment, PayrollAdjustmentId};
+use App\Modules\Payroll\Domain\Aggregates\PayrollAdjustment\PayrollAdjustment;
+use App\Modules\Payroll\Domain\Aggregates\PayrollAdjustment\PayrollAdjustmentId;
 use App\Modules\Payroll\Domain\Aggregates\PayrollEntry\PayrollEntryId;
 use App\Modules\Payroll\Domain\Events\PayrollAdjusted;
-use App\Modules\Payroll\Domain\ValueObjects\{AdjustmentStatus, Money};
+use App\Modules\Payroll\Domain\ValueObjects\AdjustmentStatus;
+use App\Modules\Payroll\Domain\ValueObjects\Money;
 use PHPUnit\Framework\TestCase;
 
 class PayrollAdjustmentTest extends TestCase

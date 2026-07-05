@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Modules\Training;
 
-use PHPUnit\Framework\TestCase;
 use App\Modules\Training\Domain\Aggregates\TrainingEnrollment\TrainingEnrollment;
 use App\Modules\Training\Domain\Aggregates\TrainingEnrollment\TrainingEnrollmentId;
-use App\Modules\Training\Domain\ValueObjects\EnrollmentStatus;
 use App\Modules\Training\Domain\Exceptions\InvalidEnrollmentStatusException;
+use App\Modules\Training\Domain\ValueObjects\EnrollmentStatus;
+use PHPUnit\Framework\TestCase;
 
 class TrainingEnrollmentTest extends TestCase
 {

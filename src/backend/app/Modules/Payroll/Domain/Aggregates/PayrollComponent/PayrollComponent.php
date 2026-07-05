@@ -2,8 +2,8 @@
 
 namespace App\Modules\Payroll\Domain\Aggregates\PayrollComponent;
 
-use App\Modules\Payroll\Domain\ValueObjects\ComponentCategory;
 use App\Modules\Payroll\Domain\ValueObjects\CalculationType;
+use App\Modules\Payroll\Domain\ValueObjects\ComponentCategory;
 use App\Modules\Payroll\Domain\ValueObjects\Money;
 
 class PayrollComponent
@@ -38,6 +38,7 @@ class PayrollComponent
         if ($calculationType === CalculationType::FixedAmount && $defaultAmount === null) {
             throw new \InvalidArgumentException('fixed_amount requires default_amount.');
         }
+
         return new self($id, $code, $name, $category, $calculationType, $percentBaseComponentId, $defaultAmount, $defaultPercent, $taxable, true);
     }
 
@@ -51,19 +52,64 @@ class PayrollComponent
         ?float $defaultPercent = null,
         ?bool $taxable = null,
     ): void {
-        if ($defaultAmount !== null) $this->defaultAmount = $defaultAmount;
-        if ($defaultPercent !== null) $this->defaultPercent = $defaultPercent;
-        if ($taxable !== null) $this->taxable = $taxable;
+        if ($defaultAmount !== null) {
+            $this->defaultAmount = $defaultAmount;
+        }
+        if ($defaultPercent !== null) {
+            $this->defaultPercent = $defaultPercent;
+        }
+        if ($taxable !== null) {
+            $this->taxable = $taxable;
+        }
     }
 
-    public function getId(): PayrollComponentId { return $this->id; }
-    public function getCode(): string { return $this->code; }
-    public function getName(): string { return $this->name; }
-    public function getCategory(): ComponentCategory { return $this->category; }
-    public function getCalculationType(): CalculationType { return $this->calculationType; }
-    public function getPercentBaseComponentId(): ?string { return $this->percentBaseComponentId; }
-    public function getDefaultAmount(): ?Money { return $this->defaultAmount; }
-    public function getDefaultPercent(): ?float { return $this->defaultPercent; }
-    public function isTaxable(): bool { return $this->taxable; }
-    public function isActive(): bool { return $this->active; }
+    public function getId(): PayrollComponentId
+    {
+        return $this->id;
+    }
+
+    public function getCode(): string
+    {
+        return $this->code;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getCategory(): ComponentCategory
+    {
+        return $this->category;
+    }
+
+    public function getCalculationType(): CalculationType
+    {
+        return $this->calculationType;
+    }
+
+    public function getPercentBaseComponentId(): ?string
+    {
+        return $this->percentBaseComponentId;
+    }
+
+    public function getDefaultAmount(): ?Money
+    {
+        return $this->defaultAmount;
+    }
+
+    public function getDefaultPercent(): ?float
+    {
+        return $this->defaultPercent;
+    }
+
+    public function isTaxable(): bool
+    {
+        return $this->taxable;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
 }

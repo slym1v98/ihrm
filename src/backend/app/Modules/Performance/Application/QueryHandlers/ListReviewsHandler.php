@@ -8,6 +8,7 @@ use App\Modules\Performance\Domain\Repositories\PerformanceReviewRepositoryInter
 class ListReviewsHandler
 {
     public function __construct(private readonly PerformanceReviewRepositoryInterface $repo) {}
+
     public function handle(ListReviewsQuery $q): array
     {
         return $this->repo->findByCycleId($q->cycleId);

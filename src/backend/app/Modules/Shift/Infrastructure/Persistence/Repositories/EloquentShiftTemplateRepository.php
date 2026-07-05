@@ -18,12 +18,14 @@ class EloquentShiftTemplateRepository implements ShiftTemplateRepositoryInterfac
     public function findById(ShiftTemplateId $id): ?ShiftTemplate
     {
         $record = $this->model->find($id->value);
+
         return $record ? $this->toDomain($record) : null;
     }
 
     public function findByCode(string $code): ?ShiftTemplate
     {
         $record = $this->model->where('code', $code)->first();
+
         return $record ? $this->toDomain($record) : null;
     }
 

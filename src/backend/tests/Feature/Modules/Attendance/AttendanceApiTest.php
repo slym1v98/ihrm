@@ -3,7 +3,9 @@
 namespace Tests\Feature\Modules\Attendance;
 
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class AttendanceApiTest extends TestCase
@@ -15,7 +17,7 @@ class AttendanceApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $response = $this->postJson('/api/v1/auth/login', [
             'email' => 'admin@ihrm.local',
@@ -76,10 +78,10 @@ class AttendanceApiTest extends TestCase
 
     public function test_submit_adjustment_and_list_pending(): void
     {
-        $timesheetId = (string) \Illuminate\Support\Str::uuid();
+        $timesheetId = (string) Str::uuid();
 
         \DB::table('attendance_periods')->insert([
-            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'id' => (string) Str::uuid(),
             'period_code' => '2026-09',
             'start_date' => '2026-09-01',
             'end_date' => '2026-09-30',
@@ -117,7 +119,6 @@ class AttendanceApiTest extends TestCase
         $this->withToken($this->token)->getJson('/api/v1/attendance-adjustment-requests')->assertStatus(200);
     }
 
-
     public function test_raw_log_blocked_by_closed_period(): void
     {
         // Create then close period
@@ -140,10 +141,10 @@ class AttendanceApiTest extends TestCase
 
     public function test_adjustment_blocked_by_closed_period(): void
     {
-        $timesheetId = (string) \Illuminate\Support\Str::uuid();
+        $timesheetId = (string) Str::uuid();
 
         \DB::table('attendance_periods')->insert([
-            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'id' => (string) Str::uuid(),
             'period_code' => '2026-12',
             'start_date' => '2026-12-01',
             'end_date' => '2026-12-31',
@@ -180,10 +181,10 @@ class AttendanceApiTest extends TestCase
 
     public function test_duplicate_pending_adjustment_returns_409(): void
     {
-        $timesheetId = (string) \Illuminate\Support\Str::uuid();
+        $timesheetId = (string) Str::uuid();
 
         \DB::table('attendance_periods')->insert([
-            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'id' => (string) Str::uuid(),
             'period_code' => '2026-10',
             'start_date' => '2026-10-01',
             'end_date' => '2026-10-31',

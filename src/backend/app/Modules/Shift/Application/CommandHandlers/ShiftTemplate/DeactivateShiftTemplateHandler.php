@@ -16,7 +16,9 @@ class DeactivateShiftTemplateHandler
     {
         $this->authorizationService->requirePermission($userId, 'shift.template.update');
         $template = $this->templates->findById(ShiftTemplateId::fromString($command->id));
-        if (!$template) throw new ShiftTemplateNotFoundException($command->id);
+        if (! $template) {
+            throw new ShiftTemplateNotFoundException($command->id);
+        }
         $template->deactivate();
         $this->templates->saveAndDispatch($template);
     }

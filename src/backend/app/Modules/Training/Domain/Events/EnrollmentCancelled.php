@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Modules\Training\Domain\Events;
-class EnrollmentCancelled {
+
+class EnrollmentCancelled
+{
     public function __construct(public readonly string $entityId) {}
 }

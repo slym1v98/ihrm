@@ -9,11 +9,12 @@ use PHPUnit\Framework\TestCase;
 class WorkflowSlaCalculatorTest extends TestCase
 {
     private WorkflowSlaCalculator $calc;
+
     private array $wh;
 
     protected function setUp(): void
     {
-        $this->calc = new WorkflowSlaCalculator();
+        $this->calc = new WorkflowSlaCalculator;
         $this->wh = [
             'mon' => ['start' => 8, 'end' => 17],
             'tue' => ['start' => 8, 'end' => 17],

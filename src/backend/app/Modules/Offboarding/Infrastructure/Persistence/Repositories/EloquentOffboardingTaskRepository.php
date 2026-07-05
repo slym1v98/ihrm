@@ -15,6 +15,7 @@ class EloquentOffboardingTaskRepository implements OffboardingTaskRepositoryInte
     public function findById(OffboardingTaskId $id): ?OffboardingTask
     {
         $model = OffboardingTaskModel::find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -23,7 +24,7 @@ class EloquentOffboardingTaskRepository implements OffboardingTaskRepositoryInte
         return OffboardingTaskModel::where('offboarding_plan_id', $planId)
             ->orderBy('sort_order')
             ->get()
-            ->map(fn($m) => $this->toDomain($m))
+            ->map(fn ($m) => $this->toDomain($m))
             ->toArray();
     }
 
@@ -32,13 +33,14 @@ class EloquentOffboardingTaskRepository implements OffboardingTaskRepositoryInte
         return OffboardingTaskModel::where('owner_type', $ownerType)
             ->where('owner_id', $ownerId)
             ->get()
-            ->map(fn($m) => $this->toDomain($m))
+            ->map(fn ($m) => $this->toDomain($m))
             ->toArray();
     }
 
     public function findByApprovalWorkflowRequestId(string $requestId): ?OffboardingTask
     {
         $model = OffboardingTaskModel::where('approval_workflow_request_id', $requestId)->first();
+
         return $model ? $this->toDomain($model) : null;
     }
 

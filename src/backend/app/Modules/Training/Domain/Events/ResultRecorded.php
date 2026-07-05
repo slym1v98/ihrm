@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Modules\Training\Domain\Events;
-class ResultRecorded {
+
+class ResultRecorded
+{
     public function __construct(public readonly string $entityId) {}
 }

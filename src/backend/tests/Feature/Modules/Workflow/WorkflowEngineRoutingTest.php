@@ -3,7 +3,9 @@
 namespace Tests\Feature\Modules\Workflow;
 
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
+use App\Modules\Leave\Infrastructure\Persistence\Eloquent\LeaveTypeModel;
 use Carbon\CarbonImmutable;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -17,7 +19,7 @@ class WorkflowEngineRoutingTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $response = $this->postJson('/api/v1/auth/login', [
             'email' => 'admin@ihrm.local',
@@ -65,8 +67,12 @@ class WorkflowEngineRoutingTest extends TestCase
             'comment' => 'Step 1 approved',
         ]);
         $status = $approve->status();
-        if ($status !== 204) echo "\nAPPROVE STATUS: {$status} BODY: " . json_encode($approve->json()) . "\n";
-        if ($status === 500) fwrite(STDERR, "500 BODY: " . json_encode($approve->json()) . "\n");
+        if ($status !== 204) {
+            echo "\nAPPROVE STATUS: {$status} BODY: ".json_encode($approve->json())."\n";
+        }
+        if ($status === 500) {
+            fwrite(STDERR, '500 BODY: '.json_encode($approve->json())."\n");
+        }
         $approve->assertStatus(204);
         $this->assertDatabaseHas('workflow_requests', ['id' => $reqId, 'current_step' => 3, 'status' => 'in_review']);
 
@@ -82,10 +88,10 @@ class WorkflowEngineRoutingTest extends TestCase
     {
         $user = UserModel::query()->first();
         $userId = (string) $user->id;
-        $type = \App\Modules\Leave\Infrastructure\Persistence\Eloquent\LeaveTypeModel::query()->where('is_balance_tracked', false)->first();
+        $type = LeaveTypeModel::query()->where('is_balance_tracked', false)->first();
         $this->assertNotNull($type, 'non-tracked leave type must exist after seed');
         $this->assertFalse($type->is_balance_tracked);
-        \App\Modules\Leave\Infrastructure\Persistence\Eloquent\LeaveTypeModel::query()
+        LeaveTypeModel::query()
             ->where('id', $type->id)->update(['workflow_template_code' => 'leave-approval']);
 
         $templateId = (string) Str::uuid();

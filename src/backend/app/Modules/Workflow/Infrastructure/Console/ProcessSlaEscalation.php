@@ -4,7 +4,6 @@ namespace App\Modules\Workflow\Infrastructure\Console;
 
 use App\Modules\Workflow\Application\Services\ResolverRegistry;
 use App\Modules\Workflow\Domain\Aggregates\WorkflowRequest\WorkflowRequestId;
-use App\Modules\Workflow\Domain\Aggregates\WorkflowTemplate\WorkflowTemplateId;
 use App\Modules\Workflow\Domain\Repositories\WorkflowRequestRepositoryInterface;
 use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface;
 use App\Modules\Workflow\Infrastructure\Persistence\Eloquent\WorkflowRequestModel;
@@ -14,6 +13,7 @@ use Illuminate\Console\Command;
 class ProcessSlaEscalation extends Command
 {
     protected $signature = 'workflow:sla-escalate';
+
     protected $description = 'Check overdue SLA deadlines and escalate';
 
     public function handle(
@@ -30,15 +30,24 @@ class ProcessSlaEscalation extends Command
         $count = 0;
         foreach ($overdue as $model) {
             $request = $requests->findById(new WorkflowRequestId($model->id));
-            if ($request === null) continue;
+            if ($request === null) {
+                continue;
+            }
             $template = $templates->findById($request->workflowTemplateId());
-            if ($template === null) continue;
+            if ($template === null) {
+                continue;
+            }
 
             $step = null;
             foreach ($template->steps() as $s) {
-                if ($s->stepOrder() === $request->currentStep()) { $step = $s; break; }
+                if ($s->stepOrder() === $request->currentStep()) {
+                    $step = $s;
+                    break;
+                }
             }
-            if ($step === null || $step->escalationSlaHours() === null) continue;
+            if ($step === null || $step->escalationSlaHours() === null) {
+                continue;
+            }
 
             if ($step->escalationTargetType() !== null) {
                 try {
@@ -46,7 +55,8 @@ class ProcessSlaEscalation extends Command
                         $step->escalationTargetConfig() ?? [],
                         $request->context() ?? [],
                     );
-                } catch (\Throwable) {}
+                } catch (\Throwable) {
+                }
             }
 
             $request->setEscalated(true);
@@ -55,6 +65,7 @@ class ProcessSlaEscalation extends Command
         }
 
         $this->info("Escalated {$count} overdue requests");
+
         return 0;
     }
 }

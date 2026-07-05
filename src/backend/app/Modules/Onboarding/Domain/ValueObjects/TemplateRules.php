@@ -16,7 +16,6 @@ class TemplateRules
     /** @var string[] */
     private array $employmentTypes;
 
-    /** @var array */
     private array $tasks;
 
     public function __construct(
@@ -63,7 +62,7 @@ class TemplateRules
     public function removeTask(int $sortOrder): void
     {
         $this->tasks = array_values(
-            array_filter($this->tasks, fn($t) => ($t['sort_order'] ?? 0) !== $sortOrder)
+            array_filter($this->tasks, fn ($t) => ($t['sort_order'] ?? 0) !== $sortOrder)
         );
     }
 

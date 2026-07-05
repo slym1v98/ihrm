@@ -2,7 +2,8 @@
 
 namespace App\Modules\Payroll\Application\Queries;
 
-use App\Modules\Payroll\Domain\Aggregates\Payslip\{Payslip, PayslipId};
+use App\Modules\Payroll\Domain\Aggregates\Payslip\Payslip;
+use App\Modules\Payroll\Domain\Aggregates\Payslip\PayslipId;
 use App\Modules\Payroll\Domain\Repositories\PayslipRepositoryInterface;
 
 readonly class PayslipViewQuery

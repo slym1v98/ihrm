@@ -6,9 +6,7 @@ use InvalidArgumentException;
 
 final readonly class HashedPassword
 {
-    private function __construct(public string $value)
-    {
-    }
+    private function __construct(public string $value) {}
 
     public static function fromHash(string $hash): self
     {

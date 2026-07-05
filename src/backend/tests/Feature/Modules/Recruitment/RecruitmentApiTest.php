@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Modules\Recruitment;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Modules\Organization\Infrastructure\Persistence\Eloquent\DepartmentModel;
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 class RecruitmentApiTest extends TestCase
@@ -15,8 +17,8 @@ class RecruitmentApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
-        $response = $this->postJson('/api/v1/auth/login', ['email'=>'admin@ihrm.local','password'=>'password']);
+        $this->seed(DatabaseSeeder::class);
+        $response = $this->postJson('/api/v1/auth/login', ['email' => 'admin@ihrm.local', 'password' => 'password']);
         $this->token = $response->json('data.access_token');
     }
 
@@ -65,12 +67,14 @@ class RecruitmentApiTest extends TestCase
             'candidate_id' => $candId,
             'requisition_id' => $reqId,
             'terms' => ['salary' => 5000],
-            'created_by' => \Ramsey\Uuid\Uuid::uuid7()->toString(),
+            'created_by' => Uuid::uuid7()->toString(),
         ])->assertStatus(201);
         $offerId = $offer->json('data.id');
 
         $resp = $this->withToken($this->token)->postJson("/api/v1/recruitment/offers/{$offerId}/accept");
-        if ($resp->status() === 500) fwrite(STDERR, "ACCEPT 500: " . json_encode($resp->json()) . "\n");
+        if ($resp->status() === 500) {
+            fwrite(STDERR, 'ACCEPT 500: '.json_encode($resp->json())."\n");
+        }
         $resp->assertStatus(200);
         // Convert is no longer needed—listener creates Employee automatically
         $this->withToken($this->token)->postJson("/api/v1/recruitment/offers/{$offerId}/convert")->assertStatus(422);
@@ -78,7 +82,7 @@ class RecruitmentApiTest extends TestCase
 
     public function test_duplicate_candidate_returns_422(): void
     {
-        $payload = ['full_name'=>'Bob','email'=>'bob@example.com','phone'=>'0911111111','source'=>'manual'];
+        $payload = ['full_name' => 'Bob', 'email' => 'bob@example.com', 'phone' => '0911111111', 'source' => 'manual'];
         $this->withToken($this->token)->postJson('/api/v1/recruitment/candidates', $payload)->assertStatus(201);
         $this->withToken($this->token)->postJson('/api/v1/recruitment/candidates', $payload)->assertStatus(422);
     }

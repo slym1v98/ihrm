@@ -10,10 +10,12 @@ use App\Modules\Performance\Domain\Repositories\GoalRepositoryInterface;
 class CreateGoalHandler
 {
     public function __construct(private readonly GoalRepositoryInterface $repo) {}
+
     public function handle(CreateGoalCommand $cmd): Goal
     {
         $goal = Goal::create(GoalId::generate(), $cmd->cycleId, $cmd->employeeId, $cmd->title, $cmd->description, $cmd->weight, $cmd->targetValue, $cmd->sortOrder);
         $this->repo->save($goal);
+
         return $goal;
     }
 }

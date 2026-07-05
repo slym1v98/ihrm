@@ -22,11 +22,15 @@ class ActivateContractHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.contract.activate');
         $contract = $this->contracts->findById(ContractId::fromString($command->contractId));
-        if (! $contract) throw new ContractNotFoundException($command->contractId);
+        if (! $contract) {
+            throw new ContractNotFoundException($command->contractId);
+        }
 
         $activeContracts = $this->contracts->findActiveByEmployeeId($contract->employeeId());
         foreach ($activeContracts as $active) {
-            if ($active->status()->value !== 'active') continue;
+            if ($active->status()->value !== 'active') {
+                continue;
+            }
             if ($this->renewalPolicy->hasOverlap($contract->term(), [$active])) {
                 throw new ContractOverlapException($contract->employeeId()->value);
             }

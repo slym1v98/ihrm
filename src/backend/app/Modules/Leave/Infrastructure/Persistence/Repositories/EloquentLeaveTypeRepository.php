@@ -14,18 +14,20 @@ class EloquentLeaveTypeRepository implements LeaveTypeRepositoryInterface
     public function findById(LeaveTypeId $id): ?LeaveType
     {
         $record = $this->model->find($id->value());
+
         return $record ? self::toDomain($record) : null;
     }
 
     public function findByCode(string $code): ?LeaveType
     {
         $record = $this->model->where('code', $code)->first();
+
         return $record ? self::toDomain($record) : null;
     }
 
     public function all(): array
     {
-        return $this->model->orderBy('sort_order')->get()->map(fn($r) => self::toDomain($r))->all();
+        return $this->model->orderBy('sort_order')->get()->map(fn ($r) => self::toDomain($r))->all();
     }
 
     public function save(LeaveType $type): void

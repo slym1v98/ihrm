@@ -19,7 +19,8 @@ class NotificationPreferenceController
     public function index(Request $request): JsonResponse
     {
         $prefs = $this->preferences->listByUser($request->user()->id);
-        return response()->json(['data' => array_map(fn($p) => new UserNotificationPreferenceResource($p), $prefs)]);
+
+        return response()->json(['data' => array_map(fn ($p) => new UserNotificationPreferenceResource($p), $prefs)]);
     }
 
     public function update(Request $request): JsonResponse

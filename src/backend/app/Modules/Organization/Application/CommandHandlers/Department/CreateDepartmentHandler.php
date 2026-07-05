@@ -2,14 +2,13 @@
 
 namespace App\Modules\Organization\Application\CommandHandlers\Department;
 
+use App\Modules\Identity\Application\Services\AuthorizationService;
 use App\Modules\Organization\Application\Commands\Department\CreateDepartmentCommand;
-use App\Modules\Organization\Domain\Aggregates\Branch\BranchId;
 use App\Modules\Organization\Domain\Aggregates\Department\Department;
 use App\Modules\Organization\Domain\Aggregates\Department\DepartmentId;
 use App\Modules\Organization\Domain\Exceptions\DuplicateDepartmentCodeException;
 use App\Modules\Organization\Domain\Repositories\BranchRepositoryInterface;
 use App\Modules\Organization\Domain\Repositories\DepartmentRepositoryInterface;
-use App\Modules\Identity\Application\Services\AuthorizationService;
 use Ramsey\Uuid\Uuid;
 
 class CreateDepartmentHandler

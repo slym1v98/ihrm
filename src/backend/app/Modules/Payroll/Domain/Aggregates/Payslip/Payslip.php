@@ -35,13 +35,14 @@ class Payslip
             'contract_snapshot' => $entry->getContractSnapshot(),
             'attendance_snapshot' => $entry->getAttendanceSnapshot(),
             'leave_snapshot' => $entry->getLeaveSnapshot(),
-            'lines' => array_map(fn($line) => [
+            'lines' => array_map(fn ($line) => [
                 'component_id' => $line['component_id'],
                 'category' => $line['category'],
                 'amount' => $line['amount'] instanceof Money ? $line['amount']->toDecimal() : $line['amount'],
                 'note' => $line['note'] ?? null,
             ], $entry->getLines()),
         ];
+
         return new self(
             id: $id,
             entryId: $entry->getId()->value,
@@ -52,28 +53,75 @@ class Payslip
             net: $entry->getNetAmount(),
             payload: $payload,
             status: PayslipStatus::Published,
-            publishedAt: new DateTimeImmutable(),
+            publishedAt: new DateTimeImmutable,
         );
     }
 
     public function recordAccess(): void
     {
         if ($this->firstAccessedAt === null) {
-            $this->firstAccessedAt = new DateTimeImmutable();
+            $this->firstAccessedAt = new DateTimeImmutable;
         }
         $this->accessCount++;
     }
 
-    public function getId(): PayslipId { return $this->id; }
-    public function getEntryId(): string { return $this->entryId; }
-    public function getEmployeeId(): string { return $this->employeeId; }
-    public function getPeriodId(): PayrollPeriodId { return $this->periodId; }
-    public function getGross(): Money { return $this->gross; }
-    public function getDeductions(): Money { return $this->deductions; }
-    public function getNet(): Money { return $this->net; }
-    public function getPayload(): array { return $this->payload; }
-    public function getStatus(): PayslipStatus { return $this->status; }
-    public function getPublishedAt(): ?DateTimeImmutable { return $this->publishedAt; }
-    public function getFirstAccessedAt(): ?DateTimeImmutable { return $this->firstAccessedAt; }
-    public function getAccessCount(): int { return $this->accessCount; }
+    public function getId(): PayslipId
+    {
+        return $this->id;
+    }
+
+    public function getEntryId(): string
+    {
+        return $this->entryId;
+    }
+
+    public function getEmployeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    public function getPeriodId(): PayrollPeriodId
+    {
+        return $this->periodId;
+    }
+
+    public function getGross(): Money
+    {
+        return $this->gross;
+    }
+
+    public function getDeductions(): Money
+    {
+        return $this->deductions;
+    }
+
+    public function getNet(): Money
+    {
+        return $this->net;
+    }
+
+    public function getPayload(): array
+    {
+        return $this->payload;
+    }
+
+    public function getStatus(): PayslipStatus
+    {
+        return $this->status;
+    }
+
+    public function getPublishedAt(): ?DateTimeImmutable
+    {
+        return $this->publishedAt;
+    }
+
+    public function getFirstAccessedAt(): ?DateTimeImmutable
+    {
+        return $this->firstAccessedAt;
+    }
+
+    public function getAccessCount(): int
+    {
+        return $this->accessCount;
+    }
 }

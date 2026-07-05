@@ -1,5 +1,7 @@
 <?php
+
 namespace Tests\Unit\Modules\Leave\Domain;
+
 use App\Modules\Leave\Domain\ValueObjects\DurationUnit;
 use App\Modules\Leave\Domain\ValueObjects\LeavePeriod;
 use Carbon\CarbonImmutable;

@@ -6,7 +6,6 @@ use App\Modules\Workflow\Domain\Aggregates\WorkflowRequest\WorkflowRequest;
 use App\Modules\Workflow\Domain\Aggregates\WorkflowTemplate\WorkflowStep;
 use App\Modules\Workflow\Domain\Aggregates\WorkflowTemplate\WorkflowTemplate;
 use App\Modules\Workflow\Domain\Repositories\WorkflowDelegationRepositoryInterface;
-use App\Modules\Workflow\Application\Services\WorkflowSlaCalculator;
 use Carbon\CarbonImmutable;
 
 final readonly class WorkflowEngine
@@ -25,19 +24,22 @@ final readonly class WorkflowEngine
 
     private function applyStepConfig(array $resolved): array
     {
-        if ($resolved['step'] === null) return $resolved;
+        if ($resolved['step'] === null) {
+            return $resolved;
+        }
         $step = $resolved['step'];
         if ($step->executionType() === 'all_of') {
             $resolved['parallel_required_count'] = count($resolved['approvers']);
         }
         if ($step->escalationSlaHours() !== null) {
-            $calculator = new WorkflowSlaCalculator();
+            $calculator = new WorkflowSlaCalculator;
             $resolved['sla_deadline_at'] = $calculator->calculateDeadline(
                 CarbonImmutable::now(),
                 $step->escalationSlaHours(),
                 config('workflow.working_hours'),
             );
         }
+
         return $resolved;
     }
 
@@ -49,6 +51,7 @@ final readonly class WorkflowEngine
         if ($next['step'] === null) {
             $request->markApproved();
             $request->setSlaDeadlineAt(null);
+
             return;
         }
 
@@ -60,7 +63,7 @@ final readonly class WorkflowEngine
         }
 
         if ($step->escalationSlaHours() !== null) {
-            $calculator = new WorkflowSlaCalculator();
+            $calculator = new WorkflowSlaCalculator;
             $request->setSlaDeadlineAt($calculator->calculateDeadline(
                 CarbonImmutable::now(),
                 $step->escalationSlaHours(),

@@ -18,6 +18,7 @@ use Throwable;
 class ReportRunJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public int $tries = 1;
 
     public function __construct(public string $runId) {}
@@ -25,7 +26,9 @@ class ReportRunJob implements ShouldQueue
     public function handle(ReportRunRepositoryInterface $runs, ReportDefinitionRepositoryInterface $defs, ReportQueryRegistry $registry): void
     {
         $run = $runs->findById(new ReportRunId($this->runId));
-        if (!$run) return;
+        if (! $run) {
+            return;
+        }
         $now = CarbonImmutable::now();
         try {
             if ($run->getStatus()->value === 'requested') {
@@ -33,7 +36,9 @@ class ReportRunJob implements ShouldQueue
                 $runs->save($run);
             }
             $definition = $defs->findById(new ReportDefinitionId($run->getReportDefinitionId()));
-            if (!$definition) throw new \RuntimeException('Report definition not found');
+            if (! $definition) {
+                throw new \RuntimeException('Report definition not found');
+            }
             $query = $registry->resolve($definition->getQueryClass());
             $result = $query->execute($run->getFilters(), $run->getRequestedBy());
             $run->complete($result, CarbonImmutable::now());

@@ -4,14 +4,14 @@ namespace App\Modules\Payroll\Application\CommandHandlers\PayrollRun;
 
 use App\Modules\Payroll\Application\Commands\PayrollRun\CompletePayrollRunCommand;
 use App\Modules\Payroll\Domain\Aggregates\PayrollRun\PayrollRunId;
-use App\Modules\Payroll\Domain\Repositories\{PayrollRunRepositoryInterface, PayrollPeriodRepositoryInterface};
-use App\Modules\Payroll\Domain\Exceptions\{PayrollRunNotFoundException, PayrollPeriodNotFoundException};
-use App\Modules\Payroll\Domain\Services\PayrollCalculator;
-use App\Modules\Payroll\Domain\Aggregates\PayrollEntry\PayrollEntry;
-use App\Modules\Payroll\Domain\Aggregates\PayrollEntry\PayrollEntryId;
-use App\Modules\Payroll\Domain\Repositories\PayrollEntryRepositoryInterface;
-use App\Modules\Payroll\Domain\Repositories\PayrollComponentRepositoryInterface;
+use App\Modules\Payroll\Domain\Exceptions\PayrollPeriodNotFoundException;
+use App\Modules\Payroll\Domain\Exceptions\PayrollRunNotFoundException;
 use App\Modules\Payroll\Domain\Ports\EmployeeContractReadPort;
+use App\Modules\Payroll\Domain\Repositories\PayrollComponentRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollEntryRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface;
+use App\Modules\Payroll\Domain\Repositories\PayrollRunRepositoryInterface;
+use App\Modules\Payroll\Domain\Services\PayrollCalculator;
 
 readonly class CompletePayrollRunHandler
 {
@@ -28,11 +28,15 @@ readonly class CompletePayrollRunHandler
     {
         $runId = PayrollRunId::fromString($command->runId);
         $run = $this->runRepo->findById($runId);
-        if ($run === null) throw PayrollRunNotFoundException::default();
+        if ($run === null) {
+            throw PayrollRunNotFoundException::default();
+        }
 
         $periodId = $run->getPeriodId();
         $period = $this->periodRepo->findById($periodId);
-        if ($period === null) throw PayrollPeriodNotFoundException::default();
+        if ($period === null) {
+            throw PayrollPeriodNotFoundException::default();
+        }
 
         // Get active employees and components
         $employeeIds = $this->contractPort->getActiveEmployeeIds($period->getEndDate());
@@ -52,7 +56,9 @@ readonly class CompletePayrollRunHandler
         $errors = 0;
         foreach ($entries as $entry) {
             $this->entryRepo->save($entry);
-            if ($entry->getStatus() === 'error') $errors++;
+            if ($entry->getStatus() === 'error') {
+                $errors++;
+            }
         }
 
         // Complete run

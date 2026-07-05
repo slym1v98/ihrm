@@ -9,5 +9,9 @@ use Illuminate\Http\Request;
 class ListWorkflowDelegationController
 {
     public function __construct(private WorkflowDelegationController $controller) {}
-    public function __invoke(Request $request, ListWorkflowDelegationsHandler $handler) { return $this->controller->index($request, $handler); }
+
+    public function __invoke(Request $request, ListWorkflowDelegationsHandler $handler)
+    {
+        return $this->controller->index($request, $handler);
+    }
 }

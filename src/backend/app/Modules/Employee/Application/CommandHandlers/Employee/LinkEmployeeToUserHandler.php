@@ -16,7 +16,9 @@ class LinkEmployeeToUserHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.update');
         $employee = $this->employees->findById(EmployeeId::fromString($command->employeeId));
-        if (! $employee) throw new EmployeeNotFoundException($command->employeeId);
+        if (! $employee) {
+            throw new EmployeeNotFoundException($command->employeeId);
+        }
         $employee->linkUserAccount($command->userId);
         $this->employees->saveAndDispatch($employee);
     }

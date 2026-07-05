@@ -93,17 +93,68 @@ class NotificationMessage
         $this->error = $error;
     }
 
-    public function getId(): NotificationMessageId { return $this->id; }
-    public function getTemplateCode(): string { return $this->templateCode; }
-    public function getChannel(): Channel { return $this->channel; }
-    public function getRecipientUserId(): string { return $this->recipientUserId; }
-    public function getRecipientAddress(): ?string { return $this->recipientAddress; }
-    public function getSubjectRendered(): ?string { return $this->subjectRendered; }
-    public function getBodyRendered(): string { return $this->bodyRendered; }
-    public function getPayload(): array { return $this->payload; }
-    public function getStatus(): MessageStatus { return $this->status; }
-    public function getPriority(): NotificationPriority { return $this->priority; }
-    public function getError(): ?string { return $this->error; }
-    public function getReadAt(): ?CarbonImmutable { return $this->readAt; }
-    public function getSentAt(): ?CarbonImmutable { return $this->sentAt; }
+    public function getId(): NotificationMessageId
+    {
+        return $this->id;
+    }
+
+    public function getTemplateCode(): string
+    {
+        return $this->templateCode;
+    }
+
+    public function getChannel(): Channel
+    {
+        return $this->channel;
+    }
+
+    public function getRecipientUserId(): string
+    {
+        return $this->recipientUserId;
+    }
+
+    public function getRecipientAddress(): ?string
+    {
+        return $this->recipientAddress;
+    }
+
+    public function getSubjectRendered(): ?string
+    {
+        return $this->subjectRendered;
+    }
+
+    public function getBodyRendered(): string
+    {
+        return $this->bodyRendered;
+    }
+
+    public function getPayload(): array
+    {
+        return $this->payload;
+    }
+
+    public function getStatus(): MessageStatus
+    {
+        return $this->status;
+    }
+
+    public function getPriority(): NotificationPriority
+    {
+        return $this->priority;
+    }
+
+    public function getError(): ?string
+    {
+        return $this->error;
+    }
+
+    public function getReadAt(): ?CarbonImmutable
+    {
+        return $this->readAt;
+    }
+
+    public function getSentAt(): ?CarbonImmutable
+    {
+        return $this->sentAt;
+    }
 }

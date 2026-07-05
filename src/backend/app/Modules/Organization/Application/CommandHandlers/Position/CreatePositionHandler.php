@@ -2,12 +2,12 @@
 
 namespace App\Modules\Organization\Application\CommandHandlers\Position;
 
+use App\Modules\Identity\Application\Services\AuthorizationService;
 use App\Modules\Organization\Application\Commands\Position\CreatePositionCommand;
 use App\Modules\Organization\Domain\Aggregates\Position\Position;
 use App\Modules\Organization\Domain\Aggregates\Position\PositionId;
 use App\Modules\Organization\Domain\Exceptions\DuplicatePositionCodeException;
 use App\Modules\Organization\Domain\Repositories\PositionRepositoryInterface;
-use App\Modules\Identity\Application\Services\AuthorizationService;
 use Ramsey\Uuid\Uuid;
 
 class CreatePositionHandler

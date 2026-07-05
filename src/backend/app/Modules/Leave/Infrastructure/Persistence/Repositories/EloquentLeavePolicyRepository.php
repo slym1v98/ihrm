@@ -16,6 +16,7 @@ class EloquentLeavePolicyRepository implements LeavePolicyRepositoryInterface
     public function findById(LeavePolicyId $id): ?LeavePolicy
     {
         $record = $this->model->find($id->value());
+
         return $record ? self::toDomain($record) : null;
     }
 
@@ -29,12 +30,13 @@ class EloquentLeavePolicyRepository implements LeavePolicyRepositoryInterface
             })
             ->orderByDesc('valid_from')
             ->first();
+
         return $record ? self::toDomain($record) : null;
     }
 
     public function all(): array
     {
-        return $this->model->orderBy('valid_from')->get()->map(fn($r) => self::toDomain($r))->all();
+        return $this->model->orderBy('valid_from')->get()->map(fn ($r) => self::toDomain($r))->all();
     }
 
     public function save(LeavePolicy $policy): void

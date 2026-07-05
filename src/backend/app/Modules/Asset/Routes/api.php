@@ -1,23 +1,20 @@
 <?php
 
-use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\{
-    DeleteAssetItemController,
-    ListAssetAssignmentController,
-    ListAssetItemController,
-    MarkAvailableAssetItemController,
-    MarkDamagedAssetItemController,
-    MarkLostAssetItemController,
-    MarkMaintenanceAssetItemController,
-    ReturnAssetAssetAssignmentController,
-    ShowAssetAssignmentController,
-    ShowAssetItemController,
-    StoreAssetAssignmentController,
-    StoreAssetItemController,
-    UpdateAssetItemController,
-};
-use Illuminate\Support\Facades\Route;
-
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\DeleteAssetItemController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\ListAssetAssignmentController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\ListAssetItemController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\MarkAvailableAssetItemController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\MarkDamagedAssetItemController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\MarkLostAssetItemController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\MarkMaintenanceAssetItemController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\ReturnAssetAssetAssignmentController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\ShowAssetAssignmentController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\ShowAssetItemController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\StoreAssetAssignmentController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\StoreAssetItemController;
+use App\Modules\Asset\Infrastructure\Http\Controllers\Actions\UpdateAssetItemController;
 use App\Modules\Asset\Infrastructure\Http\Controllers\AssetObligationController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1/assets')->middleware(['auth:sanctum'])->group(function () {
     Route::get('items', ListAssetItemController::class)->middleware('permission:asset.item.view');

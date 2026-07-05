@@ -24,6 +24,7 @@ class CreateOffboardingRequestHandler
             new \DateTimeImmutable($command->requestedLastWorkingDate),
         );
         $this->requestRepo->save($request);
+
         return $request;
     }
 }

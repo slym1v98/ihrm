@@ -6,6 +6,6 @@ final class EmployeeCodeGenerator
 {
     public function generate(): string
     {
-        return 'EMP' . now()->format('YmdHis');
+        return 'EMP'.now()->format('YmdHis');
     }
 }

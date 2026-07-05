@@ -25,12 +25,14 @@ class CreateContractHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.contract.create');
         $employee = $this->employees->findById(EmployeeId::fromString($command->employeeId));
-        if (! $employee) throw new EmployeeNotFoundException($command->employeeId);
+        if (! $employee) {
+            throw new EmployeeNotFoundException($command->employeeId);
+        }
 
         $contract = Contract::create(
             ContractId::generate(),
             EmployeeId::fromString($command->employeeId),
-            'CT' . now()->format('YmdHis'),
+            'CT'.now()->format('YmdHis'),
             new ContractTerm(
                 $command->contractType,
                 new DateRange(
@@ -42,6 +44,7 @@ class CreateContractHandler
         );
 
         $this->contracts->saveAndDispatch($contract);
+
         return $contract;
     }
 }

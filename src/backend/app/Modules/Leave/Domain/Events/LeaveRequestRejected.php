@@ -4,7 +4,5 @@ namespace App\Modules\Leave\Domain\Events;
 
 class LeaveRequestRejected
 {
-    public function __construct(public readonly array $payload)
-    {
-    }
+    public function __construct(public readonly array $payload) {}
 }

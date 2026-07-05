@@ -14,7 +14,10 @@ class GetEmployeeHandler
     public function handle(GetEmployeeQuery $query): mixed
     {
         $employee = $this->employees->findById(EmployeeId::fromString($query->employeeId));
-        if (! $employee) throw new EmployeeNotFoundException($query->employeeId);
+        if (! $employee) {
+            throw new EmployeeNotFoundException($query->employeeId);
+        }
+
         return $employee;
     }
 }

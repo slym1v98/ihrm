@@ -3,6 +3,7 @@
 namespace Tests\Feature\Modules\Shift;
 
 use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,7 +16,7 @@ class ShiftApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
 
         $response = $this->postJson('/api/v1/auth/login', [
             'email' => 'admin@ihrm.local',

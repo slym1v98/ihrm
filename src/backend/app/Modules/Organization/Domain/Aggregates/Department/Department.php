@@ -36,7 +36,8 @@ final class Department
         ?DepartmentId $parentId = null,
     ): self {
         $dept = new self($id, $code, $name, $branchId, $parentId, null, DepartmentStatus::Active);
-        $dept->record(new DepartmentCreated($id, $code->value, $name->value, new DateTimeImmutable()));
+        $dept->record(new DepartmentCreated($id, $code->value, $name->value, new DateTimeImmutable));
+
         return $dept;
     }
 
@@ -56,12 +57,12 @@ final class Department
     {
         $this->name = $name;
         $this->managerEmployeeId = $managerEmployeeId;
-        $this->record(new DepartmentUpdated($this->id, new DateTimeImmutable()));
+        $this->record(new DepartmentUpdated($this->id, new DateTimeImmutable));
     }
 
     /**
-     * @param callable(?DepartmentId): bool  $isDescendantFn  returns true if given id is a descendant
-     * @param callable(DepartmentId): BranchId $getParentBranchFn  returns branch of given dept
+     * @param  callable(?DepartmentId): bool  $isDescendantFn  returns true if given id is a descendant
+     * @param  callable(DepartmentId): BranchId  $getParentBranchFn  returns branch of given dept
      */
     public function moveTo(
         ?DepartmentId $newParentId,
@@ -69,23 +70,23 @@ final class Department
         callable $getParentBranchFn,
     ): void {
         if ($newParentId !== null && $this->id->equals($newParentId)) {
-            throw new CircularMoveException();
+            throw new CircularMoveException;
         }
 
         if ($newParentId !== null && $isDescendantFn($newParentId)) {
-            throw new CircularMoveException();
+            throw new CircularMoveException;
         }
 
         if ($newParentId !== null) {
             $parentBranchId = $getParentBranchFn($newParentId);
             if (! $parentBranchId->equals($this->branchId)) {
-                throw new DepartmentNotInSameBranchException();
+                throw new DepartmentNotInSameBranchException;
             }
         }
 
         $oldParentId = $this->parentId;
         $this->parentId = $newParentId;
-        $this->record(new DepartmentMoved($this->id, $oldParentId, $newParentId, new DateTimeImmutable()));
+        $this->record(new DepartmentMoved($this->id, $oldParentId, $newParentId, new DateTimeImmutable));
     }
 
     public function activate(): void
@@ -94,7 +95,7 @@ final class Department
             return;
         }
         $this->status = DepartmentStatus::Active;
-        $this->record(new DepartmentActivated($this->id, new DateTimeImmutable()));
+        $this->record(new DepartmentActivated($this->id, new DateTimeImmutable));
     }
 
     /** @param callable(): bool $hasActiveChildrenFn */
@@ -107,7 +108,7 @@ final class Department
             throw new DepartmentHasActiveChildrenException($this->id->value);
         }
         $this->status = DepartmentStatus::Inactive;
-        $this->record(new DepartmentDeactivated($this->id, new DateTimeImmutable()));
+        $this->record(new DepartmentDeactivated($this->id, new DateTimeImmutable));
     }
 
     private function record(object $event): void
@@ -120,14 +121,42 @@ final class Department
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 
-    public function id(): DepartmentId { return $this->id; }
-    public function code(): DepartmentCode { return $this->code; }
-    public function name(): DepartmentName { return $this->name; }
-    public function branchId(): BranchId { return $this->branchId; }
-    public function parentId(): ?DepartmentId { return $this->parentId; }
-    public function managerEmployeeId(): ?string { return $this->managerEmployeeId; }
-    public function status(): DepartmentStatus { return $this->status; }
+    public function id(): DepartmentId
+    {
+        return $this->id;
+    }
+
+    public function code(): DepartmentCode
+    {
+        return $this->code;
+    }
+
+    public function name(): DepartmentName
+    {
+        return $this->name;
+    }
+
+    public function branchId(): BranchId
+    {
+        return $this->branchId;
+    }
+
+    public function parentId(): ?DepartmentId
+    {
+        return $this->parentId;
+    }
+
+    public function managerEmployeeId(): ?string
+    {
+        return $this->managerEmployeeId;
+    }
+
+    public function status(): DepartmentStatus
+    {
+        return $this->status;
+    }
 }

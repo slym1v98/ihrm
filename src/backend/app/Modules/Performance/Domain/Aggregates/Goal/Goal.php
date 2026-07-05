@@ -28,6 +28,7 @@ class Goal
     {
         $g = new self($id, $cycleId, $employeeId, $title, $description, $weight, $targetValue, null, GoalStatus::Active, $sortOrder);
         $g->recordedEvents[] = new GoalCreated($id->value);
+
         return $g;
     }
 
@@ -49,7 +50,7 @@ class Goal
 
     public function complete(?string $actualValue = null): void
     {
-        if (!$this->status->canTransitionTo(GoalStatus::Completed)) {
+        if (! $this->status->canTransitionTo(GoalStatus::Completed)) {
             throw new InvalidStatusTransitionException($this->status->value, GoalStatus::Completed->value);
         }
         $this->actualValue = $actualValue;
@@ -59,21 +60,67 @@ class Goal
 
     public function archive(): void
     {
-        if (!$this->status->canTransitionTo(GoalStatus::Archived)) {
+        if (! $this->status->canTransitionTo(GoalStatus::Archived)) {
             throw new InvalidStatusTransitionException($this->status->value, GoalStatus::Archived->value);
         }
         $this->status = GoalStatus::Archived;
     }
 
-    public function popRecordedEvents(): array { $e=$this->recordedEvents; $this->recordedEvents=[]; return $e; }
-    public function getId(): GoalId { return $this->id; }
-    public function getCycleId(): string { return $this->cycleId; }
-    public function getEmployeeId(): ?string { return $this->employeeId; }
-    public function getTitle(): string { return $this->title; }
-    public function getDescription(): ?string { return $this->description; }
-    public function getWeight(): float { return $this->weight; }
-    public function getTargetValue(): ?string { return $this->targetValue; }
-    public function getActualValue(): ?string { return $this->actualValue; }
-    public function getStatus(): GoalStatus { return $this->status; }
-    public function getSortOrder(): int { return $this->sortOrder; }
+    public function popRecordedEvents(): array
+    {
+        $e = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $e;
+    }
+
+    public function getId(): GoalId
+    {
+        return $this->id;
+    }
+
+    public function getCycleId(): string
+    {
+        return $this->cycleId;
+    }
+
+    public function getEmployeeId(): ?string
+    {
+        return $this->employeeId;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function getWeight(): float
+    {
+        return $this->weight;
+    }
+
+    public function getTargetValue(): ?string
+    {
+        return $this->targetValue;
+    }
+
+    public function getActualValue(): ?string
+    {
+        return $this->actualValue;
+    }
+
+    public function getStatus(): GoalStatus
+    {
+        return $this->status;
+    }
+
+    public function getSortOrder(): int
+    {
+        return $this->sortOrder;
+    }
 }

@@ -10,9 +10,13 @@ class DataScopeAssignmentModel extends Model
     use HasUuids;
 
     protected $table = 'data_scope_assignments';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $casts = [
         'effective_from' => 'date',
         'effective_to' => 'date',

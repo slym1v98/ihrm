@@ -20,6 +20,7 @@ class EloquentOffboardingPlanRepository implements OffboardingPlanRepositoryInte
     public function findById(OffboardingPlanId $id): ?OffboardingPlan
     {
         $model = OffboardingPlanModel::with('tasks')->find($id->value);
+
         return $model ? $this->toDomain($model) : null;
     }
 
@@ -27,7 +28,7 @@ class EloquentOffboardingPlanRepository implements OffboardingPlanRepositoryInte
     {
         return OffboardingPlanModel::with('tasks')
             ->where('offboarding_request_id', $requestId)
-            ->get()->map(fn($m) => $this->toDomain($m))->toArray();
+            ->get()->map(fn ($m) => $this->toDomain($m))->toArray();
     }
 
     public function findByWorkflowRequestId(string $workflowRequestId): ?OffboardingPlan
@@ -35,16 +36,17 @@ class EloquentOffboardingPlanRepository implements OffboardingPlanRepositoryInte
         // Plan workflow attached to plan itself via clearance workflow
         $model = OffboardingPlanModel::with('tasks')
             ->where('id', 'like', '%')
-            ->get()->first(function($m) use ($workflowRequestId) {
+            ->get()->first(function ($m) {
                 return false; // Stub - would need a column
             });
+
         return $model ? $this->toDomain($model) : null;
     }
 
     public function all(): array
     {
         return OffboardingPlanModel::with('tasks')
-            ->get()->map(fn($m) => $this->toDomain($m))->toArray();
+            ->get()->map(fn ($m) => $this->toDomain($m))->toArray();
     }
 
     public function save(OffboardingPlan $plan): void
@@ -76,6 +78,7 @@ class EloquentOffboardingPlanRepository implements OffboardingPlanRepositoryInte
         foreach ($model->tasks ?? [] as $t) {
             $plan->addGeneratedTask($this->taskToDomain($t));
         }
+
         return $plan;
     }
 

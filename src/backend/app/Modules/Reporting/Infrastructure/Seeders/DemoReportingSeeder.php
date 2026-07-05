@@ -2,9 +2,9 @@
 
 namespace App\Modules\Reporting\Infrastructure\Seeders;
 
+use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
 use App\Modules\Reporting\Infrastructure\Persistence\Eloquent\ReportDefinitionModel;
 use App\Modules\Reporting\Infrastructure\Persistence\Eloquent\ReportRunModel;
-use App\Modules\Identity\Infrastructure\Persistence\Eloquent\UserModel;
 use Illuminate\Database\Seeder;
 
 class DemoReportingSeeder extends Seeder
@@ -14,7 +14,9 @@ class DemoReportingSeeder extends Seeder
         $admin = UserModel::where('email', 'admin@ihrm.local')->first();
         $def = ReportDefinitionModel::first();
 
-        if (!$admin || !$def) return;
+        if (! $admin || ! $def) {
+            return;
+        }
 
         ReportRunModel::firstOrCreate(
             ['report_definition_id' => $def->id],

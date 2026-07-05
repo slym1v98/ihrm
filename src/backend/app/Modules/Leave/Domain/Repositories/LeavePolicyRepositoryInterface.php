@@ -10,8 +10,11 @@ use Carbon\CarbonImmutable;
 interface LeavePolicyRepositoryInterface
 {
     public function findById(LeavePolicyId $id): ?LeavePolicy;
+
     public function findByType(LeaveTypeId $typeId, CarbonImmutable $date): ?LeavePolicy;
+
     /** @return LeavePolicy[] */
     public function all(): array;
+
     public function save(LeavePolicy $policy): void;
 }

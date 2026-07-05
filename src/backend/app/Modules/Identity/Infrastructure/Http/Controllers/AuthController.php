@@ -16,6 +16,7 @@ class AuthController
     public function login(LoginRequest $request): JsonResponse
     {
         $result = $this->auth->login($request->email, $request->password);
+
         return response()->json([
             'data' => [
                 'access_token' => $result['access_token'],
@@ -28,6 +29,7 @@ class AuthController
     public function logout(Request $request): JsonResponse
     {
         $this->auth->logout($request->user());
+
         return response()->json(['data' => null]);
     }
 
@@ -41,6 +43,7 @@ class AuthController
     public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
         $this->auth->changePassword($request->user(), $request->current_password, $request->new_password);
+
         return response()->json(['data' => null]);
     }
 }

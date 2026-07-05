@@ -6,7 +6,6 @@ use App\Modules\Onboarding\Domain\Aggregates\OnboardingPlan\OnboardingPlan;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingPlan\OnboardingPlanId;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingTask\OnboardingTask;
 use App\Modules\Onboarding\Domain\Aggregates\OnboardingTask\OnboardingTaskId;
-use App\Modules\Onboarding\Domain\ValueObjects\OnboardingTaskStatus;
 use App\Modules\Onboarding\Domain\ValueObjects\OwnerType;
 use App\Modules\Onboarding\Domain\ValueObjects\TaskType;
 use App\Modules\Onboarding\Domain\ValueObjects\TemplateRules;
@@ -84,7 +83,7 @@ class OnboardingTemplate
         foreach ($this->rules->getTasks() as $taskDef) {
             $taskId = OnboardingTaskId::generate();
             $dueDate = $taskDef['due_days'] !== null
-                ? $startDate->modify(($taskDef['due_days'] >= 0 ? '+' : '') . $taskDef['due_days'] . ' days')
+                ? $startDate->modify(($taskDef['due_days'] >= 0 ? '+' : '').$taskDef['due_days'].' days')
                 : null;
 
             $task = OnboardingTask::create(
@@ -107,9 +106,28 @@ class OnboardingTemplate
         return $plan;
     }
 
-    public function getId(): OnboardingTemplateId { return $this->id; }
-    public function getCode(): string { return $this->code; }
-    public function getName(): string { return $this->name; }
-    public function getRules(): TemplateRules { return $this->rules; }
-    public function isActive(): bool { return $this->active; }
+    public function getId(): OnboardingTemplateId
+    {
+        return $this->id;
+    }
+
+    public function getCode(): string
+    {
+        return $this->code;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getRules(): TemplateRules
+    {
+        return $this->rules;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
 }

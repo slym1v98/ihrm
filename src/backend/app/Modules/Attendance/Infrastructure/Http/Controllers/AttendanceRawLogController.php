@@ -4,14 +4,14 @@ namespace App\Modules\Attendance\Infrastructure\Http\Controllers;
 
 use App\Modules\Attendance\Application\CommandHandlers\AttendanceRawLog\RecordAttendanceRawLogHandler;
 use App\Modules\Attendance\Application\Commands\AttendanceRawLog\RecordAttendanceRawLogCommand;
+use App\Modules\Attendance\Domain\ValueObjects\EventType;
+use App\Modules\Attendance\Domain\ValueObjects\Source;
 use App\Modules\Attendance\Infrastructure\Http\Requests\RecordAttendanceRawLogRequest;
 use App\Modules\Attendance\Infrastructure\Http\Resources\AttendanceRawLogResource;
 use App\Modules\Attendance\Infrastructure\Persistence\Eloquent\AttendanceRawLogModel;
 use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Modules\Attendance\Domain\ValueObjects\Source;
-use App\Modules\Attendance\Domain\ValueObjects\EventType;
 
 class AttendanceRawLogController
 {

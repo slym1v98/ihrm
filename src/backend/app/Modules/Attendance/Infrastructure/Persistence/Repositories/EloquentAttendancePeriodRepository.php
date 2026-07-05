@@ -14,12 +14,14 @@ class EloquentAttendancePeriodRepository implements AttendancePeriodRepositoryIn
     public function findById(string $id): ?AttendancePeriod
     {
         $model = AttendancePeriodModel::find($id);
+
         return $model ? $this->toAggregate($model) : null;
     }
 
     public function findByCode(string $code): ?AttendancePeriod
     {
         $model = AttendancePeriodModel::where('period_code', $code)->first();
+
         return $model ? $this->toAggregate($model) : null;
     }
 
@@ -42,14 +44,15 @@ class EloquentAttendancePeriodRepository implements AttendancePeriodRepositoryIn
 
     public function findClosedByDate(string $date): ?AttendancePeriod
     {
-        $model = AttendancePeriodModel::where("status", "closed")
-            ->where("start_date", "<=", $date)
-            ->where("end_date", ">=", $date)
+        $model = AttendancePeriodModel::where('status', 'closed')
+            ->where('start_date', '<=', $date)
+            ->where('end_date', '>=', $date)
             ->first();
+
         return $model ? $this->toAggregate($model) : null;
     }
 
-        public function findPaginated(int $perPage = 15, int $page = 1): array
+    public function findPaginated(int $perPage = 15, int $page = 1): array
     {
         return AttendancePeriodModel::paginate($perPage)->items();
     }

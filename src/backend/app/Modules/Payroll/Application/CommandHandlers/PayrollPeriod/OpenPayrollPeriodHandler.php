@@ -3,7 +3,8 @@
 namespace App\Modules\Payroll\Application\CommandHandlers\PayrollPeriod;
 
 use App\Modules\Payroll\Application\Commands\PayrollPeriod\OpenPayrollPeriodCommand;
-use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\{PayrollPeriod, PayrollPeriodId};
+use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriod;
+use App\Modules\Payroll\Domain\Aggregates\PayrollPeriod\PayrollPeriodId;
 use App\Modules\Payroll\Domain\Repositories\PayrollPeriodRepositoryInterface;
 
 readonly class OpenPayrollPeriodHandler
@@ -31,6 +32,7 @@ readonly class OpenPayrollPeriodHandler
         );
 
         $this->periodRepo->save($period);
+
         return $period;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Modules\Shift\Infrastructure\Seeders;
 
+use App\Modules\Employee\Infrastructure\Persistence\Eloquent\EmployeeModel;
 use App\Modules\Shift\Infrastructure\Persistence\Eloquent\ShiftAssignmentModel;
 use App\Modules\Shift\Infrastructure\Persistence\Eloquent\ShiftTemplateModel;
-use App\Modules\Employee\Infrastructure\Persistence\Eloquent\EmployeeModel;
 use Illuminate\Database\Seeder;
 
 class DemoShiftSeeder extends Seeder
@@ -15,7 +15,9 @@ class DemoShiftSeeder extends Seeder
         $morningShift = ShiftTemplateModel::where('code', 'SHIFT-MORNING')->first();
         $employees = EmployeeModel::where('status', 'active')->limit(6)->pluck('id');
 
-        if (!$officeShift || $employees->isEmpty()) return;
+        if (! $officeShift || $employees->isEmpty()) {
+            return;
+        }
 
         foreach ($employees as $empId) {
             $template = rand(0, 1) ? $officeShift : $morningShift;

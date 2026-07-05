@@ -24,7 +24,9 @@ class UploadEmployeeDocumentHandler
     {
         $this->authorizationService->requirePermission($userId, 'employee.document.upload');
         $employee = $this->employees->findById(EmployeeId::fromString($command->employeeId));
-        if (! $employee) throw new EmployeeNotFoundException($command->employeeId);
+        if (! $employee) {
+            throw new EmployeeNotFoundException($command->employeeId);
+        }
 
         $document = EmployeeDocument::upload(
             EmployeeDocumentId::generate(),
@@ -35,6 +37,7 @@ class UploadEmployeeDocumentHandler
         );
 
         $this->documents->saveAndDispatch($document);
+
         return $document;
     }
 }

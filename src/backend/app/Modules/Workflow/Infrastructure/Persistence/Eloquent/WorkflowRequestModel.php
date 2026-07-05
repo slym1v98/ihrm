@@ -2,14 +2,17 @@
 
 namespace App\Modules\Workflow\Infrastructure\Persistence\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class WorkflowRequestModel extends Model
 {
     use HasUuids;
+
     protected $table = 'workflow_requests';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = ['id', 'workflow_template_id', 'subject_type', 'subject_id', 'status', 'current_step', 'submitted_by', 'context', 'sla_deadline_at', 'escalated', 'parallel_approved_count', 'parallel_required_count'];

@@ -13,7 +13,7 @@ class DemoWorkflowSeeder extends Seeder
     {
         // Leave approval template
         $leaveTemplate = WorkflowTemplateModel::where('code', 'LEAVE-APPROVAL')->first();
-        if (!$leaveTemplate) {
+        if (! $leaveTemplate) {
             $leaveTemplate = WorkflowTemplateModel::create([
                 'id' => (string) Uuid::uuid4(),
                 'code' => 'LEAVE-APPROVAL',
@@ -36,7 +36,7 @@ class DemoWorkflowSeeder extends Seeder
 
         // Payroll approval template
         $payrollTemplate = WorkflowTemplateModel::where('code', 'PAYROLL-APPROVAL')->first();
-        if (!$payrollTemplate) {
+        if (! $payrollTemplate) {
             $payrollTemplate = WorkflowTemplateModel::create([
                 'id' => (string) Uuid::uuid4(),
                 'code' => 'PAYROLL-APPROVAL',

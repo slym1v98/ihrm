@@ -53,13 +53,15 @@ class BranchController
         );
 
         $model = BranchModel::find($branch->id()->value);
+
         return response()->json(['data' => new BranchResource($model)], 201);
     }
 
     public function show(string $id): JsonResponse
     {
         $model = BranchModel::find($id);
-        abort_if(!$model, 404, 'Branch not found');
+        abort_if(! $model, 404, 'Branch not found');
+
         return response()->json(['data' => new BranchResource($model)]);
     }
 
@@ -77,6 +79,7 @@ class BranchController
         );
 
         $model = BranchModel::find($id);
+
         return response()->json(['data' => new BranchResource($model)]);
     }
 
@@ -86,6 +89,7 @@ class BranchController
             new ActivateBranchCommand(BranchId::fromString($id)),
             (string) $request->user()->id,
         );
+
         return response()->json(['message' => 'Activated']);
     }
 
@@ -95,6 +99,7 @@ class BranchController
             new DeactivateBranchCommand(BranchId::fromString($id)),
             (string) $request->user()->id,
         );
+
         return response()->json(['message' => 'Deactivated']);
     }
 }

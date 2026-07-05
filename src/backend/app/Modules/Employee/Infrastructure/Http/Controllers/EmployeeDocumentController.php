@@ -13,8 +13,11 @@ use App\Modules\Employee\Domain\Aggregates\EmployeeDocument\EmployeeDocumentId;
 use App\Modules\Employee\Infrastructure\Http\Resources\EmployeeDocumentResource;
 use App\Modules\Employee\Infrastructure\Persistence\Eloquent\EmployeeDocumentModel;
 use App\Modules\Employee\Infrastructure\Storage\EmployeeDocumentStorage;
+use App\Modules\Shared\Http\Resources\PaginatedCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EmployeeDocumentController
 {
@@ -31,7 +34,7 @@ class EmployeeDocumentController
             ->orderBy('created_at', 'desc')
             ->paginate((int) $request->input('per_page', 20), ['*'], 'page', (int) $request->input('page', 1));
 
-        return response()->json(new \App\Modules\Shared\Http\Resources\PaginatedCollection(
+        return response()->json(new PaginatedCollection(
             $paginator->through(fn ($m) => new EmployeeDocumentResource($m))
         ));
     }
@@ -39,7 +42,7 @@ class EmployeeDocumentController
     public function store(Request $request, string $employeeId): JsonResponse
     {
         $file = $request->file('file');
-        abort_if(!$file, 422, 'File required');
+        abort_if(! $file, 422, 'File required');
 
         $descriptor = $this->storage->store(EmployeeId::fromString($employeeId), EmployeeDocumentId::generate(), $file);
 
@@ -49,13 +52,14 @@ class EmployeeDocumentController
         );
 
         $model = EmployeeDocumentModel::find($document->id()->value);
+
         return response()->json(['data' => new EmployeeDocumentResource($model)], 201);
     }
 
     public function replace(Request $request, string $id): JsonResponse
     {
         $file = $request->file('file');
-        abort_if(!$file, 422, 'File required');
+        abort_if(! $file, 422, 'File required');
 
         $current = EmployeeDocumentModel::findOrFail($id);
         $descriptor = $this->storage->store(
@@ -82,9 +86,10 @@ class EmployeeDocumentController
         return response()->json(['data' => new EmployeeDocumentResource(EmployeeDocumentModel::find($id))]);
     }
 
-    public function download(string $id): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function download(string $id): StreamedResponse
     {
         $model = EmployeeDocumentModel::findOrFail($id);
-        return \Illuminate\Support\Facades\Storage::disk('minio')->download($model->file_path, $model->file_original_name);
+
+        return Storage::disk('minio')->download($model->file_path, $model->file_original_name);
     }
 }

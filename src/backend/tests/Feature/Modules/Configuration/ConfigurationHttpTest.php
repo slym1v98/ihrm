@@ -22,6 +22,7 @@ class ConfigurationHttpTest extends TestCase
         $this->seed(PermissionSeeder::class);
         $this->seed(RoleSeeder::class);
         $this->seed(AdminUserSeeder::class);
+
         return UserModel::where('email', 'admin@ihrm.local')->firstOrFail();
     }
 
@@ -46,7 +47,7 @@ class ConfigurationHttpTest extends TestCase
         $this->actingAs($admin, 'sanctum')
             ->postJson('/api/v1/config/code-generation-rules/employee/preview')
             ->assertOk()
-            ->assertJsonPath('data.code', 'EMP-' . now()->format('Y') . '-0007');
+            ->assertJsonPath('data.code', 'EMP-'.now()->format('Y').'-0007');
     }
 
     public function test_next_code_increments(): void

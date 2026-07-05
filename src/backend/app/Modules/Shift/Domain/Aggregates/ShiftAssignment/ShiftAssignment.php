@@ -34,7 +34,8 @@ final class ShiftAssignment
         ?RecurrenceRule $recurrenceRule,
     ): self {
         $assignment = new self($id, $shiftTemplateId, $assignableType, $assignableId, $effectiveFrom, $effectiveTo, $recurrenceRule, true);
-        $assignment->record(new ShiftAssigned($id, $shiftTemplateId, $assignableType, $assignableId, $effectiveFrom->format('Y-m-d'), new DateTimeImmutable()));
+        $assignment->record(new ShiftAssigned($id, $shiftTemplateId, $assignableType, $assignableId, $effectiveFrom->format('Y-m-d'), new DateTimeImmutable));
+
         return $assignment;
     }
 
@@ -55,7 +56,7 @@ final class ShiftAssignment
     {
         $this->effectiveTo = $effectiveTo;
         $this->active = false;
-        $this->record(new ShiftAssignmentEnded($this->id, $effectiveTo->format('Y-m-d'), new DateTimeImmutable()));
+        $this->record(new ShiftAssignmentEnded($this->id, $effectiveTo->format('Y-m-d'), new DateTimeImmutable));
     }
 
     public function changeTemplate(ShiftTemplateId $newTemplateId, DateTimeImmutable $effectiveFrom): void
@@ -63,22 +64,54 @@ final class ShiftAssignment
         $old = $this->shiftTemplateId;
         $this->shiftTemplateId = $newTemplateId;
         $this->effectiveFrom = $effectiveFrom;
-        $this->record(new ShiftAssignmentChanged($this->id, $old, $newTemplateId, new DateTimeImmutable()));
+        $this->record(new ShiftAssignmentChanged($this->id, $old, $newTemplateId, new DateTimeImmutable));
     }
 
-    public function id(): ShiftAssignmentId { return $this->id; }
-    public function shiftTemplateId(): ShiftTemplateId { return $this->shiftTemplateId; }
-    public function assignableType(): string { return $this->assignableType; }
-    public function assignableId(): string { return $this->assignableId; }
-    public function effectiveFrom(): DateTimeImmutable { return $this->effectiveFrom; }
-    public function effectiveTo(): ?DateTimeImmutable { return $this->effectiveTo; }
-    public function recurrenceRule(): ?RecurrenceRule { return $this->recurrenceRule; }
-    public function active(): bool { return $this->active; }
+    public function id(): ShiftAssignmentId
+    {
+        return $this->id;
+    }
+
+    public function shiftTemplateId(): ShiftTemplateId
+    {
+        return $this->shiftTemplateId;
+    }
+
+    public function assignableType(): string
+    {
+        return $this->assignableType;
+    }
+
+    public function assignableId(): string
+    {
+        return $this->assignableId;
+    }
+
+    public function effectiveFrom(): DateTimeImmutable
+    {
+        return $this->effectiveFrom;
+    }
+
+    public function effectiveTo(): ?DateTimeImmutable
+    {
+        return $this->effectiveTo;
+    }
+
+    public function recurrenceRule(): ?RecurrenceRule
+    {
+        return $this->recurrenceRule;
+    }
+
+    public function active(): bool
+    {
+        return $this->active;
+    }
 
     public function releaseEvents(): array
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
+
         return $events;
     }
 

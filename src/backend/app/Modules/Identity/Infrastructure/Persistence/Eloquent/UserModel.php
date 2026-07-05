@@ -10,14 +10,19 @@ use Laravel\Sanctum\HasApiTokens;
 
 class UserModel extends Authenticatable
 {
-    use HasUuids;
     use HasApiTokens, HasUuids, Notifiable;
+    use HasUuids;
 
     protected $table = 'users';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
+
     protected $hidden = ['password', 'remember_token'];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',

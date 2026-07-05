@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Modules\Workflow\Domain;
 
 use App\Modules\Workflow\Domain\Aggregates\WorkflowRequest\WorkflowRequest;

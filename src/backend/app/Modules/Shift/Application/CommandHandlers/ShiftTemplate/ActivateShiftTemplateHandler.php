@@ -16,7 +16,9 @@ class ActivateShiftTemplateHandler
     {
         $this->authorizationService->requirePermission($userId, 'shift.template.update');
         $template = $this->templates->findById(ShiftTemplateId::fromString($command->id));
-        if (!$template) throw new ShiftTemplateNotFoundException($command->id);
+        if (! $template) {
+            throw new ShiftTemplateNotFoundException($command->id);
+        }
         $template->activate();
         $this->templates->saveAndDispatch($template);
     }

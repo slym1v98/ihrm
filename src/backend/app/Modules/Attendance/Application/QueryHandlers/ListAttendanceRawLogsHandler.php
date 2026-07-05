@@ -8,5 +8,9 @@ use App\Modules\Attendance\Domain\Repositories\AttendanceRawLogRepositoryInterfa
 class ListAttendanceRawLogsHandler
 {
     public function __construct(private AttendanceRawLogRepositoryInterface $repo) {}
-    public function handle(ListAttendanceRawLogsQuery $query): array { return $this->repo->findPaginated($query->perPage, $query->page); }
+
+    public function handle(ListAttendanceRawLogsQuery $query): array
+    {
+        return $this->repo->findPaginated($query->perPage, $query->page);
+    }
 }

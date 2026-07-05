@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Modules\Asset\Application\CommandHandlers;
 
 use App\Modules\Asset\Application\Commands\ReturnAssetCommand;
 use App\Modules\Asset\Domain\Aggregates\AssetReturn\AssetReturn;
 use App\Modules\Asset\Domain\Exceptions\AssetAssignmentNotFoundException;
+use App\Modules\Asset\Domain\Exceptions\AssetItemNotFoundException;
 use App\Modules\Asset\Domain\Repositories\AssetAssignmentRepositoryInterface;
 use App\Modules\Asset\Domain\Repositories\AssetItemRepositoryInterface;
 use App\Modules\Asset\Domain\Repositories\AssetReturnRepositoryInterface;
@@ -23,28 +25,29 @@ class ReturnAssetHandler
     {
         $assignmentId = AssetAssignmentId::fromString($command->assignmentId);
         $assignment = $this->assignmentRepo->findById($assignmentId);
-        if (!$assignment) {
+        if (! $assignment) {
             throw new AssetAssignmentNotFoundException($command->assignmentId);
         }
         $assignment->completeReturn();
         $return = AssetReturn::create(
             AssetReturnId::generate(),
             $assignmentId,
-            new \DateTimeImmutable(),
+            new \DateTimeImmutable,
             AssetCondition::from($command->conditionOnReturn),
             $command->notes,
             $command->settlementAmount,
         );
         $itemId = $assignment->getAssetItemId();
         $item = $this->itemRepo->findById($itemId);
-        if (!$item) {
-            throw new \App\Modules\Asset\Domain\Exceptions\AssetItemNotFoundException($itemId->value);
+        if (! $item) {
+            throw new AssetItemNotFoundException($itemId->value);
         }
         $newItemStatus = $item->finishReturn($command->conditionOnReturn);
         $item->markStatus($newItemStatus);
         $this->assignmentRepo->save($assignment);
         $this->returnRepo->save($return);
         $this->itemRepo->save($item);
+
         return $return;
     }
 }

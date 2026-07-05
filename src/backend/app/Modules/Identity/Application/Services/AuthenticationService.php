@@ -23,18 +23,18 @@ class AuthenticationService
         $user = UserModel::where('email', $emailValue)->first();
 
         if (! $user || ! Hash::check($password, $user->password)) {
-            Event::dispatch(new UserLoginFailed(Email::fromString($emailValue), 'Invalid credentials', new DateTimeImmutable()));
+            Event::dispatch(new UserLoginFailed(Email::fromString($emailValue), 'Invalid credentials', new DateTimeImmutable));
             throw new InvalidCredentialsException('Invalid credentials');
         }
 
         if ($user->status !== 'active') {
-            Event::dispatch(new UserLoginFailed(Email::fromString($emailValue), 'User is disabled', new DateTimeImmutable()));
+            Event::dispatch(new UserLoginFailed(Email::fromString($emailValue), 'User is disabled', new DateTimeImmutable));
             throw new UserDisabledException('User is disabled');
         }
 
         $user->last_login_at = now();
         $user->save();
-        Event::dispatch(new UserLoggedIn(UserId::fromString($user->id), new DateTimeImmutable()));
+        Event::dispatch(new UserLoggedIn(UserId::fromString($user->id), new DateTimeImmutable));
 
         return [
             'access_token' => $user->createToken('api')->plainTextToken,

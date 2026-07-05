@@ -10,8 +10,11 @@ class PositionModel extends Model
     use HasUuids;
 
     protected $table = 'positions';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $guarded = [];
 
     protected $casts = [

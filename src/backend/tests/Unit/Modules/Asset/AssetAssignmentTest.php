@@ -1,15 +1,14 @@
 <?php
+
 namespace Tests\Unit\Modules\Asset;
 
-use PHPUnit\Framework\TestCase;
 use App\Modules\Asset\Domain\Aggregates\AssetAssignment\AssetAssignment;
-use App\Modules\Asset\Domain\Aggregates\AssetReturn\AssetReturn;
+use App\Modules\Asset\Domain\Exceptions\AssetAssignmentAlreadyReturnedException;
 use App\Modules\Asset\Domain\ValueObjects\AssetAssignmentId;
 use App\Modules\Asset\Domain\ValueObjects\AssetAssignmentStatus;
 use App\Modules\Asset\Domain\ValueObjects\AssetCondition;
 use App\Modules\Asset\Domain\ValueObjects\AssetItemId;
-use App\Modules\Asset\Domain\ValueObjects\AssetReturnId;
-use App\Modules\Asset\Domain\Exceptions\AssetAssignmentAlreadyReturnedException;
+use PHPUnit\Framework\TestCase;
 
 class AssetAssignmentTest extends TestCase
 {
@@ -19,7 +18,7 @@ class AssetAssignmentTest extends TestCase
             AssetAssignmentId::generate(),
             AssetItemId::generate(),
             'emp-1',
-            new \DateTimeImmutable(),
+            new \DateTimeImmutable,
             null,
             AssetCondition::Good,
         );
@@ -32,7 +31,7 @@ class AssetAssignmentTest extends TestCase
             AssetAssignmentId::generate(),
             AssetItemId::generate(),
             'emp-1',
-            new \DateTimeImmutable(),
+            new \DateTimeImmutable,
             null,
             AssetCondition::Good,
         );
@@ -46,7 +45,7 @@ class AssetAssignmentTest extends TestCase
             AssetAssignmentId::generate(),
             AssetItemId::generate(),
             'emp-1',
-            new \DateTimeImmutable(),
+            new \DateTimeImmutable,
             null,
             AssetCondition::Good,
         );

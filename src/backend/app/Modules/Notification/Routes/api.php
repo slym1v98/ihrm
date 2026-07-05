@@ -1,22 +1,18 @@
 <?php
 
-use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\{
-    ActivateMessageTemplateController,
-    DeactivateMessageTemplateController,
-    ListMessageTemplateController,
-    ListNotificationController,
-    ListNotificationPreferenceController,
-    MarkAllReadNotificationController,
-    MarkReadNotificationController,
-    ProcessOutboxNotificationController,
-    StoreMessageTemplateController,
-    UnreadCountNotificationController,
-    UpdateMessageTemplateController,
-    UpdateNotificationPreferenceController,
-};
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\ActivateMessageTemplateController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\DeactivateMessageTemplateController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\ListMessageTemplateController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\ListNotificationController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\ListNotificationPreferenceController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\MarkAllReadNotificationController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\MarkReadNotificationController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\ProcessOutboxNotificationController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\StoreMessageTemplateController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\UnreadCountNotificationController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\UpdateMessageTemplateController;
+use App\Modules\Notification\Infrastructure\Http\Controllers\Actions\UpdateNotificationPreferenceController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', ListNotificationController::class)->middleware('permission:notification.view-own');

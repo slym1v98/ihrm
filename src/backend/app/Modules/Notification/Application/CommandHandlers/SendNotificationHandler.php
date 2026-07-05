@@ -77,7 +77,8 @@ class SendNotificationHandler
                 'channel' => $command->channel->value,
                 'recipient_user_id' => $command->recipientUserId,
             ]));
-        } catch (\RuntimeException) {}
+        } catch (\RuntimeException) {
+        }
 
         return $message;
     }

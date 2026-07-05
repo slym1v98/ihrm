@@ -2,9 +2,9 @@
 
 namespace App\Modules\Organization\Application\CommandHandlers\Branch;
 
+use App\Modules\Identity\Application\Services\AuthorizationService;
 use App\Modules\Organization\Application\Commands\Branch\DeactivateBranchCommand;
 use App\Modules\Organization\Domain\Repositories\BranchRepositoryInterface;
-use App\Modules\Identity\Application\Services\AuthorizationService;
 
 class DeactivateBranchHandler
 {

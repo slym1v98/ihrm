@@ -22,5 +22,9 @@ return new class extends Migration
             $table->index('status');
         });
     }
-    public function down(): void { Schema::dropIfExists('recruitment_interviews'); }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('recruitment_interviews');
+    }
 };

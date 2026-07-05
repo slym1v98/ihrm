@@ -1,27 +1,23 @@
 <?php
 
-use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\{
-    ActivateOffboardingPlanController,
-    ApproveOffboardingRequestController,
-    CompleteOffboardingPlanController,
-    CompleteOffboardingTaskController,
-    FinalClearanceOffboardingPlanController,
-    ListOffboardingPlanController,
-    ListOffboardingRequestController,
-    ListOffboardingTaskController,
-    RejectOffboardingRequestController,
-    ShowOffboardingPlanController,
-    ShowOffboardingRequestController,
-    StartOffboardingTaskController,
-    StoreOffboardingPlanController,
-    StoreOffboardingRequestController,
-    StoreOffboardingTaskController,
-    SubmitOffboardingRequestController,
-    WaiveOffboardingTaskController,
-};
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\ActivateOffboardingPlanController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\ApproveOffboardingRequestController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\CompleteOffboardingPlanController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\CompleteOffboardingTaskController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\FinalClearanceOffboardingPlanController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\ListOffboardingPlanController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\ListOffboardingRequestController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\ListOffboardingTaskController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\RejectOffboardingRequestController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\ShowOffboardingPlanController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\ShowOffboardingRequestController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\StartOffboardingTaskController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\StoreOffboardingPlanController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\StoreOffboardingRequestController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\StoreOffboardingTaskController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\SubmitOffboardingRequestController;
+use App\Modules\Offboarding\Infrastructure\Http\Controllers\Actions\WaiveOffboardingTaskController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::prefix('v1/offboarding')
     ->middleware(['auth:sanctum'])

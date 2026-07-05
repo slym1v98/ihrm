@@ -8,7 +8,10 @@ use App\Modules\Performance\Domain\Aggregates\PerformanceCycle\PerformanceCycleI
 interface PerformanceCycleRepositoryInterface
 {
     public function findById(PerformanceCycleId $id): ?PerformanceCycle;
+
     public function findByCode(string $code): ?PerformanceCycle;
+
     public function all(): array;
+
     public function save(PerformanceCycle $cycle): void;
 }

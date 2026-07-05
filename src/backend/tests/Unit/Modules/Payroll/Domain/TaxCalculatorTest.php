@@ -10,14 +10,14 @@ class TaxCalculatorTest extends TestCase
 {
     public function test_flat_10_percent_default(): void
     {
-        $tax = new TaxCalculator();
+        $tax = new TaxCalculator;
         $result = $tax->calculate(Money::fromDecimal(10_000_000));
         $this->assertEquals(1_000_000, $result->toDecimal());
     }
 
     public function test_progressive_brackets(): void
     {
-        $tax = new TaxCalculator();
+        $tax = new TaxCalculator;
         $brackets = [
             ['limit' => 5_000_000, 'rate' => 5],
             ['limit' => 10_000_000, 'rate' => 10],
@@ -29,7 +29,7 @@ class TaxCalculatorTest extends TestCase
 
     public function test_zero_gross(): void
     {
-        $tax = new TaxCalculator();
+        $tax = new TaxCalculator;
         $this->assertEquals(0, $tax->calculate(Money::zero())->toDecimal());
     }
 }

@@ -4,6 +4,4 @@ namespace App\Modules\Workflow\Domain\Exceptions;
 
 use DomainException;
 
-class InvalidWorkflowTransitionException extends DomainException
-{
-}
+class InvalidWorkflowTransitionException extends DomainException {}
