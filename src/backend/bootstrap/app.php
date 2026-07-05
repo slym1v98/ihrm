@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Middleware\CacheResponse;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use App\Modules\Identity\Infrastructure\Http\Middleware\PermissionMiddleware;
 use App\Modules\Shared\Exceptions\AppException;
 use App\Modules\Shared\Exceptions\ValidationException as SharedValidationException;
@@ -180,4 +183,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 500,
             );
         });
-    })->create();
+    
+
+
+RateLimiter::for("api", fn (Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()));
+RateLimiter::for("auth", fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
+RateLimiter::for("strict", fn (Request $request) => Limit::perMinute(10)->by($request->user()?->id ?: $request->ip()));
+
+})->create();

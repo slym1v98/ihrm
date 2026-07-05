@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
+Route::middleware("throttle:api")->group(function () {
 require __DIR__.'/../app/Modules/Identity/Routes/api.php';
 require __DIR__.'/../app/Modules/Configuration/Routes/api.php';
 require __DIR__.'/../app/Modules/Audit/Routes/api.php';
@@ -20,3 +23,5 @@ require __DIR__.'/../app/Modules/Offboarding/Routes/api.php';
 require __DIR__.'/../app/Modules/Performance/Routes/api.php';
 require __DIR__.'/../app/Modules/Training/Routes/api.php';
 require __DIR__.'/../app/Modules/Asset/Routes/api.php';
+
+});
