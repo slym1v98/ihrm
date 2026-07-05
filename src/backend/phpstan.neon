@@ -1,0 +1,19 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - app/Modules
+    excludePaths:
+        - database/migrations/*
+        - config/*
+    ignoreErrors:
+        # Eloquent dynamic properties (from DB columns)
+        - '#Access to an undefined property App\\Modules\\\w+\\Infrastructure\\Persistence\\Eloquent\\#'
+        # Eloquent relations (dynamically resolved)
+        - '#Relation .* is not found in App\\Modules\\\w+\\Infrastructure\\Persistence\\Eloquent\\#'
+        # Seeder ?? array offset pattern
+        - '#Offset .* on left side of \?\? always exists#'
+        # Mixed return type from Eloquent Builder methods
+        - '#Method App\\Modules\\\w+\\Infrastructure\\Persistence\\Repositories\\Eloquent\\#'
