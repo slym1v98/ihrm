@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'permission' => PermissionMiddleware::class,
+            'cache' => \App\Http\Middleware\CacheResponse::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

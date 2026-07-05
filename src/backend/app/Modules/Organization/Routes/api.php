@@ -22,7 +22,7 @@ use App\Modules\Organization\Infrastructure\Http\Controllers\Actions\UpdatePosit
 use App\Modules\Organization\Infrastructure\Http\Controllers\OrgTreeController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+Route::prefix('v1')->middleware(['auth:sanctum', 'cache:600'])->group(function () {
     Route::get('/branches', ListBranchController::class)->middleware('permission:organization.branch.list');
     Route::post('/branches', StoreBranchController::class)->middleware('permission:organization.branch.create');
     Route::get('/branches/{id}', ShowBranchController::class)->middleware('permission:organization.branch.view');
