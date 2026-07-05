@@ -14,6 +14,8 @@ export function LeaveBalanceSection({employeeId}:{employeeId?:string}) {
     {header:'Đầu kỳ',accessor:'opening',className:'text-right w-16'},
     {header:'Phát sinh',accessor:'accrued',className:'text-right w-16'},
     {header:'Đã dùng',accessor:'used',className:'text-right w-16'},
+    {header:'Chuyển tiếp',accessor:'carried_over',className:'text-right w-20'},
+    {header:'Hết hạn',accessor:'expired',className:'text-right w-16'},
     {header:'Còn lại',accessor:'remaining',className:'text-right w-16 font-semibold'},
   ];
   return (<DataTable columns={cols} data={filtered??[]} isLoading={isLoading} rowKey={b=>b.employee_id+b.leave_type_id+b.year} emptyMessage="Chưa có số dư"/>);
