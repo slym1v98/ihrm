@@ -6,6 +6,7 @@ use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\{
     DepartmentShiftsShiftAssignmentController,
     EmployeeShiftsShiftAssignmentController,
     EndShiftAssignmentController,
+    ListShiftAssignmentController,
     ListShiftTemplateController,
     ShowShiftTemplateController,
     StoreShiftAssignmentController,
@@ -15,8 +16,6 @@ use App\Modules\Shift\Infrastructure\Http\Controllers\Actions\{
 };
 use Illuminate\Support\Facades\Route;
 
-
-
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/shift-templates', ListShiftTemplateController::class)->middleware('permission:shift.template.view');
     Route::post('/shift-templates', StoreShiftTemplateController::class)->middleware('permission:shift.template.create');
@@ -25,6 +24,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/shift-templates/{id}/activate', ActivateShiftTemplateController::class)->middleware('permission:shift.template.update');
     Route::post('/shift-templates/{id}/deactivate', DeactivateShiftTemplateController::class)->middleware('permission:shift.template.update');
 
+    Route::get('/shift-assignments', ListShiftAssignmentController::class)->middleware('permission:shift.template.view');
     Route::post('/shift-assignments', StoreShiftAssignmentController::class)->middleware('permission:shift.template.update');
     Route::patch('/shift-assignments/{id}', UpdateShiftAssignmentController::class)->middleware('permission:shift.template.update');
     Route::post('/shift-assignments/{id}/end', EndShiftAssignmentController::class)->middleware('permission:shift.template.update');

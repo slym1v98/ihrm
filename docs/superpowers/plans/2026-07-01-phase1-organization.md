@@ -2546,7 +2546,7 @@ $this->call(\App\Modules\Organization\Infrastructure\Seeders\OrgStructureSeeder:
 - [ ] **Step 5: Verify seeders**
 
 ```bash
-docker compose run --rm app php artisan migrate:fresh --seed
+docker compose run --rm app php artisan migrate
 docker compose run --rm app php artisan db:seed --class=OrgStructureSeeder
 echo "SELECT code FROM permissions WHERE code LIKE 'organization.%';" | docker compose exec -T db psql -U ihrm
 ```

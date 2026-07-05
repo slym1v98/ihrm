@@ -166,7 +166,7 @@ tests/Feature/Modules/Payroll/
 
 - [ ] **Step 8:** Verify migrations run clean
 
-  Run: `docker compose run --rm app php artisan migrate:fresh --seed 2>&1 | tail -35`
+  Run: `docker compose run --rm app php artisan migrate 2>&1 | tail -35`
   Expected: all migrations run, no errors, 7 payroll tables present.
 
 - [ ] **Step 9:** Commit

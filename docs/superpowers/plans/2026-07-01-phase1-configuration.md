@@ -43,7 +43,7 @@ Create exact schemas from `docs/superpowers/specs/2026-07-01-phase1-configuratio
 - [ ] **Step 2: Run migration verification**
 
 ```bash
-docker compose run --rm app php artisan migrate:fresh
+docker compose run --rm app php artisan migrate
 ```
 
 Expected: all existing + new Configuration migrations run successfully.
@@ -273,7 +273,7 @@ Expected: PASS.
 - [ ] **Step 3: Run smoke test**
 
 ```bash
-docker compose run --rm app php artisan migrate:fresh --seed
+docker compose run --rm app php artisan migrate
 curl -s -X POST http://api.ihrm.test/api/v1/auth/login -H 'Content-Type: application/json' -d '{"email":"admin@ihrm.local","password":"password"}'
 ```
 

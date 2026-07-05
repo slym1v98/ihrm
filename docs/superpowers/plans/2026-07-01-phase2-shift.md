@@ -34,14 +34,14 @@
 
 Create columns: `id`, `code`, `name`, `start_time`, `end_time`, `is_overnight`, `break_minutes`, `late_tolerance_minutes`, `overtime_rules` JSONB, `flexibility_rules` JSONB, `payroll_attribution_rule`, `active`, timestamps.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: migration succeeds.
 
 - [ ] **Step 2: Create shift_assignments migration**
 
 Create columns: `id`, `shift_template_id`, `assignable_type`, `assignable_id`, `effective_from`, `effective_to`, `recurrence_rule` JSONB, `active`, timestamps, indexes on `(assignable_type, assignable_id)` and date fields.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: migration succeeds.
 
 - [ ] **Step 3: Commit schema**

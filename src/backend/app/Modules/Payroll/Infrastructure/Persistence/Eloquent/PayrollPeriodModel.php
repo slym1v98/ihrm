@@ -3,9 +3,11 @@
 namespace App\Modules\Payroll\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class PayrollPeriodModel extends Model
 {
+    use HasUuids;
     protected $table = 'payroll_periods';
     protected $keyType = 'string';
     public $incrementing = false;

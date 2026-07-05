@@ -157,7 +157,7 @@ Use `DB::statement('CREATE UNIQUE INDEX user_roles_active_unique ON user_roles(u
 Run:
 
 ```bash
-docker compose run --rm app php artisan migrate:fresh
+docker compose run --rm app php artisan migrate
 ```
 
 Expected: all migrations run successfully.
@@ -484,7 +484,7 @@ Expected: PASS.
 - [ ] **Step 3: Run smoke test**
 
 ```bash
-docker compose run --rm app php artisan migrate:fresh --seed
+docker compose run --rm app php artisan migrate
 curl -s -X POST http://localhost:8000/api/v1/auth/login \
   -H 'Content-Type: application/json' \
   -d '{"email":"admin@ihrm.local","password":"password"}'

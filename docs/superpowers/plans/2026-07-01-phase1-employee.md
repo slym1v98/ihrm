@@ -36,28 +36,28 @@
 
 Use UUID PK, unique `employee_code`, nullable org refs, nullable `user_id`, and indexes from `docs/superpowers/specs/2026-07-01-phase1-employee-design.md:377`.
 
-Run: `cd src/backend && php artisan migrate:fresh --seed`
+Run: `cd src/backend && php artisan migrate`
 Expected: migration succeeds.
 
 - [ ] **Step 2: Create employee_history migration**
 
 Use append-only table: `id`, `employee_id`, `branch_id`, `department_id`, `position_id`, `effective_at`, `created_at`. No `updated_at`.
 
-Run: `cd src/backend && php artisan migrate:fresh --seed`
+Run: `cd src/backend && php artisan migrate`
 Expected: migration succeeds.
 
 - [ ] **Step 3: Create employee_contracts migration**
 
 Use UUID PK, `employee_id`, unique `contract_number`, `contract_type`, dates, `status`, `predecessor_contract_id`, `base_salary`, nullable `position_id`, timestamps, indexes.
 
-Run: `cd src/backend && php artisan migrate:fresh --seed`
+Run: `cd src/backend && php artisan migrate`
 Expected: migration succeeds.
 
 - [ ] **Step 4: Create employee_documents migration**
 
 Use UUID PK, `employee_id`, document metadata columns, file descriptor columns, dates, `status`, timestamps, indexes.
 
-Run: `cd src/backend && php artisan migrate:fresh --seed`
+Run: `cd src/backend && php artisan migrate`
 Expected: migration succeeds.
 
 - [ ] **Step 5: Commit schema**
@@ -414,7 +414,7 @@ Seed one active employee with existing Organization IDs if present. Keep optiona
 
 - [ ] **Step 4: Run seed smoke test**
 
-Run: `cd src/backend && php artisan migrate:fresh --seed`
+Run: `cd src/backend && php artisan migrate`
 Expected: PASS; employee permissions present.
 
 - [ ] **Step 5: Commit seeders**

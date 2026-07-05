@@ -3,9 +3,11 @@
 namespace App\Modules\Notification\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class MessageTemplateModel extends Model
 {
+    use HasUuids;
     protected $table = 'notification_templates';
     protected $keyType = 'string';
     public $incrementing = false;

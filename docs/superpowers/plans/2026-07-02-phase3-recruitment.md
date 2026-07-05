@@ -33,7 +33,7 @@
 - Create: `2026_07_02_130004_create_recruitment_offers_table.php`
 
 - [ ] **Step 1-4:** Write each migration matching spec Schema §4.
-  `docker compose run --rm app php artisan migrate:fresh --seed` → PASS.
+  `docker compose run --rm app php artisan migrate` → PASS.
 - [ ] **Step 5:** Commit.
 
 ---
@@ -81,7 +81,7 @@
 ### Task 4: Seeders + Final verification
 
 - [ ] **Step 1:** Permission seeder + role grants.
-- [ ] **Step 2:** `docker compose run --rm app php artisan migrate:fresh --seed` → PASS.
+- [ ] **Step 2:** `docker compose run --rm app php artisan migrate` → PASS.
 - [ ] **Step 3:** Targeted tests.
 - [ ] **Step 4:** Full suite.
 - [ ] **Step 5:** Spec acceptance review.

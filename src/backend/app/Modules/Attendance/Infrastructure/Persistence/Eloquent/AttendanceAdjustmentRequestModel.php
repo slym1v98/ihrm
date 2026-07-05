@@ -3,9 +3,11 @@
 namespace App\Modules\Attendance\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class AttendanceAdjustmentRequestModel extends Model
 {
+    use HasUuids;
     protected $table = 'attendance_adjustment_requests';
     protected $keyType = 'string';
     public $incrementing = false;

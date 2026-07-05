@@ -30,7 +30,7 @@ class DemoPayrollSeeder extends Seeder
         if (!isset($components['base_salary'], $components['meal_allowance'], $components['net_pay'])) return;
 
         $run = PayrollRunModel::create([
-            'id'              => (string) Uuid::uuid4(),
+            'id' => (string) Uuid::uuid4(),
             'period_id'       => $closed->id,
             'run_type'        => 'initial',
             'status'          => 'completed',
@@ -53,7 +53,7 @@ class DemoPayrollSeeder extends Seeder
             $net   = $gross - $ded;
 
             $entry = PayrollEntryModel::create([
-                'id'                  => (string) Uuid::uuid4(),
+                'id' => (string) Uuid::uuid4(),
                 'run_id'              => $run->id,
                 'period_id'           => $closed->id,
                 'employee_id'         => $emp->id,
@@ -87,7 +87,7 @@ class DemoPayrollSeeder extends Seeder
             }
 
             PayslipModel::create([
-                'id'           => (string) Uuid::uuid4(),
+                'id' => (string) Uuid::uuid4(),
                 'entry_id'     => $entry->id,
                 'employee_id'  => $emp->id,
                 'period_id'    => $closed->id,
@@ -106,7 +106,6 @@ class DemoPayrollSeeder extends Seeder
         return PayrollPeriodModel::updateOrCreate(
             ['period_code' => $code],
             [
-                'id'          => (string) Uuid::uuid4(),
                 'start_date'  => $start,
                 'end_date'    => $end,
                 'cutoff_date' => $cutoff,

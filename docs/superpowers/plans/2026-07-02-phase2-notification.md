@@ -39,28 +39,28 @@
 
 Create `notification_templates`: UUID `id`, unique `code`, `name`, `channel`, nullable `subject`, `body`, JSONB `variables` default `[]`, boolean `is_active` default true, timestamps; indexes on `channel`, `is_active`.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: PASS; `notification_templates` exists.
 
 - [ ] **Step 2: Create messages migration**
 
 Create `notification_messages`: UUID `id`, `template_code`, `channel`, UUID `recipient_user_id`, nullable `recipient_address`, nullable `subject_rendered`, `body_rendered`, JSONB `payload` default `{}`, `status`, `priority`, nullable `error`, nullable `read_at`, nullable `sent_at`, timestamps; indexes on `recipient_user_id`, `(status, priority)`, `created_at`.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: PASS; message indexes exist.
 
 - [ ] **Step 3: Create preferences migration**
 
 Create `user_notification_preferences`: UUID `id`, UUID `user_id`, `channel`, nullable `template_code`, boolean `enabled`, timestamps; index `(user_id, channel)`; unique `(user_id, channel, template_code)`.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: PASS; preference unique guard exists.
 
 - [ ] **Step 4: Create outbox migration**
 
 Create `notification_outbox`: UUID `id`, FK `notification_message_id` to `notification_messages(id)` cascade delete, `channel`, `status`, `attempts` default 0, `max_attempts` default 3, `available_at`, nullable `locked_at`, nullable `locked_by`, nullable `last_error`, timestamps; index `(status, attempts, available_at)`.
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: PASS; outbox worker index exists.
 
 - [ ] **Step 5: Commit schema**
@@ -406,7 +406,7 @@ Document endpoints, permissions, outbox command, default log adapters, and produ
 
 - [ ] **Step 6: Verify seed**
 
-Run: `docker compose run --rm app php artisan migrate:fresh --seed`
+Run: `docker compose run --rm app php artisan migrate`
 Expected: PASS; notification permissions and templates are seeded.
 
 - [ ] **Step 7: Commit seeders/docs**

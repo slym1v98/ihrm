@@ -3,9 +3,11 @@
 namespace App\Modules\Attendance\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class AttendanceRawLogModel extends Model
 {
+    use HasUuids;
     protected $table = 'attendance_raw_logs';
     protected $keyType = 'string';
     public $incrementing = false;

@@ -42,7 +42,6 @@ class DemoUserSeeder extends Seeder
             $user = UserModel::updateOrCreate(
                 ['email' => $email],
                 [
-                    'id' => (string) Uuid::uuid4(),
                     'name' => $name,
                     'password' => $password,
                     'status' => 'active',

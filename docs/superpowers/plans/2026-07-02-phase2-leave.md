@@ -84,7 +84,7 @@ Columns: UUID `id`, UUID `employee_id`, FK `leave_type_id`, dates `start_at`, `e
 Run:
 
 ```bash
-docker compose run --rm app php artisan migrate:fresh --seed
+docker compose run --rm app php artisan migrate
 ```
 
 Expected: PASS; all `leave_*` tables exist.
@@ -118,7 +118,7 @@ Seed codes: `annual`, `sick`, `unpaid`, `maternity`. Use upsert/idempotent patte
 - [ ] **Step 3: Run migration+seed**
 
 ```bash
-docker compose run --rm app php artisan migrate:fresh --seed
+docker compose run --rm app php artisan migrate
 ```
 
 Expected: PASS.

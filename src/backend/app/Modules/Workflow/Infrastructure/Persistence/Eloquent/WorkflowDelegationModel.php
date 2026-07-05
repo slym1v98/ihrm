@@ -3,9 +3,11 @@
 namespace App\Modules\Workflow\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class WorkflowDelegationModel extends Model
 {
+    use HasUuids;
     protected $table = 'workflow_delegations';
     protected $keyType = 'string';
     public $incrementing = false;
