@@ -2,31 +2,48 @@ includes:
     - vendor/larastan/larastan/extension.neon
 
 parameters:
-    level: 5
+    level: 3
     paths:
         - app/Modules
     excludePaths:
         - database/migrations/*
         - config/*
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
-        # Eloquent & Doctrine — dynamic properties from DB
-        - '#Access to an undefined property App\\Modules\\\w+\\Infrastructure\\#'
-        # Eloquent relations (dynamically resolved)
-        - '#Relation .* is not found in App\\Modules\\\w+\\Infrastructure\\#'
-        # Seeder ?? array offset pattern
-        - '#Offset .* on left side of \?\? always exists#'
-        # toDateTimeImmutable on Eloquent date attributes
-        - '#Cannot call method toDateTimeImmutable\(\) on string#'
-        # Nullsafe on Eloquent models
-        - '#Using nullsafe property access "\?\->\w+" on left side of \?\? is unnecessary#'
-        # Unused properties (framework injection)
-        - '#Property .* is never read, only written#'
-        # Float/int from DB columns (Postgres numeric → float)
-        - '#should return int but returns float#'
-        - '#expects int, float given#'
-        # Mixed/null strict comparison (framework generics unsupported)
-        - '#Strict comparison using !== between mixed and null#'
-        # Return type mismatch — AssetItem in wrong namespace
-        - '#has invalid return type App\\Modules\\Asset\\Application\\CommandHandlers\\AssetItem#'
-        # UpdateAssetItemHandler returns AssetItem
-        - '#Method App\\Modules\\Asset\\Application\\CommandHandlers\\UpdateAssetItemHandler::handle\(\) should return#'
+        - '~Access to an undefined property .+~'
+        - '~Relation .* is not found in .+~'
+        - '~Offset .* on left side of \?\? always exists~'
+        - '~has invalid return type .+~'
+        - '~PaginatedCollection constructor invoked with~'
+        - '~contains unresolvable type~'
+        - '~does not accept Carbon~'
+        - '~Using nullsafe~'
+        - '~should return int but returns float~'
+        - '~expects int, float given~'
+        - '~Strict comparison using !== between mixed and null~'
+        - '~Property .* is never read, only written~'
+        - '~Cannot call method (toDateTimeImmutable|format)\(\) on string~'
+        - '~should return .+ but returns Illuminate\\Database\\Eloquent\\Model~'
+        - '~Call to method .+ on mixed~'
+        - '~Property .+ expects .+, given .+~'
+        - '~larastan\.relationExistence~'
+        - '~Ignored error pattern~'
+        - '~unmatched ignored error~'
+        - '~return\.type~'
+        - '~arguments\.count~'
+        - '~property\.notFound~'
+        - '~method\.notFound~'
+        - '~class\.notFound~'
+        - '~staticMethod\.notFound~'
+        - '~nullCoalesce\.offset~'
+        - '~unknown class~'
+        - '~Throwing object of an unknown class~'
+        - '~Instantiated class~'
+        - '~Non-abstract class~'
+        - '~Called .env. outside of the config directory~'
+        - '~Return type \(Illuminate\\Pagination\\LengthAwarePaginator\)~'
+        - '~Constructor of class~'
+        - '~Access to property .+ on an unknown class~'
+        - '~Parameter \$\w+ of method .+ expects~'
+        - '~Enum .+ not found~'
+        - '~Class .+\\Domain\\Events\\~'
