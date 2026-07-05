@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
-import { Calculator, Lock, Unlock } from 'lucide-react';
+import { Calculator, Lock, Unlock, Pencil } from 'lucide-react';
 import { useAttendancePeriods, useAttendanceTimesheets, useCalculateAttendance, useClosePeriod, useReopenPeriod } from '@/domains/attendance/hooks/useAttendance';
 import type { AttendanceTimesheet, AttendancePeriod } from '@/domains/attendance/models/attendance';
 import { DataTable, type Column } from '@/shared/components/DataTable';
@@ -10,6 +10,8 @@ import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
 import { extractErrorMessage } from '@/core/errors/messages';
 import { useDateFormatter } from '@/shared/hooks/useDateFormatter';
+import { AdjustmentSection } from '@/domains/attendance/components/AdjustmentSection';
+import { AdjustmentForm } from '@/domains/attendance/components/AdjustmentForm';
 
 const periodStatusLabels: Record<string, string> = {
   open: 'Đang mở',
@@ -37,6 +39,8 @@ export function AttendanceListPage() {
   const calcAttendance = useCalculateAttendance();
   const closePeriod = useClosePeriod();
   const reopenPeriod = useReopenPeriod();
+
+  const [adjustTimesheetId, setAdjustTimesheetId] = useState<string | null>(null);
 
   const handleCalculate = useCallback(async () => {
     try {
@@ -102,6 +106,14 @@ export function AttendanceListPage() {
       header: 'Kết quả', accessor: undefined, className: 'w-20',
       cell: (t) => <Badge variant={resultVariants[t.result_status] ?? 'secondary'}>{resultLabels[t.result_status] ?? t.result_status}</Badge>,
     },
+    {
+      header: '', accessor: undefined, className: 'text-right w-12',
+      cell: (t) => (
+        <Button variant="ghost" size="sm" title="Điều chỉnh" onClick={() => setAdjustTimesheetId(t.id)}>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      ),
+    },
   ];
 
   return (
@@ -120,6 +132,17 @@ export function AttendanceListPage() {
         <span className="text-sm font-medium text-muted-foreground">Bảng chấm công</span>
         <DataTable<AttendanceTimesheet> columns={timesheetColumns} data={timesheets ?? []} isLoading={timesheetsLoading} rowKey="id" emptyMessage="Chưa có dữ liệu chấm công" />
       </div>
+
+      <div className="space-y-4">
+        <span className="text-sm font-medium text-muted-foreground">Yêu cầu điều chỉnh</span>
+        <AdjustmentSection />
+      </div>
+
+      <AdjustmentForm
+        timesheetId={adjustTimesheetId}
+        open={!!adjustTimesheetId}
+        onOpenChange={(o) => { if (!o) setAdjustTimesheetId(null); }}
+      />
     </div>
   );
 }
