@@ -40,3 +40,23 @@ export function useDeactivateShiftTemplate() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['shift-templates'] }),
   });
 }
+
+export function useShiftAssignments() {
+  return useQuery({ queryKey: ['shift-assignments'], queryFn: shiftService.getAssignments });
+}
+
+export function useCreateShiftAssignment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: Parameters<typeof shiftService.createAssignment>[0]) => shiftService.createAssignment(payload),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['shift-assignments'] }),
+  });
+}
+
+export function useEndShiftAssignment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => shiftService.endAssignment(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['shift-assignments'] }),
+  });
+}
