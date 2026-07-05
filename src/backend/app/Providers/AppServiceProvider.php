@@ -192,6 +192,9 @@ use App\Modules\Workflow\Application\Services\SubjectDataProviderRegistry;
 use App\Modules\Workflow\Application\Services\WorkflowEngine;
 use App\Modules\Workflow\Domain\Events\WorkflowApproved;
 use App\Modules\Workflow\Domain\Events\WorkflowRejected;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use App\Modules\Workflow\Domain\Repositories\WorkflowDelegationRepositoryInterface;
 use App\Modules\Workflow\Domain\Repositories\WorkflowRequestRepositoryInterface;
 use App\Modules\Workflow\Domain\Repositories\WorkflowTemplateRepositoryInterface;
@@ -329,6 +332,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        RateLimiter::for("api", fn (Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()));
+        RateLimiter::for("auth", fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
+        RateLimiter::for("strict", fn (Request $request) => Limit::perMinute(10)->by($request->user()?->id ?: $request->ip()));
         Event::listen(OfferAccepted::class, CreateEmployeeOnOfferAccepted::class);
         Event::listen(OnboardingPlanCompleted::class, ActivateEmployeeOnOnboardingComplete::class);
         Event::listen(EmployeeStatusChanged::class, CreateOffboardingOnResign::class);
