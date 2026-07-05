@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Modules\Asset\Application\CommandHandlers;
-use App\Modules\Asset\Domain\Aggregates\AssetItem\AssetItem;
 
 use App\Modules\Asset\Application\Commands\UpdateAssetItemCommand;
+use App\Modules\Asset\Domain\Aggregates\AssetItem\AssetItem;
 use App\Modules\Asset\Domain\Exceptions\AssetItemNotFoundException;
 use App\Modules\Asset\Domain\Repositories\AssetItemRepositoryInterface;
 use App\Modules\Asset\Domain\ValueObjects\AssetCondition;
