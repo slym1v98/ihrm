@@ -24,13 +24,13 @@ class DemoOffboardingSeeder extends Seeder
                 'type' => 'resignation',
                 'reason' => 'Cơ hội nghề nghiệp mới',
                 'requested_last_working_date' => now()->addDays(30)->toDateString(),
-                'status' => 'pending',
+                'status' => 'draft',
             ],
         );
 
         $plan = OffboardingPlanModel::firstOrCreate(
             ['offboarding_request_id' => $request->id],
-            ['status' => 'pending']
+            ['status' => 'draft']
         );
 
         $tasks = [
