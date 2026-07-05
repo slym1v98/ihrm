@@ -74,6 +74,21 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    working_dir: /app/src/backend
+    command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - .:/app
   redis:
     image: redis:7-alpine
     healthcheck:
