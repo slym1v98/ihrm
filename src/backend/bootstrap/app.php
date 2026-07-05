@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CacheResponse;
 use App\Modules\Identity\Infrastructure\Http\Middleware\PermissionMiddleware;
 use App\Modules\Shared\Exceptions\AppException;
 use App\Modules\Shared\Exceptions\ValidationException as SharedValidationException;
@@ -30,7 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'permission' => PermissionMiddleware::class,
-            'cache' => \App\Http\Middleware\CacheResponse::class,
+            'cache' => CacheResponse::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

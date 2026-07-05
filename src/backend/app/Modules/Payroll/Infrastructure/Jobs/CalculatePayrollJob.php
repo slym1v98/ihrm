@@ -25,6 +25,7 @@ class CalculatePayrollJob implements ShouldQueue
         $run = PayrollRunModel::find($this->payrollRunId);
         if (! $run) {
             Log::error('Payroll run not found', ['id' => $this->payrollRunId]);
+
             return;
         }
 
