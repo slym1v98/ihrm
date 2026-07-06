@@ -56,6 +56,10 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file: .env.production
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE:-ihrm}
     healthcheck:
       test: pg_isready -U ihrm
       interval: 5s
