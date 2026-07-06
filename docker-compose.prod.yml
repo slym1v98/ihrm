@@ -1,5 +1,8 @@
 services:
   app:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile.prod
     image: ghcr.io/slym1v98/ihrm-backend:latest
     restart: unless-stopped
     env_file: .env.production
@@ -12,12 +15,18 @@ services:
       - "8000"
 
   frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile.prod
     image: ghcr.io/slym1v98/ihrm-frontend:latest
     restart: unless-stopped
     expose:
       - "3000"
 
   nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile.prod
     image: ghcr.io/slym1v98/ihrm-nginx:latest
     restart: unless-stopped
     ports:
@@ -27,6 +36,9 @@ services:
       - frontend
 
   queue:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile.prod
     image: ghcr.io/slym1v98/ihrm-backend:latest
     restart: unless-stopped
     command: php artisan queue:work redis --sleep=3 --tries=3
