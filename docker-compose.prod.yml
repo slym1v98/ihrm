@@ -46,8 +46,8 @@ services:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_POLL_INTERVAL: 300
       WATCHTOWER_INCLUDE_RESTARTING: "true"
-      REPO_USER: slym1v98
-      REPO_PASS: ${GHCR_PAT}
+      WATCHTOWER_REPO_USER: slym1v98
+      WATCHTOWER_REPO_PASS: ${GHCR_PAT}
     command: --interval 300 --cleanup --include-restarting
 
   db:
