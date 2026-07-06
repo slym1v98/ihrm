@@ -1,6 +1,7 @@
 .idea
 
 .env
+.env.production
 .worktrees/
 .superpowers/
 *.bak
